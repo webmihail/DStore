@@ -1,20 +1,26 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User extends GenericEntity {
+  @ApiProperty({ example: '1', description: 'unique idetificator' })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ example: 'Mihail', description: 'User first name' })
   @Column({ name: 'first_name', type: 'varchar', length: 255 })
   firstName: string;
 
+  @ApiProperty({ example: 'Ivanov', description: 'User last name' })
   @Column({ name: 'last_name', type: 'varchar', length: 255 })
   lastName: string;
 
+  @ApiProperty({ example: 'ivanov@gmail.com', description: 'user email' })
   @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })
   email: string;
 
+  @ApiProperty({ example: 'S1234ghgh', description: 'User password' })
   @Column({
     name: 'password',
     type: 'varchar',
