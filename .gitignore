@@ -1,0 +1,11 @@
+# local env files
+**.env*
+.DS_Store
+node_modules/
+
+#############################
+# Runtime data
+#############################
+
+/data
+/backups*
