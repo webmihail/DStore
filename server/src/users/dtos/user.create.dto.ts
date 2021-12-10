@@ -9,12 +9,7 @@ import {
 } from 'class-validator';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 
-export class UserDTO extends GenericEntity {
-  @ApiProperty({ example: '1', description: 'unique idetificator' })
-  @IsOptional()
-  @IsNumber()
-  id: number;
-
+export class UserCreateDTO extends GenericEntity {
   @ApiProperty({ example: 'Mihail', description: 'User first name' })
   @IsString()
   @MaxLength(255)
@@ -34,4 +29,9 @@ export class UserDTO extends GenericEntity {
   @MinLength(8)
   @MaxLength(128)
   password: string;
+
+  @ApiProperty({ example: 1, description: 'Role id' })
+  @IsNumber()
+  @IsOptional()
+  roleId: number;
 }

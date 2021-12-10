@@ -6,19 +6,17 @@ import {
   Param,
   Post,
   Put,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
+import { UserCreateDTO } from './dtos/user.create.dto';
 import { UserDTO } from './dtos/user.dto';
-import { EditUserDTO } from './dtos/user.edit.dto';
+import { UserEditDTO } from './dtos/user.edit.dto';
 import { User } from './entity/user.entity';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
 @Controller('users')
-@UsePipes(new ValidationPipe())
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
@@ -39,7 +37,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Create new user' })
   @ApiResponse({ status: 200, type: User })
   @Post()
-  async createUser(@Body() data: UserDTO): Promise<UserDTO> {
+  async createUser(@Body() data: UserCreateDTO): Promise<UserDTO> {
     return await this.userService.create(data);
   }
 
@@ -48,11 +46,9 @@ export class UsersController {
   @Put(':id')
   async updateUser(
     @Param('id') id: number,
-    @Body() data: EditUserDTO,
+    @Body() data: UserEditDTO,
   ): Promise<UserDTO> {
-    const user = await this.userService.update(id, data);
-
-    return user;
+    return await this.userService.update(id, data);
   }
 
   @ApiOperation({ summary: 'Delete user' })
