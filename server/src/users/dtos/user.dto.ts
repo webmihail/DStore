@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEmail,
   IsNumber,
   IsOptional,
@@ -8,6 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { RoleDTO } from 'src/roles/dtos/role.dto';
 
 export class UserDTO extends GenericEntity {
   @ApiProperty({ example: '1', description: 'unique idetificator' })
@@ -34,4 +36,8 @@ export class UserDTO extends GenericEntity {
   @MinLength(8)
   @MaxLength(128)
   password: string;
+
+  @ApiProperty({ example: [], description: 'User roles' })
+  @IsArray()
+  roles: RoleDTO[];
 }
