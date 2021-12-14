@@ -11,18 +11,18 @@ import { User } from './entity/user.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
     private readonly rolesService: RolesService,
   ) {}
 
   async getAll(): Promise<UserDTO[]> {
-    return await this.userRepository.find({
+    return await this.usersRepository.find({
       relations: ['roles'],
     });
   }
 
   async getById(id: number): Promise<UserDTO> {
-    const user = await this.userRepository.findOne(id, {
+    const user = await this.usersRepository.findOne(id, {
       relations: ['roles'],
     });
     if (!user) throw new NotFoundException('user does not exists');
@@ -30,16 +30,24 @@ export class UsersService {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<UserDTO> {
+    return await this.usersRepository
+      .createQueryBuilder('user')
+      .where({ email })
+      .addSelect('user.password')
+      .getOne();
+  }
+
   async create(data: UserCreateDTO): Promise<UserDTO> {
-    const userExist = await this.userRepository.findOne({ email: data.email });
+    const userExist = await this.usersRepository.findOne({ email: data.email });
     if (userExist)
       throw new NotFoundException('User already registered with email');
 
     const role = await this.rolesService.getByValue('PERSONE');
 
-    const newUser = await this.userRepository.create(data);
+    const newUser = await this.usersRepository.create(data);
     newUser.roles = [role];
-    const user = await this.userRepository.save(newUser);
+    const user = await this.usersRepository.save(newUser);
 
     delete user.password;
     return user;
@@ -48,7 +56,7 @@ export class UsersService {
   async update(id: number, data: UserEditDTO): Promise<UserDTO> {
     const user = await this.getById(id);
     const editUser = Object.assign(user, data);
-    const updatedUser = await this.userRepository.save(editUser);
+    const updatedUser = await this.usersRepository.save(editUser);
 
     delete updatedUser.password;
     return updatedUser;
@@ -63,7 +71,7 @@ export class UsersService {
       editUser.roles.push(role);
     }
 
-    const updatedUser = await this.userRepository.save(editUser);
+    const updatedUser = await this.usersRepository.save(editUser);
 
     delete updatedUser.password;
     return updatedUser;
@@ -73,13 +81,13 @@ export class UsersService {
     const editUser = await this.getById(userId);
     const editRoles = editUser.roles.filter((role) => role.id !== roleId);
     editUser.roles = editRoles;
-    const updatedUser = await this.userRepository.save(editUser);
+    const updatedUser = await this.usersRepository.save(editUser);
 
     delete updatedUser.password;
     return updatedUser;
   }
 
   async delete(id: number): Promise<DeleteResult> {
-    return await this.userRepository.delete(id);
+    return await this.usersRepository.delete(id);
   }
 }
