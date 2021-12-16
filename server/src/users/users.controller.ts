@@ -31,7 +31,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get user by id' })
   @ApiResponse({ status: 200, type: UserDTO })
   @Get(':id')
-  async getUser(@Param('id') id: number): Promise<UserDTO> {
+  async getUser(@Param('id') id: string): Promise<UserDTO> {
     return await this.userService.getById(id);
   }
 
@@ -46,18 +46,24 @@ export class UsersController {
   @ApiResponse({ status: 200, type: User })
   @Put(':id')
   async updateUser(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() data: UserEditDTO,
   ): Promise<UserDTO> {
     return await this.userService.update(id, data);
   }
 
-  @ApiOperation({ summary: 'Delete role from user' })
+  @ApiOperation({ summary: 'Delete user' })
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string): Promise<DeleteResult> {
+    return this.userService.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add role to user' })
   @ApiResponse({ status: 200, type: UserDTO })
   @Patch(':userId/add-role/:roleId')
   async addRoleFromUser(
-    @Param('userId') userId: number,
-    @Param('roleId') roleId: number,
+    @Param('userId') userId: string,
+    @Param('roleId') roleId: string,
   ): Promise<UserDTO> {
     return await this.userService.addRole(userId, roleId);
   }
@@ -66,15 +72,9 @@ export class UsersController {
   @ApiResponse({ status: 200, type: UserDTO })
   @Patch(':userId/delete-role/:roleId')
   async deleteRoleFromUser(
-    @Param('userId') userId: number,
-    @Param('roleId') roleId: number,
+    @Param('userId') userId: string,
+    @Param('roleId') roleId: string,
   ): Promise<UserDTO> {
     return await this.userService.deleteRole(userId, roleId);
-  }
-
-  @ApiOperation({ summary: 'Delete user' })
-  @Delete(':id')
-  async deleteUser(@Param('id') id: number): Promise<DeleteResult> {
-    return this.userService.delete(id);
   }
 }

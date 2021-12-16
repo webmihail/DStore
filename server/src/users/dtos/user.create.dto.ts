@@ -1,15 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
-import { GenericEntity } from 'src/common/generic/generic.entity';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class UserCreateDTO extends GenericEntity {
+export class UserCreateDTO {
   @ApiProperty({ example: 'Mihail', description: 'User first name' })
   @IsString()
   @MaxLength(255)
@@ -29,9 +21,4 @@ export class UserCreateDTO extends GenericEntity {
   @MinLength(8)
   @MaxLength(128)
   password: string;
-
-  @ApiProperty({ example: 1, description: 'Role id' })
-  @IsNumber()
-  @IsOptional()
-  roleId: number;
 }

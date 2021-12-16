@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsEmail,
-  IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -12,10 +12,13 @@ import { GenericEntity } from 'src/common/generic/generic.entity';
 import { RoleDTO } from 'src/roles/dtos/role.dto';
 
 export class UserDTO extends GenericEntity {
-  @ApiProperty({ example: '1', description: 'unique idetificator' })
+  @ApiProperty({
+    example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
+    description: 'uuid idetificator',
+  })
   @IsOptional()
-  @IsNumber()
-  id: number;
+  @IsUUID()
+  id: string;
 
   @ApiProperty({ example: 'Mihail', description: 'User first name' })
   @IsString()

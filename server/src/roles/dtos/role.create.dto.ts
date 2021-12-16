@@ -1,15 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, Matches, MaxLength } from 'class-validator';
-import { GenericEntity } from 'src/common/generic/generic.entity';
-import { RolesTypes } from '../constants';
-import { roleTypeMatchExpression } from '../utils/roleTypeMatchExpression';
+import { IsString, MaxLength } from 'class-validator';
 
-export class RoleCreateDTO extends GenericEntity {
-  @ApiProperty({ name: 'type', enum: RolesTypes })
+export class RoleCreateDTO {
+  @ApiProperty({ example: 'Administrator', description: 'Role description' })
   @IsString()
-  @IsEnum(RolesTypes, { each: true })
-  @Matches(roleTypeMatchExpression(RolesTypes))
-  type: RolesTypes;
+  @MaxLength(255)
+  name: string;
 
   @ApiProperty({ example: 'Administrator', description: 'Role description' })
   @IsString()

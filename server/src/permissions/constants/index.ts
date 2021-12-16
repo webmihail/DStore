@@ -1,0 +1,15 @@
+export enum Permissions {
+  SubscriptionFullManagement = 'SubscriptionFullManagement',
+  SubscriptionAuthManagementRead = 'SubscriptionAuthManagementRead',
+  SubscriptionAuthManagementWrite = 'SubscriptionAuthManagementWrite',
+  SubscriptionRoleManagementRead = 'SubscriptionRoleManagementRead',
+  SubscriptionRoleManagementWrite = 'SubscriptionRoleManagementWrite',
+  SubscriptionBanManagementRead = 'SubscriptionBanManagementRead',
+  SubscriptionBanManagementWrite = 'SubscriptionBanManagementWrite',
+  SubscriptionOrderManagementRead = 'SubscriptionOrderManagementRead',
+  SubscriptionOrderManagementWrite = 'SubscriptionOrderManagementWrite',
+  SubscriptionCommentRead = 'SubscriptionCommentManagementRead',
+  SubscriptionCommentWrite = 'SubscriptionCommentManagementWrite',
+  SubscriptionCategoryProductManagementRead = 'SubscriptionCategoryProductManagementRead',
+  SubscriptionCategoryProductManagementWrite = 'SubscriptionCategoryProductManagementWrite',
+}
