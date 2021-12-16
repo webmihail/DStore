@@ -17,13 +17,13 @@ export class UsersService {
 
   async getAll(): Promise<UserDTO[]> {
     return await this.usersRepository.find({
-      relations: ['roles'],
+      relations: ['roles', 'roles.permissions'],
     });
   }
 
-  async getById(id: number): Promise<UserDTO> {
+  async getById(id: string): Promise<UserDTO> {
     const user = await this.usersRepository.findOne(id, {
-      relations: ['roles'],
+      relations: ['roles', 'roles.permissions'],
     });
     if (!user) throw new NotFoundException('user does not exists');
 
@@ -43,7 +43,14 @@ export class UsersService {
     if (userExist)
       throw new NotFoundException('User already registered with email');
 
-    const role = await this.rolesService.getByValue('PERSONE');
+    let role = await this.rolesService.getByValue('Persone');
+
+    if (!role) {
+      role = await this.rolesService.create({
+        name: 'Persone',
+        description: 'Role for all users',
+      });
+    }
 
     const newUser = await this.usersRepository.create(data);
     newUser.roles = [role];
@@ -53,7 +60,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, data: UserEditDTO): Promise<UserDTO> {
+  async update(id: string, data: UserEditDTO): Promise<UserDTO> {
     const user = await this.getById(id);
     const editUser = Object.assign(user, data);
     const updatedUser = await this.usersRepository.save(editUser);
@@ -62,32 +69,32 @@ export class UsersService {
     return updatedUser;
   }
 
-  async addRole(userId: number, roleId: number): Promise<UserDTO> {
-    const editUser = await this.getById(userId);
-    const equalRoles = editUser.roles.filter((role) => role.id === roleId);
+  async delete(id: string): Promise<DeleteResult> {
+    return await this.usersRepository.delete(id);
+  }
+
+  async addRole(userId: string, roleId: string): Promise<UserDTO> {
+    const user = await this.getById(userId);
+    const equalRoles = user.roles.filter((role) => role.id === roleId);
 
     if (equalRoles.length === 0) {
       const role = await this.rolesService.getById(roleId);
-      editUser.roles.push(role);
+      user.roles.push(role);
     }
 
-    const updatedUser = await this.usersRepository.save(editUser);
+    const editUser = await this.usersRepository.save(user);
 
-    delete updatedUser.password;
-    return updatedUser;
+    delete editUser.password;
+    return editUser;
   }
 
-  async deleteRole(userId: number, roleId: number): Promise<UserDTO> {
-    const editUser = await this.getById(userId);
-    const editRoles = editUser.roles.filter((role) => role.id !== roleId);
-    editUser.roles = editRoles;
-    const updatedUser = await this.usersRepository.save(editUser);
+  async deleteRole(userId: string, roleId: string): Promise<UserDTO> {
+    const user = await this.getById(userId);
+    const editRoles = user.roles.filter((role) => role.id !== roleId);
+    user.roles = editRoles;
+    const editUser = await this.usersRepository.save(user);
 
-    delete updatedUser.password;
-    return updatedUser;
-  }
-
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.usersRepository.delete(id);
+    delete editUser.password;
+    return editUser;
   }
 }

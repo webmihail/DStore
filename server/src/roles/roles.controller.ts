@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -30,7 +31,7 @@ export class RolesController {
   @ApiOperation({ summary: 'Get role by id' })
   @ApiResponse({ status: 200, type: Role })
   @Get(':id')
-  async getRole(@Param('id') id: number): Promise<RoleDTO> {
+  async getRole(@Param('id') id: string): Promise<RoleDTO> {
     return await this.rolesServices.getById(id);
   }
 
@@ -45,7 +46,7 @@ export class RolesController {
   @ApiResponse({ status: 200, type: Role })
   @Put(':id')
   async updateRole(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() data: RoleEditDTO,
   ): Promise<RoleDTO> {
     return await this.rolesServices.update(id, data);
@@ -53,7 +54,27 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Delete role' })
   @Delete(':id')
-  async deleteRole(@Param('id') id: number): Promise<DeleteResult> {
+  async deleteRole(@Param('id') id: string): Promise<DeleteResult> {
     return await this.rolesServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add permission to role' })
+  @ApiResponse({ status: 200, type: RoleDTO })
+  @Patch(':roleId/add-permission/:permissionId')
+  async addRoleFromUser(
+    @Param('roleId') roleId: string,
+    @Param('permissionId') permissionId: string,
+  ): Promise<RoleDTO> {
+    return await this.rolesServices.addPermission(roleId, permissionId);
+  }
+
+  @ApiOperation({ summary: 'Delete permission from role' })
+  @ApiResponse({ status: 200, type: RoleDTO })
+  @Patch(':roleId/delete-permission/:permissionId')
+  async deleteRoleFromUser(
+    @Param('roleId') roleId: string,
+    @Param('permissionId') permissionId: string,
+  ): Promise<RoleDTO> {
+    return await this.rolesServices.deletePermission(roleId, permissionId);
   }
 }

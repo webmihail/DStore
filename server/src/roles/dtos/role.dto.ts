@@ -1,30 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEnum,
-  IsNumber,
+  IsArray,
   IsOptional,
   IsString,
-  Matches,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { RolesTypes } from '../constants';
-import { roleTypeMatchExpression } from '../utils/roleTypeMatchExpression';
+import { PermissionDTO } from 'src/permissions/dtos/permission.dto';
 
 export class RoleDTO extends GenericEntity {
-  @ApiProperty({ example: '1', description: 'unique idetificator' })
+  @ApiProperty({
+    example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
+    description: 'uuid idetificator',
+  })
   @IsOptional()
-  @IsNumber()
-  id: number;
+  @IsUUID()
+  id: string;
 
-  @ApiProperty({ name: 'type', enum: RolesTypes })
+  @ApiProperty({ example: 'Administrator', description: 'Role description' })
   @IsString()
-  @IsEnum(RolesTypes, { each: true })
-  @Matches(roleTypeMatchExpression(RolesTypes))
-  type: RolesTypes;
+  @MaxLength(255)
+  name: string;
 
   @ApiProperty({ example: 'Administrator', description: 'Role description' })
   @IsString()
   @MaxLength(255)
   description: string;
+
+  @ApiProperty({ example: [], description: 'Role permissions' })
+  @IsArray()
+  permissions: PermissionDTO[];
 }
