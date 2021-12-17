@@ -4,13 +4,14 @@ import * as helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as rateLimit from 'express-rate-limit';
+import settings from 'settings';
 
 async function bootstrap() {
   try {
-    const PORT = process.env.PORT || 5000;
+    const PORT = settings.server.port || 5000;
     const app = await NestFactory.create(AppModule);
     app.enableCors();
-    app.setGlobalPrefix('/api/v1');
+    app.setGlobalPrefix(settings.server.apiPrefix);
 
     //Helmet can help protect your app from some well-known (https://github.com/helmetjs/helmet#how-it-works)
     app.use(helmet());
@@ -23,7 +24,7 @@ async function bootstrap() {
       .build();
 
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('/api/docs', app, swaggerDocument);
+    SwaggerModule.setup(settings.server.swaggerPrefix, app, swaggerDocument);
 
     //To protect your applications from brute-force attacks
     app.use(
