@@ -38,7 +38,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
       roles: [role],
     });
 
-    const user = await userRepo.save(newUser);
+    await userRepo.save(newUser);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
