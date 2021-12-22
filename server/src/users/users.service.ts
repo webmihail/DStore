@@ -33,6 +33,8 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<UserDTO> {
     return await this.usersRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('roles.permissions', 'permissions')
       .where({ email })
       .addSelect('user.password')
       .getOne();

@@ -22,6 +22,9 @@ const requiredEnvVariables = [
   'SUPERADMIN_ROLE_DESCRIPTION',
   'SUPERADMIN_ROLE_PERMISSION_NAME',
   'SUPERADMIN_ROLE_PERMISSION_DESCRIPTION',
+
+  'JWT_SECRET',
+  'JWT_EXPIRATION_TIME',
 ];
 
 dotenv.config({
@@ -67,6 +70,10 @@ const settings = {
     roleDescription: process.env.SUPERADMIN_ROLE_DESCRIPTION,
     permissionName: process.env.SUPERADMIN_ROLE_PERMISSION_NAME,
     permissionDescription: process.env.SUPERADMIN_ROLE_PERMISSION_DESCRIPTION,
+  },
+  jwtProps: {
+    secret: process.env.JWT_SECRET,
+    expirationTime: process.env.JWT_EXPIRATION_TIME,
   },
 };
 
