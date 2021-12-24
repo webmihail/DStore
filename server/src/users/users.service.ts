@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolesService } from 'src/roles/roles.service';
 import { DeleteResult, Repository } from 'typeorm';
@@ -6,6 +10,7 @@ import { UserCreateDTO } from './dtos/user.create.dto';
 import { UserEditDTO } from './dtos/user.edit.dto';
 import { UserDTO } from './dtos/user.dto';
 import { User } from './entity/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -98,5 +103,32 @@ export class UsersService {
 
     delete editUser.password;
     return editUser;
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: string) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    return await this.update(userId, {
+      currentHashedRefreshToken,
+    });
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
+    const user = await this.getById(userId);
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (!isRefreshTokenMatching) {
+      throw new UnauthorizedException('User refresh token does not mutch');
+    }
+
+    return user;
+  }
+
+  async removeRefreshToken(userId: string) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
   }
 }

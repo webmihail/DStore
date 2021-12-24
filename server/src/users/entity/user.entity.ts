@@ -12,6 +12,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -48,6 +49,15 @@ export class User extends GenericEntity {
   @ManyToMany(() => Role)
   @JoinTable()
   roles: Role[];
+
+  @Column({
+    name: 'currentHashedRefreshToken',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  @Exclude()
+  public currentHashedRefreshToken?: string;
 
   @BeforeInsert()
   @BeforeUpdate()

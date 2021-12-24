@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthStrategy } from './strategies/jwt.auth.strategy';
+import { JwtRefreshTokenStrategy } from './strategies/jwt.refresh.token.strategy';
 import { LocalAuthenticationStrategy } from './strategies/local.authentication.strategy';
 
 @Module({
@@ -15,14 +16,19 @@ import { LocalAuthenticationStrategy } from './strategies/local.authentication.s
     PassportModule,
     ConfigModule,
     PassportModule.register({
-      defaultStrategy: 'jwt',
+      defaultStrategy: 'jwt-auth',
     }),
     JwtModule.register({
-      secret: settings.jwtProps.secret,
-      signOptions: { expiresIn: settings.jwtProps.expirationTime },
+      secret: settings.jwtProps.accessSecret,
+      signOptions: { expiresIn: settings.jwtProps.accessExpirationTime },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalAuthenticationStrategy, JwtAuthStrategy],
+  providers: [
+    AuthService,
+    LocalAuthenticationStrategy,
+    JwtAuthStrategy,
+    JwtRefreshTokenStrategy,
+  ],
 })
 export class AuthModule {}

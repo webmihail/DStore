@@ -10,11 +10,16 @@ import { Response } from 'express';
 import JwtAuthGuard from './guards/jwt.auth.guard';
 import PermissionGuard from './guards/permission.guard';
 import { Permissions } from 'src/permissions/constants';
+import { UsersService } from 'src/users/users.service';
+import JwtRefreshTokenGuard from './guards/jwt.refresh.token.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(public readonly authService: AuthService) {}
+  constructor(
+    public readonly authService: AuthService,
+    public readonly usersService: UsersService,
+  ) {}
 
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, type: LoginResponseDTO })
@@ -22,8 +27,35 @@ export class AuthController {
   @ApiBody({ type: LoginRequestDTO })
   @Post('login')
   async logIn(@User() user: UserDTO, @Res() response: Response): Promise<any> {
-    const cookie = this.authService.getCookieWithJwtToken(user.id);
-    response.setHeader('Set-Cookie', cookie);
+    const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
+      user.id,
+    );
+    const refreshTokenCookie = this.authService.getCookieWithJwtRefreshToken(
+      user.id,
+    );
+
+    const updatedUser = await this.usersService.setCurrentRefreshToken(
+      refreshTokenCookie.token,
+      user.id,
+    );
+    response.setHeader('Set-Cookie', [
+      accessTokenCookie,
+      refreshTokenCookie.cookie,
+    ]);
+
+    return response.send(updatedUser);
+  }
+
+  @ApiOperation({ summary: 'Refresh user token' })
+  @ApiResponse({ status: 200, type: LoginResponseDTO })
+  @UseGuards(JwtRefreshTokenGuard)
+  @Post('refresh')
+  refresh(@User() user: UserDTO, @Res() response: Response) {
+    const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
+      user.id,
+    );
+
+    response.setHeader('Set-Cookie', accessTokenCookie);
     return response.send(user);
   }
 
@@ -32,7 +64,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: 200 })
   @Post('logout')
-  async logOut(@Res() response: Response) {
+  async logOut(@User() user: UserDTO, @Res() response: Response) {
+    await this.usersService.removeRefreshToken(user.id);
     response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     return response.sendStatus(200);
   }

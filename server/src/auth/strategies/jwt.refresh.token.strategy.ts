@@ -7,19 +7,27 @@ import { TokenPayloadDTO } from '../dtos/token.payload.dto';
 import settings from 'settings';
 
 @Injectable()
-export class JwtAuthStrategy extends PassportStrategy(Strategy, 'jwt-auth') {
+export class JwtRefreshTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
   constructor(private readonly userService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          return request?.cookies?.Authentication;
+          return request?.cookies?.Refresh;
         },
       ]),
-      secretOrKey: settings.jwtProps.accessSecret,
+      secretOrKey: settings.jwtProps.refreshSecret,
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: TokenPayloadDTO) {
-    return this.userService.getById(payload.userId);
+  async validate(request: Request, payload: TokenPayloadDTO) {
+    const refreshToken = request.cookies?.Refresh;
+    return this.userService.getUserIfRefreshTokenMatches(
+      refreshToken,
+      payload.userId,
+    );
   }
 }

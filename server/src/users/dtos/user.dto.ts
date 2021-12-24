@@ -43,4 +43,8 @@ export class UserDTO extends GenericEntity {
   @ApiProperty({ example: [], description: 'User roles' })
   @IsArray()
   roles: RoleDTO[];
+
+  @IsString()
+  @IsOptional()
+  currentHashedRefreshToken?: string;
 }

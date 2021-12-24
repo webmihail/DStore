@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import settings from 'settings';
@@ -12,7 +11,6 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
   ) {}
 
   async getAuthenticatedUser(
@@ -42,15 +40,34 @@ export class AuthService {
     }
   }
 
-  getCookieWithJwtToken(userId: string) {
+  getCookieWithJwtAccessToken(userId: string) {
     const payload: TokenPayloadDTO = { userId };
-    const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      settings.jwtProps.expirationTime,
-    )}`;
+    const token = this.jwtService.sign(payload, {
+      secret: settings.jwtProps.accessSecret,
+      expiresIn: settings.jwtProps.accessExpirationTime,
+    });
+
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${settings.jwtProps.accessExpirationTime}`;
+  }
+
+  getCookieWithJwtRefreshToken(userId: string) {
+    const payload: TokenPayloadDTO = { userId };
+    const token = this.jwtService.sign(payload, {
+      secret: settings.jwtProps.refreshSecret,
+      expiresIn: settings.jwtProps.refreshExpirationTime,
+    });
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${settings.jwtProps.refreshExpirationTime}`;
+
+    return {
+      cookie,
+      token,
+    };
   }
 
   getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+    ];
   }
 }

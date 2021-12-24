@@ -15,8 +15,9 @@ export class LocalAuthenticationStrategy extends PassportStrategy(Strategy) {
 
   async validate(email: string, password: string): Promise<UserDTO | null> {
     const user = await this.authService.getAuthenticatedUser(email, password);
-    if (!user)
+    if (!user) {
       throw new UnauthorizedException('User login or password does not mutch');
+    }
 
     return user;
   }
