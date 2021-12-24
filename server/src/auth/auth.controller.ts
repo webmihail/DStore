@@ -26,7 +26,10 @@ export class AuthController {
   @ApiBody({ type: LoginRequestDTO })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async logIn(@User() user: UserDTO, @Res() response: Response): Promise<any> {
+  async logIn(
+    @User() user: UserDTO,
+    @Res() response: Response,
+  ): Promise<Response<UserDTO>> {
     const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
       user.id,
     );
