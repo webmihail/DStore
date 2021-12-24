@@ -107,9 +107,12 @@ export class UsersService {
 
   async setCurrentRefreshToken(refreshToken: string, userId: string) {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    return await this.update(userId, {
+    const updateUser = await this.update(userId, {
       currentHashedRefreshToken,
     });
+
+    delete updateUser.currentHashedRefreshToken;
+    return updateUser;
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
@@ -123,6 +126,7 @@ export class UsersService {
       throw new UnauthorizedException('User refresh token does not mutch');
     }
 
+    delete user.currentHashedRefreshToken;
     return user;
   }
 

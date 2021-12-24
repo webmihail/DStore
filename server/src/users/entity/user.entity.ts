@@ -12,7 +12,6 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -56,7 +55,6 @@ export class User extends GenericEntity {
     length: 255,
     nullable: true,
   })
-  @Exclude()
   public currentHashedRefreshToken?: string;
 
   @BeforeInsert()

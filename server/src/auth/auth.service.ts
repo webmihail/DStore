@@ -21,6 +21,7 @@ export class AuthService {
       const user = await this.usersService.getUserByEmail(email);
       await this.verifyPassword(password, user.password);
       delete user.password;
+
       return user;
     } catch (error) {
       throw new HttpException(

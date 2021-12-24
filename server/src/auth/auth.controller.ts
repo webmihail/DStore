@@ -23,8 +23,8 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, type: LoginResponseDTO })
-  @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginRequestDTO })
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async logIn(@User() user: UserDTO, @Res() response: Response): Promise<any> {
     const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
@@ -38,6 +38,7 @@ export class AuthController {
       refreshTokenCookie.token,
       user.id,
     );
+
     response.setHeader('Set-Cookie', [
       accessTokenCookie,
       refreshTokenCookie.cookie,
@@ -59,10 +60,10 @@ export class AuthController {
     return response.send(user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard(Permissions.SubscriptionFullManagement))
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(PermissionGuard(Permissions.SubscriptionFullManagement))
   @Post('logout')
   async logOut(@User() user: UserDTO, @Res() response: Response) {
     await this.usersService.removeRefreshToken(user.id);
