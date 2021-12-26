@@ -1,14 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import settings from 'settings';
+import { EmailService } from 'src/email/email.service';
 import { UserDTO } from 'src/users/dtos/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayloadDTO } from './dtos/token.payload.dto';
+import { VerificationTokenPayloadDTO } from './dtos/verification.token.payload';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly emailService: EmailService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -70,5 +78,57 @@ export class AuthService {
       'Authentication=; HttpOnly; Path=/; Max-Age=0',
       'Refresh=; HttpOnly; Path=/; Max-Age=0',
     ];
+  }
+
+  public sendEmailVerificationLink(email: string) {
+    const payload: VerificationTokenPayloadDTO = { email };
+    const token = this.jwtService.sign(payload, {
+      secret: settings.jwtProps.verificationSecret,
+      expiresIn: settings.jwtProps.verificationExpirationTime,
+    });
+
+    const url = `${settings.email.confirmationUrl}?token=${token}`;
+
+    const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+
+    return this.emailService.sendMail({
+      to: email,
+      subject: 'Email confirmation',
+      text,
+    });
+  }
+
+  public async decodeEmailConfirmationToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(token, {
+        secret: settings.jwtProps.verificationSecret,
+      });
+
+      if (typeof payload === 'object' && 'email' in payload) {
+        return payload.email;
+      }
+      throw new BadRequestException();
+    } catch (error) {
+      if (error?.name === 'TokenExpiredError') {
+        throw new BadRequestException('Email confirmation token expired');
+      }
+      throw new BadRequestException('Bad confirmation token');
+    }
+  }
+
+  public async confirmEmail(email: string) {
+    const user = await this.usersService.getUserByEmail(email);
+    if (user.isEmailConfirmed) {
+      throw new BadRequestException('Email already confirmed');
+    }
+    await this.usersService.markEmailAsConfirmed(email);
+  }
+
+  public async resendConfirmationLink(userId: string) {
+    const user = await this.usersService.getById(userId);
+    if (user.isEmailConfirmed) {
+      throw new BadRequestException('Email already confirmed');
+    }
+    await this.sendEmailVerificationLink(user.email);
   }
 }

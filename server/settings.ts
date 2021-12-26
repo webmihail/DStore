@@ -27,6 +27,13 @@ const requiredEnvVariables = [
   'JWT_ACCESS_EXPIRATION_TIME',
   'JWT_REFRESH_SECRET',
   'JWT_REFRESH_EXPIRATION_TIME',
+  'JWT_VERIFICATION_TOKEN_SECRET',
+  'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
+
+  'EMAIL_CONFIRMATION_URL',
+  'EMAIL_SERVICE',
+  'EMAIL_USER',
+  'EMAIL_PASSWORD',
 ];
 
 dotenv.config({
@@ -78,6 +85,15 @@ const settings = {
     accessExpirationTime: process.env.JWT_ACCESS_EXPIRATION_TIME,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     refreshExpirationTime: process.env.JWT_REFRESH_EXPIRATION_TIME,
+    verificationSecret: process.env.JWT_VERIFICATION_TOKEN_SECRET,
+    verificationExpirationTime:
+      process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
+  },
+  email: {
+    confirmationUrl: process.env.EMAIL_CONFIRMATION_URL,
+    service: process.env.EMAIL_SERVICE,
+    user: process.env.EMAIL_USER,
+    password: process.env.EMAIL_PASSWORD,
   },
 };
 

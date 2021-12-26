@@ -57,6 +57,9 @@ export class User extends GenericEntity {
   })
   public currentHashedRefreshToken?: string;
 
+  @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
+  public isEmailConfirmed: boolean;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<null> {

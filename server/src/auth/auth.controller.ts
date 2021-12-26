@@ -1,4 +1,4 @@
-import { Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { UserDTO } from 'src/users/dtos/user.dto';
@@ -12,6 +12,8 @@ import PermissionGuard from './guards/permission.guard';
 import { Permissions } from 'src/permissions/constants';
 import { UsersService } from 'src/users/users.service';
 import JwtRefreshTokenGuard from './guards/jwt.refresh.token.guard';
+import { ConfirmEmailDto } from './dtos/confirm.email.tdo';
+import { UserCreateDTO } from 'src/users/dtos/user.create.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -20,6 +22,14 @@ export class AuthController {
     public readonly authService: AuthService,
     public readonly usersService: UsersService,
   ) {}
+
+  @ApiOperation({ summary: 'Create new user' })
+  @ApiResponse({ status: 200, type: UserDTO })
+  @Post('registration')
+  async createUser(@Body() data: UserCreateDTO): Promise<UserDTO> {
+    await this.authService.sendEmailVerificationLink(data.email);
+    return await this.usersService.create(data);
+  }
 
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({ status: 200, type: LoginResponseDTO })
@@ -72,5 +82,23 @@ export class AuthController {
     await this.usersService.removeRefreshToken(user.id);
     response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     return response.sendStatus(200);
+  }
+
+  @ApiOperation({ summary: 'Confirm user email' })
+  @ApiResponse({ status: 200, type: UserDTO })
+  @Post('confirm')
+  async confirm(@Body() confirmationData: ConfirmEmailDto) {
+    const email = await this.authService.decodeEmailConfirmationToken(
+      confirmationData.token,
+    );
+    await this.authService.confirmEmail(email);
+  }
+
+  @ApiOperation({ summary: 'Resend confirmation link' })
+  @ApiResponse({ status: 200 })
+  @UseGuards(JwtAuthGuard)
+  @Post('resend-confirmation-link')
+  async resendConfirmationLink(@User() user: UserDTO) {
+    await this.authService.resendConfirmationLink(user.id);
   }
 }
