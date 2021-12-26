@@ -22,6 +22,18 @@ const requiredEnvVariables = [
   'SUPERADMIN_ROLE_DESCRIPTION',
   'SUPERADMIN_ROLE_PERMISSION_NAME',
   'SUPERADMIN_ROLE_PERMISSION_DESCRIPTION',
+
+  'JWT_ACCESS_SECRET',
+  'JWT_ACCESS_EXPIRATION_TIME',
+  'JWT_REFRESH_SECRET',
+  'JWT_REFRESH_EXPIRATION_TIME',
+  'JWT_VERIFICATION_TOKEN_SECRET',
+  'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
+
+  'EMAIL_CONFIRMATION_URL',
+  'EMAIL_SERVICE',
+  'EMAIL_USER',
+  'EMAIL_PASSWORD',
 ];
 
 dotenv.config({
@@ -67,6 +79,21 @@ const settings = {
     roleDescription: process.env.SUPERADMIN_ROLE_DESCRIPTION,
     permissionName: process.env.SUPERADMIN_ROLE_PERMISSION_NAME,
     permissionDescription: process.env.SUPERADMIN_ROLE_PERMISSION_DESCRIPTION,
+  },
+  jwtProps: {
+    accessSecret: process.env.JWT_ACCESS_SECRET,
+    accessExpirationTime: process.env.JWT_ACCESS_EXPIRATION_TIME,
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    refreshExpirationTime: process.env.JWT_REFRESH_EXPIRATION_TIME,
+    verificationSecret: process.env.JWT_VERIFICATION_TOKEN_SECRET,
+    verificationExpirationTime:
+      process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
+  },
+  email: {
+    confirmationUrl: process.env.EMAIL_CONFIRMATION_URL,
+    service: process.env.EMAIL_SERVICE,
+    user: process.env.EMAIL_USER,
+    password: process.env.EMAIL_PASSWORD,
   },
 };
 

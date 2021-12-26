@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { Role } from 'src/roles/entity/role.entity';
+import { hash } from 'bcrypt';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinTable,
@@ -45,4 +48,24 @@ export class User extends GenericEntity {
   @ManyToMany(() => Role)
   @JoinTable()
   roles: Role[];
+
+  @Column({
+    name: 'currentHashedRefreshToken',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  public currentHashedRefreshToken?: string;
+
+  @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
+  public isEmailConfirmed: boolean;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword(): Promise<null> {
+    if (!this.password) {
+      return;
+    }
+    this.password = await hash(this.password, 10);
+  }
 }

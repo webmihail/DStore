@@ -5,4 +5,4 @@ import * as typeOrmConfig from '../../ormconfig';
 @Module({
   imports: [TypeOrmModule.forRoot(typeOrmConfig as TypeOrmModuleOptions)],
 })
-export class DbConnect {}
+export class DbConnectModule {}

@@ -4,6 +4,7 @@ import * as helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as rateLimit from 'express-rate-limit';
+import * as cookieParser from 'cookie-parser';
 import settings from 'settings';
 
 async function bootstrap() {
@@ -12,6 +13,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
     app.setGlobalPrefix(settings.server.apiPrefix);
+    app.use(cookieParser());
 
     //Helmet can help protect your app from some well-known (https://github.com/helmetjs/helmet#how-it-works)
     app.use(helmet());

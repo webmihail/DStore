@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class UserCreateDTO {
   @ApiProperty({ example: 'Mihail', description: 'User first name' })
@@ -21,4 +27,8 @@ export class UserCreateDTO {
   @MinLength(8)
   @MaxLength(128)
   password: string;
+
+  @IsString()
+  @IsOptional()
+  currentHashedRefreshToken?: string;
 }

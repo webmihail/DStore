@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
@@ -43,4 +44,12 @@ export class UserDTO extends GenericEntity {
   @ApiProperty({ example: [], description: 'User roles' })
   @IsArray()
   roles: RoleDTO[];
+
+  @IsString()
+  @IsOptional()
+  currentHashedRefreshToken?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isEmailConfirmed?: boolean;
 }
