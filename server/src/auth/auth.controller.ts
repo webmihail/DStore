@@ -8,12 +8,11 @@ import { LoginResponseDTO } from './dtos/login.response.dto';
 import { LocalAuthGuard } from './guards/local.authentication.guard';
 import { Response } from 'express';
 import JwtAuthGuard from './guards/jwt.auth.guard';
-import PermissionGuard from './guards/permission.guard';
-import { Permissions } from 'src/permissions/constants';
 import { UsersService } from 'src/users/users.service';
 import JwtRefreshTokenGuard from './guards/jwt.refresh.token.guard';
 import { ConfirmEmailDto } from './dtos/confirm.email.tdo';
 import { UserCreateDTO } from 'src/users/dtos/user.create.dto';
+import { BanGuard } from 'src/bans/guards/ban.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -76,7 +75,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard(Permissions.SubscriptionFullManagement))
   @Post('logout')
   async logOut(@User() user: UserDTO, @Res() response: Response) {
     await this.usersService.removeRefreshToken(user.id);
@@ -96,6 +94,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Resend confirmation link' })
   @ApiResponse({ status: 200 })
+  @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Post('resend-confirmation-link')
   async resendConfirmationLink(@User() user: UserDTO) {

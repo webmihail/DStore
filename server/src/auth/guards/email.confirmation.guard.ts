@@ -12,7 +12,7 @@ export class EmailConfirmationGuard implements CanActivate {
     const request: RequestWithUserDTO = context.switchToHttp().getRequest();
 
     if (!request.user?.isEmailConfirmed) {
-      throw new UnauthorizedException('Confirm your email first');
+      throw new UnauthorizedException('Вам потрібно підтвердити email');
     }
 
     return true;
