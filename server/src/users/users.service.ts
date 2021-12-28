@@ -11,6 +11,7 @@ import { UserEditDTO } from './dtos/user.edit.dto';
 import { UserDTO } from './dtos/user.dto';
 import { User } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
+import { BansService } from 'src/bans/bans.service';
 
 @Injectable()
 export class UsersService {
@@ -18,19 +19,20 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly rolesService: RolesService,
+    private readonly bansService: BansService,
   ) {}
 
   async getAll(): Promise<UserDTO[]> {
     return await this.usersRepository.find({
-      relations: ['roles', 'roles.permissions'],
+      relations: ['roles', 'roles.permissions', 'ban'],
     });
   }
 
   async getById(id: string): Promise<UserDTO> {
     const user = await this.usersRepository.findOne(id, {
-      relations: ['roles', 'roles.permissions'],
+      relations: ['roles', 'roles.permissions', 'ban'],
     });
-    if (!user) throw new NotFoundException('user does not exists');
+    if (!user) throw new NotFoundException('Користувача не знайдено');
 
     return user;
   }
@@ -47,8 +49,7 @@ export class UsersService {
 
   async create(data: UserCreateDTO): Promise<UserDTO> {
     const userExist = await this.usersRepository.findOne({ email: data.email });
-    if (userExist)
-      throw new NotFoundException('User already registered with email');
+    if (userExist) throw new NotFoundException('Такий email вже існує');
 
     let role = await this.rolesService.getByValue('Persone');
 
@@ -123,7 +124,7 @@ export class UsersService {
     );
 
     if (!isRefreshTokenMatching) {
-      throw new UnauthorizedException('User refresh token does not mutch');
+      throw new UnauthorizedException('Токен оновлення не співпадає');
     }
 
     delete user.currentHashedRefreshToken;
@@ -143,5 +144,26 @@ export class UsersService {
         isEmailConfirmed: true,
       },
     );
+  }
+
+  async addBan(userId: string, banId: string): Promise<UserDTO> {
+    const user = await this.getById(userId);
+    const ban = await this.bansService.getById(banId);
+
+    user.ban = ban;
+
+    const editUser = await this.usersRepository.save(user);
+
+    delete editUser.password;
+    return editUser;
+  }
+
+  async deleteBan(userId: string): Promise<UserDTO> {
+    const user = await this.getById(userId);
+    user.ban = null;
+    const editUser = await this.usersRepository.save(user);
+
+    delete editUser.password;
+    return editUser;
   }
 }

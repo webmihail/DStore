@@ -3,12 +3,14 @@ import {
   IsArray,
   IsBoolean,
   IsEmail,
+  IsObject,
   IsOptional,
   IsString,
   IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { BanDTO } from 'src/bans/dtos/ban.dto';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { RoleDTO } from 'src/roles/dtos/role.dto';
 
@@ -44,6 +46,10 @@ export class UserDTO extends GenericEntity {
   @ApiProperty({ example: [], description: 'User roles' })
   @IsArray()
   roles: RoleDTO[];
+
+  @ApiProperty({ example: {}, description: 'User ban' })
+  @IsObject()
+  ban: BanDTO;
 
   @IsString()
   @IsOptional()

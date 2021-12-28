@@ -9,9 +9,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Ban } from 'src/bans/entity/ban.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -45,10 +47,6 @@ export class User extends GenericEntity {
   })
   password: string;
 
-  @ManyToMany(() => Role)
-  @JoinTable()
-  roles: Role[];
-
   @Column({
     name: 'currentHashedRefreshToken',
     type: 'varchar',
@@ -58,7 +56,14 @@ export class User extends GenericEntity {
   public currentHashedRefreshToken?: string;
 
   @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
-  public isEmailConfirmed: boolean;
+  public isEmailConfirmed?: boolean;
+
+  @ManyToMany(() => Role)
+  @JoinTable()
+  roles: Role[];
+
+  @ManyToOne(() => Ban, (ban: Ban) => ban.users)
+  ban: Ban;
 
   @BeforeInsert()
   @BeforeUpdate()

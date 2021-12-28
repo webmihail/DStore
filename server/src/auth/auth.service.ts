@@ -33,7 +33,7 @@ export class AuthService {
       return user;
     } catch (error) {
       throw new HttpException(
-        'Wrong credentials provided',
+        'Невірний логін або пароль',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -43,7 +43,7 @@ export class AuthService {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
       throw new HttpException(
-        'Wrong credentials provided',
+        'Невірний логін або пароль',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -89,11 +89,11 @@ export class AuthService {
 
     const url = `${settings.email.confirmationUrl}?token=${token}`;
 
-    const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+    const text = `Ласкаво просимо до нашого магазину. Для підтвердження вашого email перейдіть за цим посиланням: ${url}`;
 
     return this.emailService.sendMail({
       to: email,
-      subject: 'Email confirmation',
+      subject: 'Підтвердження email',
       text,
     });
   }
@@ -110,16 +110,18 @@ export class AuthService {
       throw new BadRequestException();
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
-        throw new BadRequestException('Email confirmation token expired');
+        throw new BadRequestException(
+          'Срок дії токену підтвердження email закінчився',
+        );
       }
-      throw new BadRequestException('Bad confirmation token');
+      throw new BadRequestException('Невірний токен підтвердження');
     }
   }
 
   public async confirmEmail(email: string) {
     const user = await this.usersService.getUserByEmail(email);
     if (user.isEmailConfirmed) {
-      throw new BadRequestException('Email already confirmed');
+      throw new BadRequestException('Ваш email успішно підтвердженно');
     }
     await this.usersService.markEmailAsConfirmed(email);
   }
@@ -127,7 +129,7 @@ export class AuthService {
   public async resendConfirmationLink(userId: string) {
     const user = await this.usersService.getById(userId);
     if (user.isEmailConfirmed) {
-      throw new BadRequestException('Email already confirmed');
+      throw new BadRequestException('Ваш email успішно підтвердженно');
     }
     await this.sendEmailVerificationLink(user.email);
   }
