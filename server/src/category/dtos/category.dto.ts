@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
-import { SubcategoryDTO } from 'src/subcategory/dtos/subcategory.dto';
+import { Category } from '../entity/category.entity';
 
 export class CategoryDTO {
   @ApiProperty({
@@ -26,7 +26,11 @@ export class CategoryDTO {
   @IsOptional()
   iconUrl?: string;
 
-  @ApiProperty({ example: [], description: 'Category subcategories' })
+  @ApiProperty({
+    example: [],
+    description: 'subcategories',
+  })
   @IsArray()
-  subcategories: SubcategoryDTO[];
+  @IsOptional()
+  children?: Category[];
 }

@@ -19,7 +19,6 @@ import { CategoryService } from './category.service';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryDTO } from './dtos/category.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
-import { Category } from './entity/category.entity';
 
 @ApiTags('Categories')
 @Controller('category')
@@ -27,21 +26,21 @@ export class CategoryController {
   constructor(private readonly categoryServices: CategoryService) {}
 
   @ApiOperation({ summary: 'Get all categories' })
-  @ApiResponse({ status: 200, type: [Category] })
+  @ApiResponse({ status: 200, type: [CategoryDTO] })
   @Get()
   async getAllCategories(): Promise<CategoryDTO[]> {
     return await this.categoryServices.getAll();
   }
 
   @ApiOperation({ summary: 'Get category by id' })
-  @ApiResponse({ status: 200, type: Category })
+  @ApiResponse({ status: 200, type: CategoryDTO })
   @Get(':id')
   async getCategory(@Param('id') id: string): Promise<CategoryDTO> {
     return await this.categoryServices.getById(id);
   }
 
   @ApiOperation({ summary: 'Create new category' })
-  @ApiResponse({ status: 200, type: Category })
+  @ApiResponse({ status: 200, type: CategoryDTO })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -55,8 +54,26 @@ export class CategoryController {
     return await this.categoryServices.create(data);
   }
 
+  @ApiOperation({ summary: 'Add subcategory to category' })
+  @ApiResponse({ status: 200, type: CategoryDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':categoryId/add-subcategory')
+  async addSubcategoryToCategory(
+    @Param('categoryId') categoryId: string,
+    @Body() data: CategoryCreateDTO,
+  ): Promise<CategoryDTO> {
+    return await this.categoryServices.createSubcategory(categoryId, data);
+  }
+
   @ApiOperation({ summary: 'Update category' })
-  @ApiResponse({ status: 200, type: Category })
+  @ApiResponse({ status: 200, type: CategoryDTO })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -85,47 +102,5 @@ export class CategoryController {
   @Delete(':id')
   async deleteCategory(@Param('id') id: string): Promise<DeleteResult> {
     return await this.categoryServices.delete(id);
-  }
-
-  @ApiOperation({ summary: 'Add subcategory to category' })
-  @ApiResponse({ status: 200, type: CategoryDTO })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/add-subcategory/:subcategoryId')
-  async addSubcategoryToCategory(
-    @Param('categoryId') categoryId: string,
-    @Param('subcategoryId') subcategoryId: string,
-  ): Promise<CategoryDTO> {
-    return await this.categoryServices.addSubcategory(
-      categoryId,
-      subcategoryId,
-    );
-  }
-
-  @ApiOperation({ summary: 'Delete subcategory from category' })
-  @ApiResponse({ status: 200, type: CategoryDTO })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/delete-subcategory/:subcategoryId')
-  async deleteSubcategoryFromCategory(
-    @Param('categoryId') categoryId: string,
-    @Param('subcategoryId') subcategoryId: string,
-  ): Promise<CategoryDTO> {
-    return await this.categoryServices.deleteSubcategory(
-      categoryId,
-      subcategoryId,
-    );
   }
 }
