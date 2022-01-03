@@ -14,11 +14,15 @@ export class CategoryService {
   ) {}
 
   async getAll(): Promise<CategoryDTO[]> {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.find({
+      relations: ['subcategories'],
+    });
   }
 
   async getById(id: string): Promise<CategoryDTO> {
-    return await this.categoryRepository.findOne(id);
+    return await this.categoryRepository.findOne(id, {
+      relations: ['subcategories'],
+    });
   }
 
   async create(data: CategoryCreateDTO): Promise<CategoryDTO> {
