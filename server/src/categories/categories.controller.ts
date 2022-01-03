@@ -15,15 +15,15 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
-import { CategoryService } from './category.service';
+import { CategoriesService } from './categories.service';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryDTO } from './dtos/category.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
 
 @ApiTags('Categories')
 @Controller('category')
-export class CategoryController {
-  constructor(private readonly categoryServices: CategoryService) {}
+export class CategoriesController {
+  constructor(private readonly categoryServices: CategoriesService) {}
 
   @ApiOperation({ summary: 'Get all categories' })
   @ApiResponse({ status: 200, type: [CategoryDTO] })

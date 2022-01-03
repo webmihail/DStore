@@ -7,7 +7,7 @@ import { CategoryEditDTO } from './dtos/category.edit.dto';
 import { Category } from './entity/category.entity';
 
 @Injectable()
-export class CategoryService {
+export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryTreeRepository: TreeRepository<Category> = getManager().getTreeRepository(

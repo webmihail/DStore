@@ -10,7 +10,7 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity('category')
+@Entity('categories')
 @Unique(['id'])
 @Tree('materialized-path')
 export class Category extends GenericEntity {
