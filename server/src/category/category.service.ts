@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SubcategoryService } from 'src/subcategory/subcategory.service';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryDTO } from './dtos/category.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
@@ -11,68 +10,52 @@ import { Category } from './entity/category.entity';
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
-    private readonly subcategoryService: SubcategoryService,
+    private readonly categoryTreeRepository: TreeRepository<Category> = getManager().getTreeRepository(
+      Category,
+    ),
   ) {}
 
   async getAll(): Promise<CategoryDTO[]> {
-    return await this.categoryRepository.find({
-      relations: ['subcategories'],
-    });
+    return await this.categoryTreeRepository.findTrees({ depth: 2 });
   }
 
-  async getById(id: string): Promise<CategoryDTO> {
-    return await this.categoryRepository.findOne(id, {
-      relations: ['subcategories'],
-    });
+  async getById(id: string): Promise<Category> {
+    return await this.categoryTreeRepository.findOne(id);
   }
 
   async create(data: CategoryCreateDTO): Promise<CategoryDTO> {
-    const newCategory = await this.categoryRepository.create(data);
-    return await this.categoryRepository.save(newCategory);
+    const category = new Category();
+    category.name = data.name;
+    category.iconUrl = data.iconUrl;
+    return await this.categoryTreeRepository.save(category);
+  }
+
+  async createSubcategory(
+    categoryId: string,
+    data: CategoryCreateDTO,
+  ): Promise<Category> {
+    const newSubcategory = new Category();
+    const category = await this.getById(categoryId);
+    newSubcategory.name = data.name;
+    newSubcategory.iconUrl = data.iconUrl;
+    newSubcategory.parent = category;
+
+    return await this.categoryTreeRepository.save(newSubcategory);
   }
 
   async update(id: string, data: CategoryEditDTO): Promise<CategoryDTO> {
     const category = await this.getById(id);
     const editCategory = Object.assign(category, data);
-    return await this.categoryRepository.save(editCategory);
+    return await this.categoryTreeRepository.save(editCategory);
   }
 
   async delete(id: string): Promise<DeleteResult> {
-    return await this.categoryRepository.delete(id);
-  }
-
-  async addSubcategory(
-    categoryId: string,
-    subcategoryId: string,
-  ): Promise<CategoryDTO> {
-    const category = await this.getById(categoryId);
-    const equalSubcategories = category.subcategories.filter(
-      (subcategory) => subcategory.id === subcategoryId,
-    );
-
-    if (equalSubcategories.length === 0) {
-      const subcategory = await this.subcategoryService.getById(subcategoryId);
-      category.subcategories.push(subcategory);
+    try {
+      return await this.categoryTreeRepository.delete(id);
+    } catch (error) {
+      throw new BadRequestException(
+        'Ви не можете видалити категорію! Спочатку треба видалити усі підкатегорії з цієї категорії',
+      );
     }
-
-    const editCategory = await this.categoryRepository.save(category);
-
-    return editCategory;
-  }
-
-  async deleteSubcategory(
-    categoryId: string,
-    subcategoryId: string,
-  ): Promise<CategoryDTO> {
-    const category = await this.getById(categoryId);
-    const editSubcategory = category.subcategories.filter(
-      (subcategory) => subcategory.id !== subcategoryId,
-    );
-
-    category.subcategories = editSubcategory;
-    const editCategory = await this.categoryRepository.save(category);
-
-    return editCategory;
   }
 }

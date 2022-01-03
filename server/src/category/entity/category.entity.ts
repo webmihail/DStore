@@ -1,16 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { Subcategory } from 'src/subcategory/entity/subcategory.entity';
 import {
   Column,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
   Unique,
 } from 'typeorm';
 
 @Entity('category')
 @Unique(['id'])
+@Tree('materialized-path')
 export class Category extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
@@ -42,9 +44,9 @@ export class Category extends GenericEntity {
   })
   iconUrl?: string;
 
-  @OneToMany(
-    () => Subcategory,
-    (subcategory: Subcategory) => subcategory.category,
-  )
-  subcategories: Subcategory[];
+  @TreeChildren()
+  children: Category[];
+
+  @TreeParent()
+  parent: Category;
 }
