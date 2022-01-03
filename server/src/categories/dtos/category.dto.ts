@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
-import { Category } from '../entity/category.entity';
 
 export class CategoryDTO {
   @ApiProperty({
@@ -32,5 +31,5 @@ export class CategoryDTO {
   })
   @IsArray()
   @IsOptional()
-  children?: Category[];
+  children?: CategoryDTO[];
 }

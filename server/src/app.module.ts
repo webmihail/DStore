@@ -7,7 +7,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { BansModule } from './bans/bans.module';
-import { CategoryModule } from './category/category.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { CategoryModule } from './category/category.module';
     AuthModule,
     EmailModule,
     BansModule,
-    CategoryModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {

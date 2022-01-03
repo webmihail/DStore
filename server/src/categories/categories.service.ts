@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
@@ -7,7 +7,7 @@ import { CategoryEditDTO } from './dtos/category.edit.dto';
 import { Category } from './entity/category.entity';
 
 @Injectable()
-export class CategoryService {
+export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryTreeRepository: TreeRepository<Category> = getManager().getTreeRepository(
@@ -50,12 +50,6 @@ export class CategoryService {
   }
 
   async delete(id: string): Promise<DeleteResult> {
-    try {
-      return await this.categoryTreeRepository.delete(id);
-    } catch (error) {
-      throw new BadRequestException(
-        'Ви не можете видалити категорію! Спочатку треба видалити усі підкатегорії з цієї категорії',
-      );
-    }
+    return await this.categoryTreeRepository.delete(id);
   }
 }

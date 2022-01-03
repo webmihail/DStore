@@ -10,7 +10,7 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity('category')
+@Entity('categories')
 @Unique(['id'])
 @Tree('materialized-path')
 export class Category extends GenericEntity {
@@ -44,9 +44,9 @@ export class Category extends GenericEntity {
   })
   iconUrl?: string;
 
-  @TreeChildren()
+  @TreeChildren({ cascade: ['soft-remove', 'remove', 'recover'] })
   children: Category[];
 
-  @TreeParent()
+  @TreeParent({ onDelete: 'CASCADE' })
   parent: Category;
 }
