@@ -21,7 +21,7 @@ import { CategoryDTO } from './dtos/category.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
 
 @ApiTags('Categories')
-@Controller('category')
+@Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoryServices: CategoriesService) {}
 
