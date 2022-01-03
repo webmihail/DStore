@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
-import { SubcategoryDTO } from 'src/subcategory/dtos/subcategory.dto';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class CategoryDTO {
+export class SubcategoryDTO {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -25,8 +24,4 @@ export class CategoryDTO {
   @IsString()
   @IsOptional()
   iconUrl?: string;
-
-  @ApiProperty({ example: [], description: 'Category subcategories' })
-  @IsArray()
-  subcategories: SubcategoryDTO[];
 }

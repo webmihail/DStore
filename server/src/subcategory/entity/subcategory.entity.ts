@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from 'src/category/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { Subcategory } from 'src/subcategory/entity/subcategory.entity';
 import {
   Column,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 
-@Entity('category')
+@Entity('subcategory')
 @Unique(['id'])
-export class Category extends GenericEntity {
+export class Subcategory extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -20,8 +20,8 @@ export class Category extends GenericEntity {
   id: string;
 
   @ApiProperty({
-    example: 'Man clothes',
-    description: 'category name',
+    example: 'T-shirt',
+    description: 'subcategory name',
   })
   @Column({
     name: 'name',
@@ -32,7 +32,7 @@ export class Category extends GenericEntity {
 
   @ApiProperty({
     example: 'https://www.fsdfdsf.fdfs',
-    description: 'category icon url',
+    description: 'subcategory icon url',
   })
   @Column({
     name: 'iconUrl',
@@ -42,9 +42,6 @@ export class Category extends GenericEntity {
   })
   iconUrl?: string;
 
-  @OneToMany(
-    () => Subcategory,
-    (subcategory: Subcategory) => subcategory.category,
-  )
-  subcategories: Subcategory[];
+  @ManyToOne(() => Category, (category: Category) => category.subcategories)
+  category: Category;
 }

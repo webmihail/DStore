@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -84,5 +85,47 @@ export class CategoryController {
   @Delete(':id')
   async deleteCategory(@Param('id') id: string): Promise<DeleteResult> {
     return await this.categoryServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add subcategory to category' })
+  @ApiResponse({ status: 200, type: CategoryDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':categoryId/add-subcategory/:subcategoryId')
+  async addSubcategoryToCategory(
+    @Param('categoryId') categoryId: string,
+    @Param('subcategoryId') subcategoryId: string,
+  ): Promise<CategoryDTO> {
+    return await this.categoryServices.addSubcategory(
+      categoryId,
+      subcategoryId,
+    );
+  }
+
+  @ApiOperation({ summary: 'Delete subcategory from category' })
+  @ApiResponse({ status: 200, type: CategoryDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':categoryId/delete-subcategory/:subcategoryId')
+  async deleteSubcategoryFromCategory(
+    @Param('categoryId') categoryId: string,
+    @Param('subcategoryId') subcategoryId: string,
+  ): Promise<CategoryDTO> {
+    return await this.categoryServices.deleteSubcategory(
+      categoryId,
+      subcategoryId,
+    );
   }
 }

@@ -114,7 +114,7 @@ export class RolesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':roleId/add-permission/:permissionId')
-  async addRoleFromUser(
+  async addRoleToUser(
     @Param('roleId') roleId: string,
     @Param('permissionId') permissionId: string,
   ): Promise<RoleDTO> {

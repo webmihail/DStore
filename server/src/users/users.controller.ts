@@ -107,7 +107,7 @@ export class UsersController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':userId/add-ban/:banId')
-  async addBanFromUser(
+  async addBanToUser(
     @Param('userId') userId: string,
     @Param('banId') banId: string,
   ): Promise<UserDTO> {
