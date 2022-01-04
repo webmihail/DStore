@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { ProductDTO } from 'src/products/dtos/product.dto';
+import { Product } from 'src/products/entity/product.entity';
 import {
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
@@ -49,4 +52,9 @@ export class Category extends GenericEntity {
 
   @TreeParent({ onDelete: 'CASCADE' })
   parent: Category;
+
+  @OneToMany(() => Product, (product: Product) => product.category, {
+    cascade: true,
+  })
+  products: ProductDTO[];
 }
