@@ -18,16 +18,35 @@ export class CategoriesService {
   ) {}
 
   async getAll(): Promise<CategoryDTO[]> {
-    return await this.categoryTreeRepository.findTrees({
+    const categoriesList = await this.categoryTreeRepository.findTrees({
       depth: 2,
       relations: ['products'],
     });
+
+    const responseWithDeletions = categoriesList.map((category) => {
+      if (category.children.length !== 0) delete category.products;
+      category.children.map((child) => {
+        if (child.children.length === 0) delete child.children;
+        return child;
+      });
+      return category;
+    });
+
+    return responseWithDeletions;
   }
 
   async getById(id: string): Promise<Category> {
-    return await this.categoryTreeRepository.findOne(id, {
-      relations: ['products'],
+    const category = await this.categoryTreeRepository.findOne(id, {
+      relations: ['children', 'products'],
     });
+
+    if (category.children.length !== 0 && category.products.length === 0) {
+      delete category.products;
+    }
+
+    if (category.children.length === 0) delete category.children;
+
+    return category;
   }
 
   async create(data: CategoryCreateDTO): Promise<CategoryDTO> {
