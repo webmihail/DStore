@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProductsService } from 'src/products/products.service';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryDTO } from './dtos/category.dto';
@@ -13,14 +14,39 @@ export class CategoriesService {
     private readonly categoryTreeRepository: TreeRepository<Category> = getManager().getTreeRepository(
       Category,
     ),
+    private readonly productsService: ProductsService,
   ) {}
 
   async getAll(): Promise<CategoryDTO[]> {
-    return await this.categoryTreeRepository.findTrees({ depth: 2 });
+    const categoriesList = await this.categoryTreeRepository.findTrees({
+      depth: 2,
+      relations: ['products'],
+    });
+
+    const responseWithDeletions = categoriesList.map((category) => {
+      if (category.children.length !== 0) delete category.products;
+      category.children.map((child) => {
+        if (child.children.length === 0) delete child.children;
+        return child;
+      });
+      return category;
+    });
+
+    return responseWithDeletions;
   }
 
   async getById(id: string): Promise<Category> {
-    return await this.categoryTreeRepository.findOne(id);
+    const category = await this.categoryTreeRepository.findOne(id, {
+      relations: ['children', 'products'],
+    });
+
+    if (category.children.length !== 0 && category.products.length === 0) {
+      delete category.products;
+    }
+
+    if (category.children.length === 0) delete category.children;
+
+    return category;
   }
 
   async create(data: CategoryCreateDTO): Promise<CategoryDTO> {
@@ -51,5 +77,40 @@ export class CategoriesService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.categoryTreeRepository.delete(id);
+  }
+
+  async addProduct(
+    categoryId: string,
+    productId: string,
+  ): Promise<CategoryDTO> {
+    const category = await this.getById(categoryId);
+    const equalProduct = category.products.filter(
+      (product) => product.id === productId,
+    );
+
+    if (equalProduct.length === 0) {
+      const product = await this.productsService.getById(productId);
+      category.products.push(product);
+    }
+
+    const editCategory = await this.categoryTreeRepository.save(category);
+
+    return editCategory;
+  }
+
+  async deleteProduct(
+    categoryId: string,
+    productId: string,
+  ): Promise<CategoryDTO> {
+    const category = await this.getById(categoryId);
+    const editProducts = category.products.filter(
+      (product) => product.id !== productId,
+    );
+
+    category.products = editProducts;
+
+    const editCategory = await this.categoryTreeRepository.save(category);
+
+    return editCategory;
   }
 }

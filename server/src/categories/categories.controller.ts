@@ -103,4 +103,40 @@ export class CategoriesController {
   async deleteCategory(@Param('id') id: string): Promise<DeleteResult> {
     return await this.categoryServices.delete(id);
   }
+
+  @ApiOperation({ summary: 'Add product to category' })
+  @ApiResponse({ status: 200, type: CategoryDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':categoryId/add-product/:productId')
+  async addProductToCategory(
+    @Param('categoryId') categoryId: string,
+    @Param('productId') productId: string,
+  ): Promise<CategoryDTO> {
+    return await this.categoryServices.addProduct(categoryId, productId);
+  }
+
+  @ApiOperation({ summary: 'Delete product from category' })
+  @ApiResponse({ status: 200, type: CategoryDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':categoryId/delete-product/:productId')
+  async deleteProductFromCategory(
+    @Param('categoryId') categoryId: string,
+    @Param('productId') productId: string,
+  ): Promise<CategoryDTO> {
+    return await this.categoryServices.deleteProduct(categoryId, productId);
+  }
 }

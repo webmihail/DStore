@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ProductDTO } from 'src/products/dtos/product.dto';
 
 export class CategoryDTO {
   @ApiProperty({
@@ -32,4 +33,12 @@ export class CategoryDTO {
   @IsArray()
   @IsOptional()
   children?: CategoryDTO[];
+
+  @ApiProperty({
+    example: [],
+    description: 'products',
+  })
+  @IsArray()
+  @IsOptional()
+  products?: ProductDTO[];
 }
