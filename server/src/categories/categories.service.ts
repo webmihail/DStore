@@ -101,7 +101,6 @@ export class CategoriesService {
   ): Promise<CategoryDTO> {
     const category = await this.getById(id);
     const newProductType = await this.productTypesService.create(data);
-    console.log(category);
 
     const equalProductType = category.productTypes.filter(
       (productType) => productType.name === newProductType.name,

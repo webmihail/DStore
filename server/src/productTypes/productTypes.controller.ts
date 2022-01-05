@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +13,6 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
-import { ProductTypeCreateDTO } from './dtos/productType.create.dto';
 import { ProductTypeDTO } from './dtos/productType.dto';
 import { ProductTypeEditDTO } from './dtos/productType.edit.dto';
 import { ProductType } from './entity/productType.entity';
@@ -70,23 +68,6 @@ export class ProductTypesController {
   @Get(':id')
   async getProductType(@Param('id') id: string): Promise<ProductTypeDTO> {
     return await this.productTypesServices.getById(id);
-  }
-
-  @ApiOperation({ summary: 'Create product type' })
-  @ApiResponse({ status: 200, type: ProductType })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  async createProductType(
-    @Body() data: ProductTypeCreateDTO,
-  ): Promise<ProductTypeDTO> {
-    return await this.productTypesServices.create(data);
   }
 
   @ApiOperation({ summary: 'Update product type' })
