@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProductCreateDTO } from 'src/products/dtos/product.create.dto';
 import { ProductsService } from 'src/products/products.service';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
@@ -67,6 +68,26 @@ export class CategoriesService {
     newSubcategory.parent = category;
 
     return await this.categoryTreeRepository.save(newSubcategory);
+  }
+
+  async createProductToCategory(
+    id: string,
+    data: ProductCreateDTO,
+  ): Promise<CategoryDTO> {
+    const category = await this.getById(id);
+    const newProduct = await this.productsService.create(data);
+
+    const equalProduct = category.products.filter(
+      (product) => product.id === newProduct.id,
+    );
+
+    if (equalProduct.length === 0) {
+      category.products.push(newProduct);
+    }
+
+    const editCategory = await this.categoryTreeRepository.save(category);
+
+    return editCategory;
   }
 
   async update(id: string, data: CategoryEditDTO): Promise<CategoryDTO> {

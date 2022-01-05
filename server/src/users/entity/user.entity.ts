@@ -26,11 +26,11 @@ export class User extends GenericEntity {
   id: string;
 
   @ApiProperty({ example: 'Mihail', description: 'User first name' })
-  @Column({ name: 'first_name', type: 'varchar', length: 255 })
+  @Column({ name: 'firstName', type: 'varchar', length: 255 })
   firstName: string;
 
   @ApiProperty({ example: 'Ivanov', description: 'User last name' })
-  @Column({ name: 'last_name', type: 'varchar', length: 255 })
+  @Column({ name: 'lastName', type: 'varchar', length: 255 })
   lastName: string;
 
   @ApiProperty({ example: 'ivanov@gmail.com', description: 'user email' })

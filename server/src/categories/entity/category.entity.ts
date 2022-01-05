@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ProductDTO } from 'src/products/dtos/product.dto';
 import { Product } from 'src/products/entity/product.entity';
+import { ProductTypeDTO } from 'src/productTypes/dtos/productType.dto';
+import { ProductType } from 'src/productTypes/entity/productType.entity';
 import {
   Column,
   Entity,
@@ -57,4 +59,13 @@ export class Category extends GenericEntity {
     cascade: true,
   })
   products: ProductDTO[];
+
+  @OneToMany(
+    () => ProductType,
+    (productType: ProductType) => productType.category,
+    {
+      cascade: true,
+    },
+  )
+  productTypes: ProductTypeDTO[];
 }
