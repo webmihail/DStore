@@ -82,12 +82,11 @@ export class ProductTypesController {
   )
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
-  @Post('create-by-category/:categoryId')
+  @Post()
   async createProductType(
-    @Param('categoryId') categoryId: string,
     @Body() data: ProductTypeCreateDTO,
   ): Promise<ProductTypeDTO> {
-    return await this.productTypesServices.create(categoryId, data);
+    return await this.productTypesServices.create(data);
   }
 
   @ApiOperation({ summary: 'Update product type' })
