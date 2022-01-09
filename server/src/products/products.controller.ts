@@ -4,7 +4,7 @@ import {
   Delete,
   Get,
   Param,
-  Post,
+  Patch,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +14,6 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
-import { ProductCreateDTO } from './dtos/product.create.dto';
 import { ProductDTO } from './dtos/product.dto';
 import { ProductEditDTO } from './dtos/product.edit.dto';
 import { Product } from './entity/product.entity';
@@ -37,21 +36,6 @@ export class ProductsController {
   @Get(':id')
   async getProduct(@Param('id') id: string): Promise<ProductDTO> {
     return await this.productsServices.getById(id);
-  }
-
-  @ApiOperation({ summary: 'Create new product' })
-  @ApiResponse({ status: 200, type: Product })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Post()
-  async createProduct(@Body() data: ProductCreateDTO): Promise<ProductDTO> {
-    return await this.productsServices.create(data);
   }
 
   @ApiOperation({ summary: 'Update product' })
@@ -84,5 +68,40 @@ export class ProductsController {
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add product type to product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/add-product-type/:productTypeId')
+  async addProductTypeToProduct(
+    @Param('productId') productId: string,
+    @Param('productTypeId') productTypeId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.addProductType(productId, productTypeId);
+  }
+
+  @ApiOperation({ summary: 'Delete product type from product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/delete-product-type')
+  async deleteProductFromCategory(
+    @Param('productId') productId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.deleteProductType(productId);
   }
 }
