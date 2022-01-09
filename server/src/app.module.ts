@@ -10,6 +10,7 @@ import { BansModule } from './bans/bans.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { ProductTypesModule } from './productTypes/productTypes.module';
+import { BrandsModule } from './brands/brands.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProductTypesModule } from './productTypes/productTypes.module';
     CategoriesModule,
     ProductsModule,
     ProductTypesModule,
+    BrandsModule,
   ],
 })
 export class AppModule {

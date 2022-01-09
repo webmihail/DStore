@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BrandDTO } from 'src/brands/dtos/brand.dto';
+import { Brand } from 'src/brands/entity/brand.entity';
 import { CategoryDTO } from 'src/categories/dtos/category.dto';
 import { Category } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
@@ -43,4 +45,9 @@ export class Product extends GenericEntity {
     },
   )
   productType: ProductTypeDTO;
+
+  @ManyToOne(() => Brand, (brand: Brand) => brand.products, {
+    onDelete: 'CASCADE',
+  })
+  brand: BrandDTO;
 }
