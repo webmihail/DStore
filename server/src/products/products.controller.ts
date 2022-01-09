@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -67,5 +68,40 @@ export class ProductsController {
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add product type to product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/add-product-type/:productTypeId')
+  async addProductTypeToProduct(
+    @Param('productId') productId: string,
+    @Param('productTypeId') productTypeId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.addProductType(productId, productTypeId);
+  }
+
+  @ApiOperation({ summary: 'Delete product type from product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/delete-product-type')
+  async deleteProductFromCategory(
+    @Param('productId') productId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.deleteProductType(productId);
   }
 }
