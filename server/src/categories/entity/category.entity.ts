@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { ProductDTO } from 'src/products/dtos/product.dto';
-import { Product } from 'src/products/entity/product.entity';
-import { ProductTypeDTO } from 'src/productTypes/dtos/productType.dto';
-import { ProductType } from 'src/productTypes/entity/productType.entity';
+import { ProductEntity } from 'src/products/entity/product.entity';
+import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import {
   Column,
   Entity,
@@ -18,7 +16,7 @@ import {
 @Entity('categories')
 @Unique(['id'])
 @Tree('materialized-path')
-export class Category extends GenericEntity {
+export class CategoryEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -50,22 +48,26 @@ export class Category extends GenericEntity {
   iconUrl?: string;
 
   @TreeChildren({ cascade: ['soft-remove', 'remove', 'recover'] })
-  children: Category[];
+  children: CategoryEntity[];
 
   @TreeParent({ onDelete: 'CASCADE' })
-  parent: Category;
-
-  @OneToMany(() => Product, (product: Product) => product.category, {
-    cascade: true,
-  })
-  products: ProductDTO[];
+  parent: CategoryEntity;
 
   @OneToMany(
-    () => ProductType,
-    (productType: ProductType) => productType.category,
+    () => ProductEntity,
+    (product: ProductEntity) => product.category,
     {
       cascade: true,
     },
   )
-  productTypes: ProductTypeDTO[];
+  products: ProductEntity[];
+
+  @OneToMany(
+    () => ProductTypeEntity,
+    (productType: ProductTypeEntity) => productType.category,
+    {
+      cascade: true,
+    },
+  )
+  productTypes: ProductTypeEntity[];
 }

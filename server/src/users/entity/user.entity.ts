@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { Role } from 'src/roles/entity/role.entity';
+import { RoleEntity } from 'src/roles/entity/role.entity';
 import { hash } from 'bcrypt';
 import {
   BeforeInsert,
@@ -13,11 +13,11 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Ban } from 'src/bans/entity/ban.entity';
+import { BanEntity } from 'src/bans/entity/ban.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
-export class User extends GenericEntity {
+export class UserEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -58,12 +58,12 @@ export class User extends GenericEntity {
   @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
   public isEmailConfirmed?: boolean;
 
-  @ManyToMany(() => Role)
+  @ManyToMany(() => RoleEntity)
   @JoinTable()
-  roles: Role[];
+  roles: RoleEntity[];
 
-  @ManyToOne(() => Ban, (ban: Ban) => ban.users)
-  ban: Ban;
+  @ManyToOne(() => BanEntity, (ban: BanEntity) => ban.users)
+  ban: BanEntity;
 
   @BeforeInsert()
   @BeforeUpdate()

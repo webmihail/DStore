@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { ProductDTO } from 'src/products/dtos/product.dto';
-import { Product } from 'src/products/entity/product.entity';
+import { ProductEntity } from 'src/products/entity/product.entity';
 import {
   Column,
   Entity,
@@ -12,7 +11,7 @@ import {
 
 @Entity({ name: 'brands' })
 @Unique(['id'])
-export class Brand extends GenericEntity {
+export class BrandEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -34,8 +33,8 @@ export class Brand extends GenericEntity {
   @Column({ name: 'country', type: 'varchar', length: 255 })
   country: string;
 
-  @OneToMany(() => Product, (product: Product) => product.brand, {
+  @OneToMany(() => ProductEntity, (product: ProductEntity) => product.brand, {
     cascade: true,
   })
-  products: ProductDTO[];
+  products: ProductEntity[];
 }

@@ -8,27 +8,26 @@ import { RolesService } from 'src/roles/roles.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { UserCreateDTO } from './dtos/user.create.dto';
 import { UserEditDTO } from './dtos/user.edit.dto';
-import { UserDTO } from './dtos/user.dto';
-import { User } from './entity/user.entity';
+import { UserEntity } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { BansService } from 'src/bans/bans.service';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
     private readonly rolesService: RolesService,
     private readonly bansService: BansService,
   ) {}
 
-  async getAll(): Promise<UserDTO[]> {
+  async getAll(): Promise<UserEntity[]> {
     return await this.usersRepository.find({
       relations: ['roles', 'roles.permissions', 'ban'],
     });
   }
 
-  async getById(id: string): Promise<UserDTO> {
+  async getById(id: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne(id, {
       relations: ['roles', 'roles.permissions', 'ban'],
     });
@@ -37,7 +36,7 @@ export class UsersService {
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<UserDTO> {
+  async getUserByEmail(email: string): Promise<UserEntity> {
     return await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
@@ -47,7 +46,7 @@ export class UsersService {
       .getOne();
   }
 
-  async create(data: UserCreateDTO): Promise<UserDTO> {
+  async create(data: UserCreateDTO): Promise<UserEntity> {
     const userExist = await this.usersRepository.findOne({ email: data.email });
     if (userExist) throw new NotFoundException('Такий email вже існує');
 
@@ -68,7 +67,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, data: UserEditDTO): Promise<UserDTO> {
+  async update(id: string, data: UserEditDTO): Promise<UserEntity> {
     const user = await this.getById(id);
     const editUser = Object.assign(user, data);
     const updatedUser = await this.usersRepository.save(editUser);
@@ -81,7 +80,7 @@ export class UsersService {
     return await this.usersRepository.delete(id);
   }
 
-  async addRole(userId: string, roleId: string): Promise<UserDTO> {
+  async addRole(userId: string, roleId: string): Promise<UserEntity> {
     const user = await this.getById(userId);
     const equalRoles = user.roles.filter((role) => role.id === roleId);
 
@@ -96,7 +95,7 @@ export class UsersService {
     return editUser;
   }
 
-  async deleteRole(userId: string, roleId: string): Promise<UserDTO> {
+  async deleteRole(userId: string, roleId: string): Promise<UserEntity> {
     const user = await this.getById(userId);
     const editRoles = user.roles.filter((role) => role.id !== roleId);
     user.roles = editRoles;
@@ -146,7 +145,7 @@ export class UsersService {
     );
   }
 
-  async addBan(userId: string, banId: string): Promise<UserDTO> {
+  async addBan(userId: string, banId: string): Promise<UserEntity> {
     const user = await this.getById(userId);
     const ban = await this.bansService.getById(banId);
 
@@ -158,7 +157,7 @@ export class UsersService {
     return editUser;
   }
 
-  async deleteBan(userId: string): Promise<UserDTO> {
+  async deleteBan(userId: string): Promise<UserEntity> {
     const user = await this.getById(userId);
     user.ban = null;
     const editUser = await this.usersRepository.save(user);

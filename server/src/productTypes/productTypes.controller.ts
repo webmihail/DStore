@@ -13,9 +13,8 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
-import { ProductTypeDTO } from './dtos/productType.dto';
 import { ProductTypeEditDTO } from './dtos/productType.edit.dto';
-import { ProductType } from './entity/productType.entity';
+import { ProductTypeEntity } from './entity/productType.entity';
 import { ProductTypesService } from './productTypes.service';
 
 @ApiTags('ProductTypes')
@@ -24,7 +23,7 @@ export class ProductTypesController {
   constructor(private readonly productTypesServices: ProductTypesService) {}
 
   @ApiOperation({ summary: 'Get all product types' })
-  @ApiResponse({ status: 200, type: [ProductType] })
+  @ApiResponse({ status: 200, type: [ProductTypeEntity] })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -34,12 +33,12 @@ export class ProductTypesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllProductTypes(): Promise<ProductTypeDTO[]> {
+  async getAllProductTypes(): Promise<ProductTypeEntity[]> {
     return await this.productTypesServices.getAll();
   }
 
   @ApiOperation({ summary: 'Get all product types by category id' })
-  @ApiResponse({ status: 200, type: [ProductType] })
+  @ApiResponse({ status: 200, type: [ProductTypeEntity] })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -51,12 +50,12 @@ export class ProductTypesController {
   @Get('get-by-category/:categoryId')
   async getAllProductTypesByCategory(
     @Param('categoryId') categoryId: string,
-  ): Promise<ProductTypeDTO[]> {
+  ): Promise<ProductTypeEntity[]> {
     return await this.productTypesServices.getAllByCategoryId(categoryId);
   }
 
   @ApiOperation({ summary: 'Get product types by id' })
-  @ApiResponse({ status: 200, type: ProductType })
+  @ApiResponse({ status: 200, type: ProductTypeEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -66,12 +65,12 @@ export class ProductTypesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getProductType(@Param('id') id: string): Promise<ProductTypeDTO> {
+  async getProductType(@Param('id') id: string): Promise<ProductTypeEntity> {
     return await this.productTypesServices.getById(id);
   }
 
   @ApiOperation({ summary: 'Update product type' })
-  @ApiResponse({ status: 200, type: ProductType })
+  @ApiResponse({ status: 200, type: ProductTypeEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -84,7 +83,7 @@ export class ProductTypesController {
   async updateProductType(
     @Param('id') id: string,
     @Body() data: ProductTypeEditDTO,
-  ): Promise<ProductTypeDTO> {
+  ): Promise<ProductTypeEntity> {
     return await this.productTypesServices.update(id, data);
   }
 

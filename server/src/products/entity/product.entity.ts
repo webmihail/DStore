@@ -1,11 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BrandDTO } from 'src/brands/dtos/brand.dto';
-import { Brand } from 'src/brands/entity/brand.entity';
-import { CategoryDTO } from 'src/categories/dtos/category.dto';
-import { Category } from 'src/categories/entity/category.entity';
+import { BrandEntity } from 'src/brands/entity/brand.entity';
+import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { ProductTypeDTO } from 'src/productTypes/dtos/productType.dto';
-import { ProductType } from 'src/productTypes/entity/productType.entity';
+import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import {
   Column,
   Entity,
@@ -16,7 +13,7 @@ import {
 
 @Entity({ name: 'products' })
 @Unique(['id'])
-export class Product extends GenericEntity {
+export class ProductEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -32,22 +29,26 @@ export class Product extends GenericEntity {
   @Column({ name: 'price', type: 'numeric', nullable: true })
   price: number;
 
-  @ManyToOne(() => Category, (category: Category) => category.products, {
-    onDelete: 'CASCADE',
-  })
-  category: CategoryDTO;
-
   @ManyToOne(
-    () => ProductType,
-    (productType: ProductType) => productType.products,
+    () => CategoryEntity,
+    (category: CategoryEntity) => category.products,
     {
       onDelete: 'CASCADE',
     },
   )
-  productType: ProductTypeDTO;
+  category: CategoryEntity;
 
-  @ManyToOne(() => Brand, (brand: Brand) => brand.products, {
+  @ManyToOne(
+    () => ProductTypeEntity,
+    (productType: ProductTypeEntity) => productType.products,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  productType: ProductTypeEntity;
+
+  @ManyToOne(() => BrandEntity, (brand: BrandEntity) => brand.products, {
     onDelete: 'CASCADE',
   })
-  brand: BrandDTO;
+  brand: BrandEntity;
 }

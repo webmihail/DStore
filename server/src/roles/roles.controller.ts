@@ -16,9 +16,8 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import { DeleteResult } from 'typeorm';
 import { RoleCreateDTO } from './dtos/role.create.dto';
-import { RoleDTO } from './dtos/role.dto';
 import { RoleEditDTO } from './dtos/role.edit.dto';
-import { Role } from './entity/role.entity';
+import { RoleEntity } from './entity/role.entity';
 import { RolesService } from './roles.service';
 
 @ApiTags('Roles')
@@ -27,7 +26,7 @@ export class RolesController {
   constructor(private readonly rolesServices: RolesService) {}
 
   @ApiOperation({ summary: 'Get all roles' })
-  @ApiResponse({ status: 200, type: [Role] })
+  @ApiResponse({ status: 200, type: [RoleEntity] })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionRoleManagementRead,
@@ -37,12 +36,12 @@ export class RolesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllRoles(): Promise<RoleDTO[]> {
+  async getAllRoles(): Promise<RoleEntity[]> {
     return await this.rolesServices.getAll();
   }
 
   @ApiOperation({ summary: 'Get role by id' })
-  @ApiResponse({ status: 200, type: Role })
+  @ApiResponse({ status: 200, type: RoleEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -52,12 +51,12 @@ export class RolesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getRole(@Param('id') id: string): Promise<RoleDTO> {
+  async getRole(@Param('id') id: string): Promise<RoleEntity> {
     return await this.rolesServices.getById(id);
   }
 
   @ApiOperation({ summary: 'Create new role' })
-  @ApiResponse({ status: 200, type: Role })
+  @ApiResponse({ status: 200, type: RoleEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -67,12 +66,12 @@ export class RolesController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createRole(@Body() data: RoleCreateDTO): Promise<RoleDTO> {
+  async createRole(@Body() data: RoleCreateDTO): Promise<RoleEntity> {
     return await this.rolesServices.create(data);
   }
 
   @ApiOperation({ summary: 'Update role' })
-  @ApiResponse({ status: 200, type: Role })
+  @ApiResponse({ status: 200, type: RoleEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -85,7 +84,7 @@ export class RolesController {
   async updateRole(
     @Param('id') id: string,
     @Body() data: RoleEditDTO,
-  ): Promise<RoleDTO> {
+  ): Promise<RoleEntity> {
     return await this.rolesServices.update(id, data);
   }
 
@@ -104,7 +103,7 @@ export class RolesController {
   }
 
   @ApiOperation({ summary: 'Add permission to role' })
-  @ApiResponse({ status: 200, type: RoleDTO })
+  @ApiResponse({ status: 200, type: RoleEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -117,12 +116,12 @@ export class RolesController {
   async addRoleToUser(
     @Param('roleId') roleId: string,
     @Param('permissionId') permissionId: string,
-  ): Promise<RoleDTO> {
+  ): Promise<RoleEntity> {
     return await this.rolesServices.addPermission(roleId, permissionId);
   }
 
   @ApiOperation({ summary: 'Delete permission from role' })
-  @ApiResponse({ status: 200, type: RoleDTO })
+  @ApiResponse({ status: 200, type: RoleEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -135,7 +134,7 @@ export class RolesController {
   async deleteRoleFromUser(
     @Param('roleId') roleId: string,
     @Param('permissionId') permissionId: string,
-  ): Promise<RoleDTO> {
+  ): Promise<RoleEntity> {
     return await this.rolesServices.deletePermission(roleId, permissionId);
   }
 }

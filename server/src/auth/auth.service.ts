@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import settings from 'settings';
 import { EmailService } from 'src/email/email.service';
-import { UserDTO } from 'src/users/dtos/user.dto';
+import { UserEntity } from 'src/users/entity/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayloadDTO } from './dtos/token.payload.dto';
 import { VerificationTokenPayloadDTO } from './dtos/verification.token.payload';
@@ -24,7 +24,7 @@ export class AuthService {
   async getAuthenticatedUser(
     email: string,
     password: string,
-  ): Promise<UserDTO> {
+  ): Promise<UserEntity> {
     try {
       const user = await this.usersService.getUserByEmail(email);
       await this.verifyPassword(password, user.password);

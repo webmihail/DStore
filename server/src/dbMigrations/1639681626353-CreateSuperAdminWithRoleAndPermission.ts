@@ -2,18 +2,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import settings from 'settings';
 import { Permissions } from 'src/permissions/constants';
-import { Permission } from 'src/permissions/entity/permission.entity';
-import { Role } from 'src/roles/entity/role.entity';
-import { User } from 'src/users/entity/user.entity';
+import { PermissionEntity } from 'src/permissions/entity/permission.entity';
+import { RoleEntity } from 'src/roles/entity/role.entity';
+import { UserEntity } from 'src/users/entity/user.entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateSuperAdminWithRoleAndPermission1639681626353
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const userRepo = queryRunner.connection.getRepository(User);
-    const roleRepo = queryRunner.connection.getRepository(Role);
-    const permissionRepo = queryRunner.connection.getRepository(Permission);
+    const userRepo = queryRunner.connection.getRepository(UserEntity);
+    const roleRepo = queryRunner.connection.getRepository(RoleEntity);
+    const permissionRepo =
+      queryRunner.connection.getRepository(PermissionEntity);
 
     const newPremission = await permissionRepo.create({
       name: settings.superadmin.permissionName as Permissions,
