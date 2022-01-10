@@ -3,6 +3,7 @@ import { BrandEntity } from 'src/brands/entity/brand.entity';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
+import { SaleEntity } from 'src/sales/entity/sale.entity';
 import {
   Column,
   Entity,
@@ -51,4 +52,9 @@ export class ProductEntity extends GenericEntity {
     onDelete: 'CASCADE',
   })
   brand: BrandEntity;
+
+  @ManyToOne(() => SaleEntity, (sale: SaleEntity) => sale.products, {
+    onDelete: 'CASCADE',
+  })
+  sale: SaleEntity;
 }
