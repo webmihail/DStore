@@ -99,9 +99,44 @@ export class ProductsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':productId/delete-product-type')
-  async deleteProductFromCategory(
+  async deleteProductTypeFromCategory(
     @Param('productId') productId: string,
   ): Promise<ProductDTO> {
     return await this.productsServices.deleteProductType(productId);
+  }
+
+  @ApiOperation({ summary: 'Add brand to product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/add-brand/:brandId')
+  async addBrandToProduct(
+    @Param('productId') productId: string,
+    @Param('brandId') brandId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.addBrand(productId, brandId);
+  }
+
+  @ApiOperation({ summary: 'Delete brand from product' })
+  @ApiResponse({ status: 200, type: ProductDTO })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/delete-brand')
+  async deleteBrandFromCategory(
+    @Param('productId') productId: string,
+  ): Promise<ProductDTO> {
+    return await this.productsServices.deleteBrand(productId);
   }
 }

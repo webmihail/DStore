@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BrandsService } from 'src/brands/brands.service';
 import { ProductTypesService } from 'src/productTypes/productTypes.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductCreateDTO } from './dtos/product.create.dto';
@@ -13,14 +14,19 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
     private readonly productTypesService: ProductTypesService,
+    private readonly brandsService: BrandsService,
   ) {}
 
   async getAll(): Promise<ProductDTO[]> {
-    return await this.productsRepository.find({ relations: ['productType'] });
+    return await this.productsRepository.find({
+      relations: ['productType', 'brand'],
+    });
   }
 
   async getById(id: string): Promise<Product> {
-    return await this.productsRepository.findOne(id);
+    return await this.productsRepository.findOne(id, {
+      relations: ['productType', 'brand'],
+    });
   }
 
   async create(data: ProductCreateDTO): Promise<ProductDTO> {
@@ -53,6 +59,23 @@ export class ProductsService {
   async deleteProductType(productId: string): Promise<ProductDTO> {
     const product = await this.getById(productId);
     product.productType = null;
+    const editCategory = await this.productsRepository.save(product);
+
+    return editCategory;
+  }
+
+  async addBrand(productId: string, brandId: string): Promise<ProductDTO> {
+    const product = await this.getById(productId);
+    const brand = await this.brandsService.getById(brandId);
+    product.brand = brand;
+    const editCategory = await this.productsRepository.save(product);
+
+    return editCategory;
+  }
+
+  async deleteBrand(productId: string): Promise<ProductDTO> {
+    const product = await this.getById(productId);
+    product.brand = null;
     const editCategory = await this.productsRepository.save(product);
 
     return editCategory;
