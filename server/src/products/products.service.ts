@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BrandsService } from 'src/brands/brands.service';
 import { ProductTypesService } from 'src/productTypes/productTypes.service';
+import { SalesService } from 'src/sales/sales.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductCreateDTO } from './dtos/product.create.dto';
 import { ProductEditDTO } from './dtos/product.edit.dto';
@@ -14,17 +15,18 @@ export class ProductsService {
     private readonly productsRepository: Repository<ProductEntity>,
     private readonly productTypesService: ProductTypesService,
     private readonly brandsService: BrandsService,
+    private readonly salesServise: SalesService,
   ) {}
 
   async getAll(): Promise<ProductEntity[]> {
     return await this.productsRepository.find({
-      relations: ['productType', 'brand'],
+      relations: ['productType', 'brand', 'sale'],
     });
   }
 
   async getById(id: string): Promise<ProductEntity> {
     return await this.productsRepository.findOne(id, {
-      relations: ['productType', 'brand'],
+      relations: ['productType', 'brand', 'sale'],
     });
   }
 
@@ -75,6 +77,23 @@ export class ProductsService {
   async deleteBrand(productId: string): Promise<ProductEntity> {
     const product = await this.getById(productId);
     product.brand = null;
+    const editCategory = await this.productsRepository.save(product);
+
+    return editCategory;
+  }
+
+  async addSale(productId: string, saleId: string): Promise<ProductEntity> {
+    const product = await this.getById(productId);
+    const sale = await this.salesServise.getById(saleId);
+    product.sale = sale;
+    const editCategory = await this.productsRepository.save(product);
+
+    return editCategory;
+  }
+
+  async deleteSale(productId: string): Promise<ProductEntity> {
+    const product = await this.getById(productId);
+    product.sale = null;
     const editCategory = await this.productsRepository.save(product);
 
     return editCategory;

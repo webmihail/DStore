@@ -138,4 +138,39 @@ export class ProductsController {
   ): Promise<ProductEntity> {
     return await this.productsServices.deleteBrand(productId);
   }
+
+  @ApiOperation({ summary: 'Add sale to product' })
+  @ApiResponse({ status: 200, type: ProductEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/add-sale/:saleId')
+  async addSaleToProduct(
+    @Param('productId') productId: string,
+    @Param('saleId') saleId: string,
+  ): Promise<ProductEntity> {
+    return await this.productsServices.addSale(productId, saleId);
+  }
+
+  @ApiOperation({ summary: 'Delete sale from product' })
+  @ApiResponse({ status: 200, type: ProductEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/delete-sale')
+  async deleteSaleFromCategory(
+    @Param('productId') productId: string,
+  ): Promise<ProductEntity> {
+    return await this.productsServices.deleteSale(productId);
+  }
 }
