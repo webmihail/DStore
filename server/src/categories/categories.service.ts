@@ -6,22 +6,21 @@ import { ProductTypeCreateDTO } from 'src/productTypes/dtos/productType.create.d
 import { ProductTypesService } from 'src/productTypes/productTypes.service';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
-import { CategoryDTO } from './dtos/category.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
-import { Category } from './entity/category.entity';
+import { CategoryEntity } from './entity/category.entity';
 
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(Category)
-    private readonly categoryTreeRepository: TreeRepository<Category> = getManager().getTreeRepository(
-      Category,
+    @InjectRepository(CategoryEntity)
+    private readonly categoryTreeRepository: TreeRepository<CategoryEntity> = getManager().getTreeRepository(
+      CategoryEntity,
     ),
     private readonly productsService: ProductsService,
     private readonly productTypesService: ProductTypesService,
   ) {}
 
-  async getAll(): Promise<CategoryDTO[]> {
+  async getAll(): Promise<CategoryEntity[]> {
     const categoriesList = await this.categoryTreeRepository.findTrees({
       depth: 2,
       relations: ['products'],
@@ -39,7 +38,7 @@ export class CategoriesService {
     return responseWithDeletions;
   }
 
-  async getById(id: string): Promise<Category> {
+  async getById(id: string): Promise<CategoryEntity> {
     const category = await this.categoryTreeRepository.findOne(id, {
       relations: ['children', 'products', 'productTypes'],
     });
@@ -55,8 +54,8 @@ export class CategoriesService {
     return category;
   }
 
-  async create(data: CategoryCreateDTO): Promise<CategoryDTO> {
-    const category = new Category();
+  async create(data: CategoryCreateDTO): Promise<CategoryEntity> {
+    const category = new CategoryEntity();
     category.name = data.name;
     category.iconUrl = data.iconUrl;
     return await this.categoryTreeRepository.save(category);
@@ -65,8 +64,8 @@ export class CategoriesService {
   async createSubcategory(
     categoryId: string,
     data: CategoryCreateDTO,
-  ): Promise<Category> {
-    const newSubcategory = new Category();
+  ): Promise<CategoryEntity> {
+    const newSubcategory = new CategoryEntity();
     const category = await this.getById(categoryId);
     newSubcategory.name = data.name;
     newSubcategory.iconUrl = data.iconUrl;
@@ -78,7 +77,7 @@ export class CategoriesService {
   async createProductToCategory(
     id: string,
     data: ProductCreateDTO,
-  ): Promise<CategoryDTO> {
+  ): Promise<CategoryEntity> {
     const category = await this.getById(id);
     const newProduct = await this.productsService.create(data);
 
@@ -98,7 +97,7 @@ export class CategoriesService {
   async createProductTypeToCategory(
     id: string,
     data: ProductTypeCreateDTO,
-  ): Promise<CategoryDTO> {
+  ): Promise<CategoryEntity> {
     const category = await this.getById(id);
     const newProductType = await this.productTypesService.create(data);
 
@@ -117,7 +116,7 @@ export class CategoriesService {
     return editCategory;
   }
 
-  async update(id: string, data: CategoryEditDTO): Promise<CategoryDTO> {
+  async update(id: string, data: CategoryEditDTO): Promise<CategoryEntity> {
     const category = await this.getById(id);
     const editCategory = Object.assign(category, data);
     return await this.categoryTreeRepository.save(editCategory);
@@ -130,7 +129,7 @@ export class CategoriesService {
   async addProduct(
     categoryId: string,
     productId: string,
-  ): Promise<CategoryDTO> {
+  ): Promise<CategoryEntity> {
     const category = await this.getById(categoryId);
     const equalProduct = category.products.filter(
       (product) => product.id === productId,
@@ -149,7 +148,7 @@ export class CategoriesService {
   async deleteProduct(
     categoryId: string,
     productId: string,
-  ): Promise<CategoryDTO> {
+  ): Promise<CategoryEntity> {
     const category = await this.getById(categoryId);
     const editProducts = category.products.filter(
       (product) => product.id !== productId,

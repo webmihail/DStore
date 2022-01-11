@@ -1,7 +1,6 @@
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
-import { UserDTO } from 'src/users/dtos/user.dto';
 import { AuthService } from './auth.service';
 import { LoginRequestDTO } from './dtos/login.request.dto';
 import { LoginResponseDTO } from './dtos/login.response.dto';
@@ -13,6 +12,7 @@ import JwtRefreshTokenGuard from './guards/jwt.refresh.token.guard';
 import { ConfirmEmailDto } from './dtos/confirm.email.tdo';
 import { UserCreateDTO } from 'src/users/dtos/user.create.dto';
 import { BanGuard } from 'src/bans/guards/ban.guard';
+import { UserEntity } from 'src/users/entity/user.entity';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -23,9 +23,9 @@ export class AuthController {
   ) {}
 
   @ApiOperation({ summary: 'Create new user' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @Post('registration')
-  async createUser(@Body() data: UserCreateDTO): Promise<UserDTO> {
+  async createUser(@Body() data: UserCreateDTO): Promise<UserEntity> {
     await this.authService.sendEmailVerificationLink(data.email);
     return await this.usersService.create(data);
   }
@@ -36,9 +36,9 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async logIn(
-    @User() user: UserDTO,
+    @User() user: UserEntity,
     @Res() response: Response,
-  ): Promise<Response<UserDTO>> {
+  ): Promise<Response<UserEntity>> {
     const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
       user.id,
     );
@@ -63,7 +63,7 @@ export class AuthController {
   @ApiResponse({ status: 200, type: LoginResponseDTO })
   @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh')
-  refresh(@User() user: UserDTO, @Res() response: Response) {
+  refresh(@User() user: UserEntity, @Res() response: Response) {
     const accessTokenCookie = this.authService.getCookieWithJwtAccessToken(
       user.id,
     );
@@ -76,14 +76,14 @@ export class AuthController {
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logOut(@User() user: UserDTO, @Res() response: Response) {
+  async logOut(@User() user: UserEntity, @Res() response: Response) {
     await this.usersService.removeRefreshToken(user.id);
     response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     return response.sendStatus(200);
   }
 
   @ApiOperation({ summary: 'Confirm user email' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @Post('confirm')
   async confirm(@Body() confirmationData: ConfirmEmailDto) {
     const email = await this.authService.decodeEmailConfirmationToken(
@@ -97,7 +97,7 @@ export class AuthController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Post('resend-confirmation-link')
-  async resendConfirmationLink(@User() user: UserDTO) {
+  async resendConfirmationLink(@User() user: UserEntity) {
     await this.authService.resendConfirmationLink(user.id);
   }
 }

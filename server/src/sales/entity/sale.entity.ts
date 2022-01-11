@@ -9,9 +9,9 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity({ name: 'brands' })
+@Entity({ name: 'sales' })
 @Unique(['id'])
-export class BrandEntity extends GenericEntity {
+export class SaleEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -23,17 +23,10 @@ export class BrandEntity extends GenericEntity {
     example: 'Disquired',
     description: 'Brand type name',
   })
-  @Column({ name: 'name', type: 'varchar', length: 255 })
-  name: string;
+  @Column({ name: 'discount', type: 'numeric' })
+  discount: number;
 
-  @ApiProperty({
-    example: 'USA',
-    description: 'Brand country name',
-  })
-  @Column({ name: 'country', type: 'varchar', length: 255 })
-  country: string;
-
-  @OneToMany(() => ProductEntity, (product: ProductEntity) => product.brand, {
+  @OneToMany(() => ProductEntity, (product: ProductEntity) => product.sale, {
     cascade: true,
   })
   products: ProductEntity[];

@@ -15,10 +15,9 @@ import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
 import { BrandsService } from './brands.service';
-import { BrandDTO } from './dtos/brand.dto';
 import { BrandEditDTO } from './dtos/brand.edit.dto';
 import { BrandCreateDTO } from './dtos/brend.create.dto';
-import { Brand } from './entity/brand.entity';
+import { BrandEntity } from './entity/brand.entity';
 
 @ApiTags('Brands')
 @Controller('brands')
@@ -34,9 +33,9 @@ export class BrandsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all brands' })
-  @ApiResponse({ status: 200, type: [Brand] })
+  @ApiResponse({ status: 200, type: [BrandEntity] })
   @Get()
-  async getAllBrands(): Promise<BrandDTO[]> {
+  async getAllBrands(): Promise<BrandEntity[]> {
     return await this.brandsServices.getAll();
   }
 
@@ -49,14 +48,14 @@ export class BrandsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get brand by id' })
-  @ApiResponse({ status: 200, type: Brand })
+  @ApiResponse({ status: 200, type: BrandEntity })
   @Get(':id')
-  async getBrand(@Param('id') id: string): Promise<BrandDTO> {
+  async getBrand(@Param('id') id: string): Promise<BrandEntity> {
     return await this.brandsServices.getById(id);
   }
 
   @ApiOperation({ summary: 'Create brand' })
-  @ApiResponse({ status: 200, type: Brand })
+  @ApiResponse({ status: 200, type: BrandEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -66,12 +65,12 @@ export class BrandsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createBrand(@Body() data: BrandCreateDTO): Promise<BrandDTO> {
+  async createBrand(@Body() data: BrandCreateDTO): Promise<BrandEntity> {
     return await this.brandsServices.create(data);
   }
 
   @ApiOperation({ summary: 'Update brand' })
-  @ApiResponse({ status: 200, type: Brand })
+  @ApiResponse({ status: 200, type: BrandEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -84,7 +83,7 @@ export class BrandsController {
   async updateBrand(
     @Param('id') id: string,
     @Body() data: BrandEditDTO,
-  ): Promise<BrandDTO> {
+  ): Promise<BrandEntity> {
     return await this.brandsServices.update(id, data);
   }
 

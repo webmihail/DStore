@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { UserDTO } from 'src/users/dtos/user.dto';
+import { UserEntity } from 'src/users/entity/user.entity';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class LocalAuthenticationStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(email: string, password: string): Promise<UserDTO | null> {
+  async validate(email: string, password: string): Promise<UserEntity | null> {
     const user = await this.authService.getAuthenticatedUser(email, password);
     if (!user) {
       throw new UnauthorizedException('Логін або пароль не співпадають');

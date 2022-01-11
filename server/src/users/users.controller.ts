@@ -11,8 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
 import { UserEditDTO } from './dtos/user.edit.dto';
-import { UserDTO } from './dtos/user.dto';
-import { User } from './entity/user.entity';
+import { UserEntity } from './entity/user.entity';
 import { UsersService } from './users.service';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
@@ -25,30 +24,30 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, type: [UserDTO] })
+  @ApiResponse({ status: 200, type: [UserEntity] })
   @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllUsers(): Promise<UserDTO[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAll();
   }
 
   @ApiOperation({ summary: 'Get user by id' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getUser(@Param('id') id: string): Promise<UserDTO> {
+  async getUser(@Param('id') id: string): Promise<UserEntity> {
     return await this.userService.getById(id);
   }
 
   @ApiOperation({ summary: 'Update user' })
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   async updateUser(
     @Param('id') id: string,
     @Body() data: UserEditDTO,
-  ): Promise<UserDTO> {
+  ): Promise<UserEntity> {
     return await this.userService.update(id, data);
   }
 
@@ -61,7 +60,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Add role to user' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -74,12 +73,12 @@ export class UsersController {
   async addRoleFromUser(
     @Param('userId') userId: string,
     @Param('roleId') roleId: string,
-  ): Promise<UserDTO> {
+  ): Promise<UserEntity> {
     return await this.userService.addRole(userId, roleId);
   }
 
   @ApiOperation({ summary: 'Delete role from user' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -92,12 +91,12 @@ export class UsersController {
   async deleteRoleFromUser(
     @Param('userId') userId: string,
     @Param('roleId') roleId: string,
-  ): Promise<UserDTO> {
+  ): Promise<UserEntity> {
     return await this.userService.deleteRole(userId, roleId);
   }
 
   @ApiOperation({ summary: 'Add ban to user' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -110,12 +109,12 @@ export class UsersController {
   async addBanToUser(
     @Param('userId') userId: string,
     @Param('banId') banId: string,
-  ): Promise<UserDTO> {
+  ): Promise<UserEntity> {
     return await this.userService.addBan(userId, banId);
   }
 
   @ApiOperation({ summary: 'Delete ban from user' })
-  @ApiResponse({ status: 200, type: UserDTO })
+  @ApiResponse({ status: 200, type: UserEntity })
   @UseGuards(
     PermissionGuard([
       Permissions.SubscriptionFullManagement,
@@ -125,7 +124,9 @@ export class UsersController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':userId/delete-ban')
-  async deleteBanFromUser(@Param('userId') userId: string): Promise<UserDTO> {
+  async deleteBanFromUser(
+    @Param('userId') userId: string,
+  ): Promise<UserEntity> {
     return await this.userService.deleteBan(userId);
   }
 }

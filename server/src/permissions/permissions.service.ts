@@ -2,31 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { PermissionCreateDTO } from './dtos/permission.create.dto';
-import { PermissionDTO } from './dtos/permission.dto';
 import { PermissionEditDTO } from './dtos/permission.edit.dto';
-import { Permission } from './entity/permission.entity';
+import { PermissionEntity } from './entity/permission.entity';
 
 @Injectable()
 export class PermissionsService {
   constructor(
-    @InjectRepository(Permission)
-    private readonly permissionsRepository: Repository<Permission>,
+    @InjectRepository(PermissionEntity)
+    private readonly permissionsRepository: Repository<PermissionEntity>,
   ) {}
 
-  async getAll(): Promise<PermissionDTO[]> {
+  async getAll(): Promise<PermissionEntity[]> {
     return await this.permissionsRepository.find();
   }
 
-  async getById(id: string): Promise<PermissionDTO> {
+  async getById(id: string): Promise<PermissionEntity> {
     return await this.permissionsRepository.findOne(id);
   }
 
-  async create(data: PermissionCreateDTO): Promise<PermissionDTO> {
+  async create(data: PermissionCreateDTO): Promise<PermissionEntity> {
     const newPremission = await this.permissionsRepository.create(data);
     return await this.permissionsRepository.save(newPremission);
   }
 
-  async update(id: string, data: PermissionEditDTO): Promise<PermissionDTO> {
+  async update(id: string, data: PermissionEditDTO): Promise<PermissionEntity> {
     const premission = await this.getById(id);
     const editPremission = Object.assign(premission, data);
     return await this.permissionsRepository.save(editPremission);

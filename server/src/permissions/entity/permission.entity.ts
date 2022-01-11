@@ -5,7 +5,7 @@ import { Permissions } from '../constants';
 
 @Entity({ name: 'permissions' })
 @Unique(['id', 'name'])
-export class Permission extends GenericEntity {
+export class PermissionEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',

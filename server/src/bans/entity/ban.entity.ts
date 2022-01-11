@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { User } from 'src/users/entity/user.entity';
+import { UserEntity } from 'src/users/entity/user.entity';
 import {
   Column,
   Entity,
@@ -11,7 +11,7 @@ import {
 
 @Entity({ name: 'bans' })
 @Unique(['id'])
-export class Ban extends GenericEntity {
+export class BanEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -26,6 +26,6 @@ export class Ban extends GenericEntity {
   @Column({ name: 'banReason', type: 'varchar', length: 255 })
   banReason: string;
 
-  @OneToMany(() => User, (user: User) => user.ban)
-  users: User[];
+  @OneToMany(() => UserEntity, (user: UserEntity) => user.ban)
+  users: UserEntity[];
 }
