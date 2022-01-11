@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BrandsService } from 'src/brands/brands.service';
+import { ProductInfoCreateDTO } from 'src/productsInfo/dtos/productInfo.create.dto';
+import { ProductsInfoService } from 'src/productsInfo/productsInfo.service';
 import { ProductTypesService } from 'src/productTypes/productTypes.service';
 import { SalesService } from 'src/sales/sales.service';
 import { DeleteResult, Repository } from 'typeorm';
@@ -16,17 +18,18 @@ export class ProductsService {
     private readonly productTypesService: ProductTypesService,
     private readonly brandsService: BrandsService,
     private readonly salesServise: SalesService,
+    private readonly productsInfo: ProductsInfoService,
   ) {}
 
   async getAll(): Promise<ProductEntity[]> {
     return await this.productsRepository.find({
-      relations: ['productType', 'brand', 'sale'],
+      relations: ['productType', 'brand', 'sale', 'productsInfo'],
     });
   }
 
   async getById(id: string): Promise<ProductEntity> {
     return await this.productsRepository.findOne(id, {
-      relations: ['productType', 'brand', 'sale'],
+      relations: ['productType', 'brand', 'sale', 'productsInfo'],
     });
   }
 
@@ -97,5 +100,17 @@ export class ProductsService {
     const editCategory = await this.productsRepository.save(product);
 
     return editCategory;
+  }
+
+  async createProductInfoToProduct(
+    id: string,
+    data: ProductInfoCreateDTO,
+  ): Promise<ProductEntity> {
+    const product = await this.getById(id);
+    const newProductInfo = await this.productsInfo.create(data);
+    product.productsInfo.push(newProductInfo);
+    const editProduct = await this.productsRepository.save(product);
+
+    return editProduct;
   }
 }

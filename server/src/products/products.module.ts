@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandsModule } from 'src/brands/brands.module';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
+import { ProductsInfoModule } from 'src/productsInfo/productsInfo.module';
 import { ProductTypesModule } from 'src/productTypes/productTypes.module';
 import { SalesModule } from 'src/sales/sales.module';
 import { ProductEntity } from './entity/product.entity';
@@ -14,6 +15,7 @@ import { ProductsService } from './products.service';
     ProductTypesModule,
     BrandsModule,
     SalesModule,
+    ProductsInfoModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

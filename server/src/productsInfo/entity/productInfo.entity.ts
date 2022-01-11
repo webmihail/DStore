@@ -44,7 +44,7 @@ export class ProductInfoEntity extends GenericEntity {
     example: ['http://fjsdjflsdf.com/image', 'http://dwewrwer.com/image'],
     description: 'Array of images url',
   })
-  @Column({ name: 'images', type: 'array' })
+  @Column('text', { array: true, default: null })
   images: string[];
 
   @ApiProperty({
@@ -58,7 +58,7 @@ export class ProductInfoEntity extends GenericEntity {
     () => ProductEntity,
     (product: ProductEntity) => product.productsInfo,
     {
-      cascade: true,
+      onDelete: 'CASCADE',
     },
   )
   product: ProductEntity;
