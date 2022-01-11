@@ -2,12 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BrandEntity } from 'src/brands/entity/brand.entity';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import { SaleEntity } from 'src/sales/entity/sale.entity';
 import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -57,4 +59,13 @@ export class ProductEntity extends GenericEntity {
     onDelete: 'CASCADE',
   })
   sale: SaleEntity;
+
+  @OneToMany(
+    () => ProductInfoEntity,
+    (productInfo: ProductInfoEntity) => productInfo.product,
+    {
+      cascade: true,
+    },
+  )
+  productsInfo: ProductInfoEntity[];
 }
