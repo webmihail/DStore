@@ -27,10 +27,10 @@ export class ProductInfoEntity extends GenericEntity {
   title: string;
 
   @ApiProperty({
-    example: 'Тип ткани: коттон, размер: L',
+    example: 'Тип ткани: коттон, очень легко носится, хорошо прилегает к телу',
     description: 'Product info description',
   })
-  @Column({ name: 'country', type: 'varchar', length: 255 })
+  @Column({ name: 'description', type: 'varchar', length: 255 })
   description: string;
 
   @ApiProperty({
