@@ -29,6 +29,7 @@ export class ProductsService {
         'sale',
         'productsInfo',
         'productsInfo.size',
+        'productsInfo.color',
       ],
     });
   }
@@ -41,6 +42,7 @@ export class ProductsService {
         'sale',
         'productsInfo',
         'productsInfo.size',
+        'productsInfo.color',
       ],
     });
   }

@@ -73,5 +73,5 @@ export class ProductInfoEntity extends GenericEntity {
   @ManyToOne(() => ColorEntity, (color: ColorEntity) => color.productsInfo, {
     onDelete: 'CASCADE',
   })
-  color: SizeEntity;
+  color: ColorEntity;
 }
