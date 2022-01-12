@@ -23,13 +23,25 @@ export class ProductsService {
 
   async getAll(): Promise<ProductEntity[]> {
     return await this.productsRepository.find({
-      relations: ['productType', 'brand', 'sale', 'productsInfo'],
+      relations: [
+        'productType',
+        'brand',
+        'sale',
+        'productsInfo',
+        'productsInfo.size',
+      ],
     });
   }
 
   async getById(id: string): Promise<ProductEntity> {
     return await this.productsRepository.findOne(id, {
-      relations: ['productType', 'brand', 'sale', 'productsInfo'],
+      relations: [
+        'productType',
+        'brand',
+        'sale',
+        'productsInfo',
+        'productsInfo.size',
+      ],
     });
   }
 

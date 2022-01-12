@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 
 @Entity({ name: 'sizes' })
 @Unique(['id'])
@@ -32,4 +39,13 @@ export class SizeEntity extends GenericEntity {
   })
   @Column({ name: 'description', type: 'varchar', length: 255 })
   description: string;
+
+  @OneToMany(
+    () => ProductInfoEntity,
+    (productInfo: ProductInfoEntity) => productInfo.size,
+    {
+      cascade: true,
+    },
+  )
+  productsInfo: ProductInfoEntity[];
 }
