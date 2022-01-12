@@ -15,6 +15,12 @@ import { SalesModule } from './sales/sales.module';
 import { ProductsInfoModule } from './productsInfo/productsInfo.module';
 import { SizesModule } from './sizes/sizes.module';
 import { ColorsModule } from './colors/colors.module';
+import { OrdersModule } from './orders/orders.module';
+import { DeliveriesModule } from './deliveries/deliveries.module';
+import { PaymentsService } from './payments/payments.service';
+import { PaymentsModule } from './payments/payments.module';
+import { BasketsModule } from './baskets/baskets.module';
+import { PiecesModule } from './pieces/pieces.module';
 
 @Module({
   imports: [
@@ -33,7 +39,13 @@ import { ColorsModule } from './colors/colors.module';
     ProductsInfoModule,
     SizesModule,
     ColorsModule,
+    OrdersModule,
+    DeliveriesModule,
+    PaymentsModule,
+    BasketsModule,
+    PiecesModule,
   ],
+  providers: [PaymentsService],
 })
 export class AppModule {
   constructor(private readonly connection: Connection) {}
