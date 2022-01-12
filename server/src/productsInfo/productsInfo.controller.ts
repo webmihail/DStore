@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -67,5 +68,40 @@ export class ProductsInfoController {
   @Delete(':id')
   async deleteProductInfo(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsInfoService.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add size to product info' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productInfoId/add-size/:sizeId')
+  async addSizeToProductInfo(
+    @Param('productInfoId') productInfoId: string,
+    @Param('sizeId') sizeId: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.addSize(productInfoId, sizeId);
+  }
+
+  @ApiOperation({ summary: 'Delete size from product info' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productInfoId/delete-size')
+  async deleteSizeFromProductInfo(
+    @Param('productInfoId') productInfoId: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.deleteSize(productInfoId);
   }
 }

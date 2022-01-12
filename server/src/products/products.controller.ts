@@ -99,7 +99,7 @@ export class ProductsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':productId/delete-product-type')
-  async deleteProductTypeFromCategory(
+  async deleteProductTypeFromProduct(
     @Param('productId') productId: string,
   ): Promise<ProductEntity> {
     return await this.productsServices.deleteProductType(productId);
@@ -134,7 +134,7 @@ export class ProductsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':productId/delete-brand')
-  async deleteBrandFromCategory(
+  async deleteBrandFromProduct(
     @Param('productId') productId: string,
   ): Promise<ProductEntity> {
     return await this.productsServices.deleteBrand(productId);
@@ -169,7 +169,7 @@ export class ProductsController {
   @UseGuards(BanGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':productId/delete-sale')
-  async deleteSaleFromCategory(
+  async deleteSaleFromProduct(
     @Param('productId') productId: string,
   ): Promise<ProductEntity> {
     return await this.productsServices.deleteSale(productId);

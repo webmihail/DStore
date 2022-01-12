@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
+import { SizeEntity } from 'src/sizes/entity/size.entity';
 import {
   Column,
   Entity,
@@ -27,10 +28,10 @@ export class ProductInfoEntity extends GenericEntity {
   title: string;
 
   @ApiProperty({
-    example: 'Тип ткани: коттон, размер: L',
+    example: 'Тип ткани: коттон, очень легко носится, хорошо прилегает к телу',
     description: 'Product info description',
   })
-  @Column({ name: 'country', type: 'varchar', length: 255 })
+  @Column({ name: 'description', type: 'varchar', length: 255 })
   description: string;
 
   @ApiProperty({
@@ -62,4 +63,9 @@ export class ProductInfoEntity extends GenericEntity {
     },
   )
   product: ProductEntity;
+
+  @ManyToOne(() => SizeEntity, (size: SizeEntity) => size.productsInfo, {
+    onDelete: 'CASCADE',
+  })
+  size: SizeEntity;
 }
