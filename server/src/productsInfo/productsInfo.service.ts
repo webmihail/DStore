@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ColorsService } from 'src/colors/colors.service';
 import { SizesService } from 'src/sizes/sizes.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductInfoCreateDTO } from './dtos/productInfo.create.dto';
@@ -12,11 +13,12 @@ export class ProductsInfoService {
     @InjectRepository(ProductInfoEntity)
     private readonly productInfoRepository: Repository<ProductInfoEntity>,
     private readonly sizesService: SizesService,
+    private readonly colorsService: ColorsService,
   ) {}
 
   async getById(id: string): Promise<ProductInfoEntity> {
     return await this.productInfoRepository.findOne(id, {
-      relations: ['size'],
+      relations: ['size', 'color'],
     });
   }
 
@@ -53,6 +55,27 @@ export class ProductsInfoService {
   async deleteSize(productInfoId: string): Promise<ProductInfoEntity> {
     const productInfo = await this.getById(productInfoId);
     productInfo.size = null;
+    const editProductInfo = await this.productInfoRepository.save(productInfo);
+
+    return editProductInfo;
+  }
+
+  async addColor(
+    productInfoId: string,
+    colorId: string,
+  ): Promise<ProductInfoEntity> {
+    const productInfo = await this.getById(productInfoId);
+    const color = await this.colorsService.getById(colorId);
+    console.log(productInfo);
+    productInfo.color = color;
+    const editProductInfo = await this.productInfoRepository.save(productInfo);
+
+    return editProductInfo;
+  }
+
+  async deleteColor(productInfoId: string): Promise<ProductInfoEntity> {
+    const productInfo = await this.getById(productInfoId);
+    productInfo.color = null;
     const editProductInfo = await this.productInfoRepository.save(productInfo);
 
     return editProductInfo;

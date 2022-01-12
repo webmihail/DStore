@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ColorEntity } from 'src/colors/entity/color.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import { SizeEntity } from 'src/sizes/entity/size.entity';
@@ -68,4 +69,9 @@ export class ProductInfoEntity extends GenericEntity {
     onDelete: 'CASCADE',
   })
   size: SizeEntity;
+
+  @ManyToOne(() => ColorEntity, (color: ColorEntity) => color.productsInfo, {
+    onDelete: 'CASCADE',
+  })
+  color: ColorEntity;
 }

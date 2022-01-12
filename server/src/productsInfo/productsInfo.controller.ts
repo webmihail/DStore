@@ -104,4 +104,39 @@ export class ProductsInfoController {
   ): Promise<ProductInfoEntity> {
     return await this.productsInfoService.deleteSize(productInfoId);
   }
+
+  @ApiOperation({ summary: 'Add size to product info' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productInfoId/add-color/:colorId')
+  async addColorToProductInfo(
+    @Param('productInfoId') productInfoId: string,
+    @Param('colorId') colorId: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.addColor(productInfoId, colorId);
+  }
+
+  @ApiOperation({ summary: 'Delete size from product info' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productInfoId/delete-color')
+  async deleteColorFromProductInfo(
+    @Param('productInfoId') productInfoId: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.deleteColor(productInfoId);
+  }
 }
