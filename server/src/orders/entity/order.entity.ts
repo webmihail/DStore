@@ -1,18 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { OrderEntity } from 'src/orders/entity/order.entity';
-import { ProductEntity } from 'src/products/entity/product.entity';
+import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import {
   Column,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 
-@Entity({ name: 'pieces' })
+@Entity({ name: 'orders' })
 @Unique(['id'])
-export class PieceEntity extends GenericEntity {
+export class OrderEntity extends GenericEntity {
   @ApiProperty({
     example: '29be0ee3-fe77-331e-a1bf-9494ec18c0ba',
     description: 'uuid idetificator',
@@ -22,25 +21,23 @@ export class PieceEntity extends GenericEntity {
 
   @ApiProperty({
     example: 1,
-    description: 'count of piece',
+    description: 'count of all pieces in order',
   })
   @Column({ name: 'count', type: 'numeric' })
   count: number;
 
   @ApiProperty({
     example: 1200,
-    description: 'price of piece',
+    description: 'price of all pieces in order',
   })
   @Column({ name: 'price', type: 'numeric' })
   price: number;
 
-  @ManyToOne(() => ProductEntity, (product: ProductEntity) => product.pieces, {
-    onDelete: 'CASCADE',
-  })
-  product: ProductEntity;
+  @Column({ name: 'isPaid', type: 'boolean', default: false })
+  isPaid: boolean;
 
-  @ManyToOne(() => OrderEntity, (order: OrderEntity) => order.pieces, {
-    onDelete: 'CASCADE',
+  @OneToMany(() => PieceEntity, (piece: PieceEntity) => piece.order, {
+    cascade: true,
   })
-  order: OrderEntity;
+  pieces: PieceEntity[];
 }

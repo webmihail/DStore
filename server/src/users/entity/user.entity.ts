@@ -14,6 +14,7 @@ import {
   Unique,
 } from 'typeorm';
 import { BanEntity } from 'src/bans/entity/ban.entity';
+import { PieceEntity } from 'src/pieces/entity/piece.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -57,6 +58,14 @@ export class UserEntity extends GenericEntity {
 
   @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
   public isEmailConfirmed?: boolean;
+
+  @Column({
+    type: 'jsonb',
+    array: false,
+    default: () => "'[]'",
+    nullable: false,
+  })
+  basket: PieceEntity[];
 
   @ManyToMany(() => RoleEntity)
   @JoinTable()

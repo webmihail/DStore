@@ -129,4 +129,22 @@ export class UsersController {
   ): Promise<UserEntity> {
     return await this.userService.deleteBan(userId);
   }
+
+  @ApiOperation({ summary: 'Add piece to user basket' })
+  @ApiResponse({ status: 200, type: UserEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionOrderManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':userId/add-product-to-basket/:productId')
+  async createAndAddPieceToUserBasket(
+    @Param('userId') userId: string,
+    @Param('productId') productId: string,
+  ): Promise<UserEntity> {
+    return await this.userService.addPieceToBasket(userId, productId);
+  }
 }
