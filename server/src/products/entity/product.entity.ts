@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BrandEntity } from 'src/brands/entity/brand.entity';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import { SaleEntity } from 'src/sales/entity/sale.entity';
@@ -68,4 +69,9 @@ export class ProductEntity extends GenericEntity {
     },
   )
   productsInfo: ProductInfoEntity[];
+
+  @OneToMany(() => PieceEntity, (piece: PieceEntity) => piece.product, {
+    cascade: true,
+  })
+  pieces: PieceEntity[];
 }
