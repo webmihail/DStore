@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { ColumnNumericTransformer } from 'src/common/utils/ColumnNumericTransformer';
 import { OrderEntity } from 'src/orders/entity/order.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import {
@@ -25,14 +26,20 @@ export class PieceEntity extends GenericEntity {
     example: 1,
     description: 'count of piece',
   })
-  @Column({ name: 'count', type: 'numeric' })
+  @Column('numeric', {
+    transformer: new ColumnNumericTransformer(),
+  })
   count: number;
 
   @ApiProperty({
     example: 1200,
     description: 'price of piece',
   })
-  @Column({ name: 'price', type: 'numeric' })
+  @Column('numeric', {
+    precision: 10,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
   @ManyToOne(() => ProductEntity, (product: ProductEntity) => product.pieces, {

@@ -33,7 +33,7 @@ export class BasketsService {
     if (productIsExist && productIsExist.length !== 0) {
       const piece = await this.piecesService.update(productIsExist[0].id, {
         productId,
-        count: Number(productIsExist[0].count) + 1,
+        count: productIsExist[0].count + 1,
       });
 
       basket.pieces = basket.pieces.map((currentPiece) => {
@@ -48,7 +48,7 @@ export class BasketsService {
         productId,
       });
 
-      basket.pieces = [newPiece];
+      basket.pieces.push(newPiece);
     }
 
     return this.basketRepository.save(basket);

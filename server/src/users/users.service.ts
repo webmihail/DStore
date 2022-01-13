@@ -32,6 +32,7 @@ export class UsersService {
         'basket',
         'basket.pieces',
         'basket.pieces.product',
+        'orders',
       ],
     });
   }
@@ -45,6 +46,7 @@ export class UsersService {
         'basket',
         'basket.pieces',
         'basket.pieces.product',
+        'orders',
       ],
     });
     if (!user) throw new NotFoundException('Користувача не знайдено');

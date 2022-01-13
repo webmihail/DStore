@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { ColumnNumericTransformer } from 'src/common/utils/ColumnNumericTransformer';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
+import { UserEntity } from 'src/users/entity/user.entity';
 import {
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -23,14 +26,20 @@ export class OrderEntity extends GenericEntity {
     example: 1,
     description: 'count of all pieces in order',
   })
-  @Column({ name: 'count', type: 'numeric' })
+  @Column('numeric', {
+    transformer: new ColumnNumericTransformer(),
+  })
   count: number;
 
   @ApiProperty({
     example: 1200,
     description: 'price of all pieces in order',
   })
-  @Column({ name: 'price', type: 'numeric' })
+  @Column('numeric', {
+    precision: 10,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
   @Column({ name: 'isPaid', type: 'boolean', default: false })
@@ -40,4 +49,7 @@ export class OrderEntity extends GenericEntity {
     cascade: true,
   })
   pieces: PieceEntity[];
+
+  @ManyToOne(() => UserEntity, (user: UserEntity) => user.orders)
+  user: UserEntity;
 }

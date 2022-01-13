@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { ColumnNumericTransformer } from 'src/common/utils/ColumnNumericTransformer';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import {
   Column,
@@ -23,7 +24,9 @@ export class SaleEntity extends GenericEntity {
     example: 'Disquired',
     description: 'Brand type name',
   })
-  @Column({ name: 'discount', type: 'numeric' })
+  @Column('numeric', {
+    transformer: new ColumnNumericTransformer(),
+  })
   discount: number;
 
   @OneToMany(() => ProductEntity, (product: ProductEntity) => product.sale, {
