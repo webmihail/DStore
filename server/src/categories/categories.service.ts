@@ -49,8 +49,6 @@ export class CategoriesService {
 
     if (category.children.length === 0) delete category.children;
 
-    delete category.productTypes;
-
     return category;
   }
 

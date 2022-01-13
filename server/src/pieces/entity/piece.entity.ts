@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { OrderEntity } from 'src/orders/entity/order.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
@@ -43,4 +44,7 @@ export class PieceEntity extends GenericEntity {
     onDelete: 'CASCADE',
   })
   order: OrderEntity;
+
+  @ManyToOne(() => BasketEntity, (basket: BasketEntity) => basket.pieces)
+  basket: BasketEntity;
 }

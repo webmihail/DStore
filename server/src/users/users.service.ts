@@ -11,7 +11,7 @@ import { UserEditDTO } from './dtos/user.edit.dto';
 import { UserEntity } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { BansService } from 'src/bans/bans.service';
-import { PiecesService } from 'src/pieces/pieces.service';
+import { BasketsService } from 'src/baskets/baskets.service';
 
 @Injectable()
 export class UsersService {
@@ -20,18 +20,32 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
     private readonly rolesService: RolesService,
     private readonly bansService: BansService,
-    private readonly piecesService: PiecesService,
+    private readonly basketsService: BasketsService,
   ) {}
 
   async getAll(): Promise<UserEntity[]> {
     return await this.usersRepository.find({
-      relations: ['roles', 'roles.permissions', 'ban'],
+      relations: [
+        'roles',
+        'roles.permissions',
+        'ban',
+        'basket',
+        'basket.pieces',
+        'basket.pieces.product',
+      ],
     });
   }
 
   async getById(id: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne(id, {
-      relations: ['roles', 'roles.permissions', 'ban'],
+      relations: [
+        'roles',
+        'roles.permissions',
+        'ban',
+        'basket',
+        'basket.pieces',
+        'basket.pieces.product',
+      ],
     });
     if (!user) throw new NotFoundException('Користувача не знайдено');
 
@@ -64,6 +78,7 @@ export class UsersService {
     const newUser = await this.usersRepository.create(data);
     newUser.roles = [role];
     const user = await this.usersRepository.save(newUser);
+    await this.basketsService.create(user);
 
     delete user.password;
     return user;
@@ -166,38 +181,5 @@ export class UsersService {
 
     delete editUser.password;
     return editUser;
-  }
-
-  async addPieceToBasket(
-    userId: string,
-    productId: string,
-  ): Promise<UserEntity> {
-    const user = await this.getById(userId);
-    const productIsExist =
-      user.basket &&
-      user.basket.filter((piece) => piece.product.id === productId);
-
-    if (productIsExist && productIsExist.length !== 0) {
-      const piece = await this.piecesService.update(productIsExist[0].id, {
-        productId,
-        count: productIsExist[0].count + 1,
-      });
-
-      user.basket = user.basket.map((currentPiece) => {
-        if (currentPiece.id === piece.id) {
-          return piece;
-        }
-        return currentPiece;
-      });
-    } else {
-      const newPiece = await this.piecesService.create({
-        count: 1,
-        productId,
-      });
-
-      user.basket = [newPiece];
-    }
-
-    return this.usersRepository.save(user);
   }
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import settings from 'settings';
+import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { Permissions } from 'src/permissions/constants';
 import { PermissionEntity } from 'src/permissions/entity/permission.entity';
 import { RoleEntity } from 'src/roles/entity/role.entity';
@@ -12,6 +13,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const userRepo = queryRunner.connection.getRepository(UserEntity);
+    const basketRepo = queryRunner.connection.getRepository(BasketEntity);
     const roleRepo = queryRunner.connection.getRepository(RoleEntity);
     const permissionRepo =
       queryRunner.connection.getRepository(PermissionEntity);
@@ -40,7 +42,9 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
       roles: [role],
     });
 
-    await userRepo.save(newUser);
+    const user = await userRepo.save(newUser);
+    const newBasket = await basketRepo.create({ user });
+    await basketRepo.save(newBasket);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}

@@ -42,8 +42,8 @@ import { PiecesModule } from './pieces/pieces.module';
     OrdersModule,
     DeliveriesModule,
     PaymentsModule,
-    BasketsModule,
     PiecesModule,
+    BasketsModule,
   ],
   providers: [PaymentsService],
 })
