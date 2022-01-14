@@ -34,7 +34,7 @@ export class OrdersController {
   async getAllOrdersByUserId(
     @Param('userId') userId: string,
   ): Promise<OrderEntity[]> {
-    return await this.ordersService.getAll(userId);
+    return await this.ordersService.getAllByUserId(userId);
   }
 
   @UseGuards(

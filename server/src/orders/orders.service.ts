@@ -19,7 +19,7 @@ export class OrdersService {
     private readonly basketsService: BasketsService,
   ) {}
 
-  async getAll(userId: string): Promise<OrderEntity[]> {
+  async getAllByUserId(userId: string): Promise<OrderEntity[]> {
     return await this.ordersRepository.find({
       where: {
         user: {

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BrandEntity } from 'src/brands/entity/brand.entity';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { ColumnNumericTransformer } from 'src/common/utils/ColumnNumericTransformer';
+import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';

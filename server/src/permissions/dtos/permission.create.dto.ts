@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, Matches, MaxLength } from 'class-validator';
 import { Permissions } from '../constants';
-import { permissionTypeMatchExpression } from '../utils/permissionTypeMatchExpression';
+import { enumTypeMatchExpression } from '../../common/utils/enumTypeMatchExpression';
 
 export class PermissionCreateDTO {
   @ApiProperty({ name: 'name', enum: Permissions })
   @IsString()
   @IsEnum(Permissions, { each: true })
-  @Matches(permissionTypeMatchExpression(Permissions))
+  @Matches(enumTypeMatchExpression(Permissions))
   name: Permissions;
 
   @ApiProperty({
