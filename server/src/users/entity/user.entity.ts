@@ -19,6 +19,7 @@ import {
 import { BanEntity } from 'src/bans/entity/ban.entity';
 import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { OrderEntity } from 'src/orders/entity/order.entity';
+import { DeliveryEntity } from 'src/deliveries/entity/delivery.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -87,4 +88,13 @@ export class UserEntity extends GenericEntity {
     cascade: true,
   })
   orders: OrderEntity[];
+
+  @OneToMany(
+    () => DeliveryEntity,
+    (delivery: DeliveryEntity) => delivery.user,
+    {
+      cascade: true,
+    },
+  )
+  deliveries: DeliveryEntity[];
 }

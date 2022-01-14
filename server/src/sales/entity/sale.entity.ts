@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
-import { ColumnNumericTransformer } from 'src/common/utils/ColumnNumericTransformer';
+import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import {
   Column,
