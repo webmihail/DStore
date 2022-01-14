@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -80,5 +81,40 @@ export class OrdersController {
   @Delete(':id')
   async deleteOrder(@Param('id') id: string): Promise<DeleteResult> {
     return await this.ordersService.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add delivery to order' })
+  @ApiResponse({ status: 200, type: OrderEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionOrderManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':orderId/add-delivery/:deliveryId')
+  async addDeliveryToOrder(
+    @Param('orderId') orderId: string,
+    @Param('deliveryId') deliveryId: string,
+  ): Promise<OrderEntity> {
+    return await this.ordersService.addDelivery(orderId, deliveryId);
+  }
+
+  @ApiOperation({ summary: 'Delete delivery from order' })
+  @ApiResponse({ status: 200, type: OrderEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionOrderManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':orderId/delete-delivery')
+  async deleteDeliveryFromOrder(
+    @Param('orderId') orderId: string,
+  ): Promise<OrderEntity> {
+    return await this.ordersService.deleteDelivery(orderId);
   }
 }

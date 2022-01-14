@@ -34,6 +34,8 @@ export class UsersService {
         'basket.pieces',
         'basket.pieces.product',
         'orders',
+        'orders.pieces',
+        'orders.delivery',
         'deliveries',
       ],
     });
@@ -49,6 +51,8 @@ export class UsersService {
         'basket.pieces',
         'basket.pieces.product',
         'orders',
+        'orders.pieces',
+        'orders.delivery',
         'deliveries',
       ],
     });
