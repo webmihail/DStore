@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BasketsService } from 'src/baskets/baskets.service';
 import { DeliveriesService } from 'src/deliveries/deliveries.service';
-import { PaymentsService } from 'src/payments/payments.service';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { UsersService } from 'src/users/users.service';
 import { DeleteResult, Repository } from 'typeorm';
@@ -14,7 +13,6 @@ export class OrdersService {
     @InjectRepository(OrderEntity)
     private readonly ordersRepository: Repository<OrderEntity>,
     private readonly usersServices: UsersService,
-    private readonly paymentsService: PaymentsService,
     private readonly deliveriesServices: DeliveriesService,
     private readonly basketsService: BasketsService,
   ) {}
@@ -68,5 +66,18 @@ export class OrdersService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.ordersRepository.delete(id);
+  }
+
+  async addDelivery(orderId: string, deliveryId: string): Promise<OrderEntity> {
+    const order = await this.getById(orderId);
+    const delivery = await this.deliveriesServices.getById(deliveryId);
+    order.delivery = delivery;
+    return await this.ordersRepository.save(order);
+  }
+
+  async deleteDelivery(orderId: string): Promise<OrderEntity> {
+    const order = await this.getById(orderId);
+    order.delivery = null;
+    return await this.ordersRepository.save(order);
   }
 }

@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import { OrderEntity } from 'src/orders/entity/order.entity';
 import { UserEntity } from 'src/users/entity/user.entity';
 import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -58,6 +60,11 @@ export class DeliveryEntity extends GenericEntity {
   })
   @Column({ name: 'description', type: 'varchar', length: 255 })
   description: string;
+
+  @OneToMany(() => OrderEntity, (order: OrderEntity) => order.delivery, {
+    cascade: true,
+  })
+  orders: OrderEntity[];
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.deliveries)
   user: UserEntity;

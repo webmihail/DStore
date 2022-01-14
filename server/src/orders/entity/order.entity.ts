@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
+import { DeliveryEntity } from 'src/deliveries/entity/delivery.entity';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { UserEntity } from 'src/users/entity/user.entity';
 import {
@@ -49,6 +50,12 @@ export class OrderEntity extends GenericEntity {
     cascade: true,
   })
   pieces: PieceEntity[];
+
+  @ManyToOne(
+    () => DeliveryEntity,
+    (delivery: DeliveryEntity) => delivery.orders,
+  )
+  delivery: DeliveryEntity;
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.orders)
   user: UserEntity;
