@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BrandsModule } from 'src/brands/brands.module';
+import { CategoriesModule } from 'src/categories/categories.module';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { ProductsInfoModule } from 'src/productsInfo/productsInfo.module';
 import { ProductTypesModule } from 'src/productTypes/productTypes.module';
@@ -12,6 +13,7 @@ import { ProductsService } from './products.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductEntity, CategoryEntity]),
+    CategoriesModule,
     ProductTypesModule,
     BrandsModule,
     SalesModule,

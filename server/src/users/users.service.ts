@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -66,7 +67,7 @@ export class UsersService {
 
   async create(data: UserCreateDTO): Promise<UserEntity> {
     const userExist = await this.usersRepository.findOne({ email: data.email });
-    if (userExist) throw new NotFoundException('Такий email вже існує');
+    if (userExist) throw new BadRequestException('Такий email вже існує');
 
     let role = await this.rolesService.getByValue('Persone');
 

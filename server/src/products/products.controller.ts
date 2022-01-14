@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { ProductInfoCreateDTO } from 'src/productsInfo/dtos/productInfo.create.dto';
 import { DeleteResult } from 'typeorm';
+import { ProductCreateDTO } from './dtos/product.create.dto';
 import { ProductEditDTO } from './dtos/product.edit.dto';
 import { ProductEntity } from './entity/product.entity';
 import { ProductsService } from './products.service';
@@ -36,6 +38,24 @@ export class ProductsController {
   @Get(':id')
   async getProduct(@Param('id') id: string): Promise<ProductEntity> {
     return await this.productsServices.getById(id);
+  }
+
+  @ApiOperation({ summary: 'Create and add product to category' })
+  @ApiResponse({ status: 200, type: ProductEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Post('create-product-to-category/:categoryId')
+  async createProductAndAddToCategory(
+    @Param('categoryId') categoryId: string,
+    @Body() data: ProductCreateDTO,
+  ): Promise<ProductEntity> {
+    return await this.productsServices.create(categoryId, data);
   }
 
   @ApiOperation({ summary: 'Update product' })
@@ -68,6 +88,41 @@ export class ProductsController {
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add product to category' })
+  @ApiResponse({ status: 200, type: ProductEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/add-to-category/:categoryId')
+  async addProductToCategory(
+    @Param('productId') productId: string,
+    @Param('categoryId') categoryId: string,
+  ): Promise<ProductEntity> {
+    return await this.productsServices.addToCategory(productId, categoryId);
+  }
+
+  @ApiOperation({ summary: 'Delete product from category' })
+  @ApiResponse({ status: 200, type: ProductEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Patch(':productId/delete-from-category')
+  async deleteProductFromCategory(
+    @Param('productId') productId: string,
+  ): Promise<ProductEntity> {
+    return await this.productsServices.deleteFromCategory(productId);
   }
 
   @ApiOperation({ summary: 'Add product type to product' })

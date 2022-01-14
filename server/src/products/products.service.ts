@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BrandsService } from 'src/brands/brands.service';
+import { CategoriesService } from 'src/categories/categories.service';
 import { ProductInfoCreateDTO } from 'src/productsInfo/dtos/productInfo.create.dto';
 import { ProductsInfoService } from 'src/productsInfo/productsInfo.service';
 import { ProductTypesService } from 'src/productTypes/productTypes.service';
@@ -19,6 +20,7 @@ export class ProductsService {
     private readonly brandsService: BrandsService,
     private readonly salesServise: SalesService,
     private readonly productsInfo: ProductsInfoService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async getAll(): Promise<ProductEntity[]> {
@@ -47,8 +49,21 @@ export class ProductsService {
     });
   }
 
-  async create(data: ProductCreateDTO): Promise<ProductEntity> {
+  async create(
+    categoryId: string,
+    data: ProductCreateDTO,
+  ): Promise<ProductEntity> {
+    const category = await this.categoriesService.getById(categoryId);
     const newProduct = await this.productsRepository.create(data);
+    const equalProduct = category.products.filter(
+      (product) => product.name === newProduct.name,
+    );
+
+    if (equalProduct.length !== 0)
+      throw new BadRequestException('Продукт з такою назвою існує у категорії');
+
+    newProduct.category = category;
+
     return await this.productsRepository.save(newProduct);
   }
 
@@ -60,6 +75,30 @@ export class ProductsService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.productsRepository.delete(id);
+  }
+
+  async addToCategory(
+    productId: string,
+    categoryId: string,
+  ): Promise<ProductEntity> {
+    const product = await this.getById(productId);
+    const category = await this.categoriesService.getById(categoryId);
+    const equalProduct = category.products.filter(
+      (product) => product.id === productId,
+    );
+
+    if (equalProduct.length === 0) {
+      product.category = category;
+    }
+
+    return await this.productsRepository.save(product);
+  }
+
+  async deleteFromCategory(productId: string): Promise<ProductEntity> {
+    const product = await this.getById(productId);
+    product.category = null;
+
+    return await this.productsRepository.save(product);
   }
 
   async addProductType(

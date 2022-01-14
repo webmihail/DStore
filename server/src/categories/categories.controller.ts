@@ -14,8 +14,6 @@ import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
-import { ProductCreateDTO } from 'src/products/dtos/product.create.dto';
-import { ProductTypeCreateDTO } from 'src/productTypes/dtos/productType.create.dto';
 import { DeleteResult } from 'typeorm';
 import { CategoriesService } from './categories.service';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
@@ -76,48 +74,6 @@ export class CategoriesController {
     return await this.categoryServices.createSubcategory(categoryId, data);
   }
 
-  @ApiOperation({ summary: 'Create and add product to category' })
-  @ApiResponse({ status: 200, type: CategoryEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/create-product-to-category')
-  async createProductAndAddToCategory(
-    @Param('categoryId') categoryId: string,
-    @Body() data: ProductCreateDTO,
-  ): Promise<CategoryEntity> {
-    return await this.categoryServices.createProductToCategory(
-      categoryId,
-      data,
-    );
-  }
-
-  @ApiOperation({ summary: 'Create and add product type to category' })
-  @ApiResponse({ status: 200, type: CategoryEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/create-product-type-to-category')
-  async createProductTypeAndAddToCategory(
-    @Param('categoryId') categoryId: string,
-    @Body() data: ProductTypeCreateDTO,
-  ): Promise<CategoryEntity> {
-    return await this.categoryServices.createProductTypeToCategory(
-      categoryId,
-      data,
-    );
-  }
-
   @ApiOperation({ summary: 'Update category' })
   @ApiResponse({ status: 200, type: CategoryEntity })
   @UseGuards(
@@ -148,41 +104,5 @@ export class CategoriesController {
   @Delete(':id')
   async deleteCategory(@Param('id') id: string): Promise<DeleteResult> {
     return await this.categoryServices.delete(id);
-  }
-
-  @ApiOperation({ summary: 'Add product to category' })
-  @ApiResponse({ status: 200, type: CategoryEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/add-product/:productId')
-  async addProductToCategory(
-    @Param('categoryId') categoryId: string,
-    @Param('productId') productId: string,
-  ): Promise<CategoryEntity> {
-    return await this.categoryServices.addProduct(categoryId, productId);
-  }
-
-  @ApiOperation({ summary: 'Delete product from category' })
-  @ApiResponse({ status: 200, type: CategoryEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':categoryId/delete-product/:productId')
-  async deleteProductFromCategory(
-    @Param('categoryId') categoryId: string,
-    @Param('productId') productId: string,
-  ): Promise<CategoryEntity> {
-    return await this.categoryServices.deleteProduct(categoryId, productId);
   }
 }
