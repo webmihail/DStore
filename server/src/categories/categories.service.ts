@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductCreateDTO } from 'src/products/dtos/product.create.dto';
-import { ProductsService } from 'src/products/products.service';
-import { ProductTypeCreateDTO } from 'src/productTypes/dtos/productType.create.dto';
-import { ProductTypesService } from 'src/productTypes/productTypes.service';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
@@ -16,8 +12,6 @@ export class CategoriesService {
     private readonly categoryTreeRepository: TreeRepository<CategoryEntity> = getManager().getTreeRepository(
       CategoryEntity,
     ),
-    private readonly productsService: ProductsService,
-    private readonly productTypesService: ProductTypesService,
   ) {}
 
   async getAll(): Promise<CategoryEntity[]> {
@@ -49,8 +43,6 @@ export class CategoriesService {
 
     if (category.children.length === 0) delete category.children;
 
-    delete category.productTypes;
-
     return category;
   }
 
@@ -74,48 +66,6 @@ export class CategoriesService {
     return await this.categoryTreeRepository.save(newSubcategory);
   }
 
-  async createProductToCategory(
-    id: string,
-    data: ProductCreateDTO,
-  ): Promise<CategoryEntity> {
-    const category = await this.getById(id);
-    const newProduct = await this.productsService.create(data);
-
-    const equalProduct = category.products.filter(
-      (product) => product.name === newProduct.name,
-    );
-
-    if (equalProduct.length === 0) {
-      category.products.push(newProduct);
-    }
-
-    const editCategory = await this.categoryTreeRepository.save(category);
-
-    return editCategory;
-  }
-
-  async createProductTypeToCategory(
-    id: string,
-    data: ProductTypeCreateDTO,
-  ): Promise<CategoryEntity> {
-    const category = await this.getById(id);
-    const newProductType = await this.productTypesService.create(data);
-
-    const equalProductType = category.productTypes.filter(
-      (productType) => productType.name === newProductType.name,
-    );
-
-    if (equalProductType.length === 0) {
-      category.productTypes.push(newProductType);
-    }
-
-    const editCategory = await this.categoryTreeRepository.save(category);
-
-    delete editCategory.productTypes;
-
-    return editCategory;
-  }
-
   async update(id: string, data: CategoryEditDTO): Promise<CategoryEntity> {
     const category = await this.getById(id);
     const editCategory = Object.assign(category, data);
@@ -124,40 +74,5 @@ export class CategoriesService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.categoryTreeRepository.delete(id);
-  }
-
-  async addProduct(
-    categoryId: string,
-    productId: string,
-  ): Promise<CategoryEntity> {
-    const category = await this.getById(categoryId);
-    const equalProduct = category.products.filter(
-      (product) => product.id === productId,
-    );
-
-    if (equalProduct.length === 0) {
-      const product = await this.productsService.getById(productId);
-      category.products.push(product);
-    }
-
-    const editCategory = await this.categoryTreeRepository.save(category);
-
-    return editCategory;
-  }
-
-  async deleteProduct(
-    categoryId: string,
-    productId: string,
-  ): Promise<CategoryEntity> {
-    const category = await this.getById(categoryId);
-    const editProducts = category.products.filter(
-      (product) => product.id !== productId,
-    );
-
-    category.products = editProducts;
-
-    const editCategory = await this.categoryTreeRepository.save(category);
-
-    return editCategory;
   }
 }

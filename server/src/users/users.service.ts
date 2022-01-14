@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { UserEditDTO } from './dtos/user.edit.dto';
 import { UserEntity } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { BansService } from 'src/bans/bans.service';
+import { BasketsService } from 'src/baskets/baskets.service';
 
 @Injectable()
 export class UsersService {
@@ -19,17 +21,34 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
     private readonly rolesService: RolesService,
     private readonly bansService: BansService,
+    private readonly basketsService: BasketsService,
   ) {}
 
   async getAll(): Promise<UserEntity[]> {
     return await this.usersRepository.find({
-      relations: ['roles', 'roles.permissions', 'ban'],
+      relations: [
+        'roles',
+        'roles.permissions',
+        'ban',
+        'basket',
+        'basket.pieces',
+        'basket.pieces.product',
+        'orders',
+      ],
     });
   }
 
   async getById(id: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne(id, {
-      relations: ['roles', 'roles.permissions', 'ban'],
+      relations: [
+        'roles',
+        'roles.permissions',
+        'ban',
+        'basket',
+        'basket.pieces',
+        'basket.pieces.product',
+        'orders',
+      ],
     });
     if (!user) throw new NotFoundException('Користувача не знайдено');
 
@@ -48,7 +67,7 @@ export class UsersService {
 
   async create(data: UserCreateDTO): Promise<UserEntity> {
     const userExist = await this.usersRepository.findOne({ email: data.email });
-    if (userExist) throw new NotFoundException('Такий email вже існує');
+    if (userExist) throw new BadRequestException('Такий email вже існує');
 
     let role = await this.rolesService.getByValue('Persone');
 
@@ -62,6 +81,7 @@ export class UsersService {
     const newUser = await this.usersRepository.create(data);
     newUser.roles = [role];
     const user = await this.usersRepository.save(newUser);
+    await this.basketsService.create(user);
 
     delete user.password;
     return user;

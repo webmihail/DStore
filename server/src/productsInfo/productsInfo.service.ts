@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ColorsService } from 'src/colors/colors.service';
+import { ProductsService } from 'src/products/products.service';
 import { SizesService } from 'src/sizes/sizes.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductInfoCreateDTO } from './dtos/productInfo.create.dto';
@@ -14,6 +15,7 @@ export class ProductsInfoService {
     private readonly productInfoRepository: Repository<ProductInfoEntity>,
     private readonly sizesService: SizesService,
     private readonly colorsService: ColorsService,
+    private readonly productsService: ProductsService,
   ) {}
 
   async getById(id: string): Promise<ProductInfoEntity> {
@@ -22,8 +24,13 @@ export class ProductsInfoService {
     });
   }
 
-  async create(data: ProductInfoCreateDTO): Promise<ProductInfoEntity> {
+  async create(
+    productId: string,
+    data: ProductInfoCreateDTO,
+  ): Promise<ProductInfoEntity> {
+    const product = await this.productsService.getById(productId);
     const newProductInfo = await this.productInfoRepository.create(data);
+    newProductInfo.product = product;
     return await this.productInfoRepository.save(newProductInfo);
   }
 
@@ -66,7 +73,6 @@ export class ProductsInfoService {
   ): Promise<ProductInfoEntity> {
     const productInfo = await this.getById(productInfoId);
     const color = await this.colorsService.getById(colorId);
-    console.log(productInfo);
     productInfo.color = color;
     const editProductInfo = await this.productInfoRepository.save(productInfo);
 

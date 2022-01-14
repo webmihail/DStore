@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CategoriesService } from 'src/categories/categories.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductTypeCreateDTO } from './dtos/productType.create.dto';
 import { ProductTypeEditDTO } from './dtos/productType.edit.dto';
@@ -10,6 +11,7 @@ export class ProductTypesService {
   constructor(
     @InjectRepository(ProductTypeEntity)
     private readonly productTypeRepository: Repository<ProductTypeEntity>,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async getAll(): Promise<ProductTypeEntity[]> {
@@ -30,8 +32,24 @@ export class ProductTypesService {
     return await this.productTypeRepository.findOne(id);
   }
 
-  async create(data: ProductTypeCreateDTO): Promise<ProductTypeEntity> {
+  async create(
+    categoryId: string,
+    data: ProductTypeCreateDTO,
+  ): Promise<ProductTypeEntity> {
+    const category = await this.categoriesService.getById(categoryId);
     const newProductType = await this.productTypeRepository.create(data);
+
+    const equalProductType = category.productTypes.filter(
+      (productType) => productType.name === newProductType.name,
+    );
+
+    if (equalProductType.length !== 0)
+      throw new BadRequestException(
+        'Тип продукту з такою назвою існує у категорії',
+      );
+
+    newProductType.category = category;
+
     return await this.productTypeRepository.save(newProductType);
   }
 

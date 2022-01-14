@@ -7,13 +7,18 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { BanEntity } from 'src/bans/entity/ban.entity';
+import { BasketEntity } from 'src/baskets/entity/basket.entity';
+import { OrderEntity } from 'src/orders/entity/order.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -58,6 +63,10 @@ export class UserEntity extends GenericEntity {
   @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
   public isEmailConfirmed?: boolean;
 
+  @OneToOne(() => BasketEntity, (basket: BasketEntity) => basket.user)
+  @JoinColumn()
+  basket: BasketEntity;
+
   @ManyToMany(() => RoleEntity)
   @JoinTable()
   roles: RoleEntity[];
@@ -73,4 +82,9 @@ export class UserEntity extends GenericEntity {
     }
     this.password = await hash(this.password, 10);
   }
+
+  @OneToMany(() => OrderEntity, (order: OrderEntity) => order.user, {
+    cascade: true,
+  })
+  orders: OrderEntity[];
 }
