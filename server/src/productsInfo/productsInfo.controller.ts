@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
+import { ProductInfoCreateDTO } from './dtos/productInfo.create.dto';
 import { ProductInfoEditDTO } from './dtos/productInfo.edit.dto';
 import { ProductInfoEntity } from './entity/productInfo.entity';
 import { ProductsInfoService } from './productsInfo.service';
@@ -36,6 +38,24 @@ export class ProductsInfoController {
   @Get(':id')
   async getProductType(@Param('id') id: string): Promise<ProductInfoEntity> {
     return await this.productsInfoService.getById(id);
+  }
+
+  @ApiOperation({ summary: 'Create and add product info to product' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @UseGuards(
+    PermissionGuard([
+      Permissions.SubscriptionFullManagement,
+      Permissions.SubscriptionCategoryProductManagementWrite,
+    ]),
+  )
+  @UseGuards(BanGuard)
+  @UseGuards(JwtAuthGuard)
+  @Post('create-to-product/:productId')
+  async createProductInfoAndAddToProduct(
+    @Param('productId') productId: string,
+    @Body() data: ProductInfoCreateDTO,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.create(productId, data);
   }
 
   @ApiOperation({ summary: 'Update product info' })

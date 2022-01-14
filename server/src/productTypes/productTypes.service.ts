@@ -32,12 +32,7 @@ export class ProductTypesService {
     return await this.productTypeRepository.findOne(id);
   }
 
-  async create(data: ProductTypeCreateDTO): Promise<ProductTypeEntity> {
-    const newProductType = await this.productTypeRepository.create(data);
-    return await this.productTypeRepository.save(newProductType);
-  }
-
-  async createProductTypeToCategory(
+  async create(
     categoryId: string,
     data: ProductTypeCreateDTO,
   ): Promise<ProductTypeEntity> {

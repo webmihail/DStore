@@ -14,7 +14,6 @@ import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import { Permissions } from 'src/permissions/constants';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
-import { ProductInfoCreateDTO } from 'src/productsInfo/dtos/productInfo.create.dto';
 import { DeleteResult } from 'typeorm';
 import { ProductCreateDTO } from './dtos/product.create.dto';
 import { ProductEditDTO } from './dtos/product.edit.dto';
@@ -228,26 +227,5 @@ export class ProductsController {
     @Param('productId') productId: string,
   ): Promise<ProductEntity> {
     return await this.productsServices.deleteSale(productId);
-  }
-
-  @ApiOperation({ summary: 'Create and add product info to product' })
-  @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
-  @Patch(':productId/create-product-info-to-product')
-  async createProductInfoAndAddToProduct(
-    @Param('productId') productId: string,
-    @Body() data: ProductInfoCreateDTO,
-  ): Promise<ProductEntity> {
-    return await this.productsServices.createProductInfoToProduct(
-      productId,
-      data,
-    );
   }
 }

@@ -86,10 +86,7 @@ export class ProductTypesController {
     @Param('categoryId') categoryId: string,
     @Body() data: ProductTypeCreateDTO,
   ): Promise<ProductTypeEntity> {
-    return await this.productTypesServices.createProductTypeToCategory(
-      categoryId,
-      data,
-    );
+    return await this.productTypesServices.create(categoryId, data);
   }
 
   @ApiOperation({ summary: 'Update product type' })
