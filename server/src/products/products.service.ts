@@ -42,6 +42,7 @@ export class ProductsService {
         'productsInfo',
         'productsInfo.size',
         'productsInfo.color',
+        'comments',
       ],
     });
   }
