@@ -21,6 +21,7 @@ import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { OrderEntity } from 'src/orders/entity/order.entity';
 import { DeliveryEntity } from 'src/deliveries/entity/delivery.entity';
 import { CommentEntity } from 'src/comments/entity/comment.entity';
+import { RatingEntity } from 'src/ratings/entity/rating.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -103,4 +104,9 @@ export class UserEntity extends GenericEntity {
     cascade: true,
   })
   comments: CommentEntity[];
+
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.user, {
+    cascade: true,
+  })
+  ratings: RatingEntity[];
 }

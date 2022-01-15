@@ -7,6 +7,7 @@ import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericT
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
+import { RatingEntity } from 'src/ratings/entity/rating.entity';
 import { SaleEntity } from 'src/sales/entity/sale.entity';
 import {
   Column,
@@ -85,4 +86,9 @@ export class ProductEntity extends GenericEntity {
     cascade: true,
   })
   comments: CommentEntity[];
+
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.product, {
+    cascade: true,
+  })
+  ratings: RatingEntity[];
 }
