@@ -2,34 +2,35 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
-  mixin,
-  Type,
+  Injectable,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { PERMISSIONS_KEY } from '../decorators/permission.decorator';
 import { RequestWithUserDTO } from '../../auth/dtos/user.request.dto';
-import JwtAuthGuard from '../../auth/guards/jwt.auth.guard';
 
-const PermissionGuard = (permissions: string[]): Type<CanActivate> => {
-  class PermissionGuardMixin extends JwtAuthGuard {
-    async canActivate(context: ExecutionContext) {
-      await super.canActivate(context);
+@Injectable()
+class PermissionGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
 
-      const request = context.switchToHttp().getRequest<RequestWithUserDTO>();
-      const user = request.user;
-      const countOfMatchRolesWithPermission = user?.roles.filter(
-        (role) =>
-          role.permissions.filter((item) => permissions.includes(item.name))
-            .length !== 0,
-      );
+  canActivate(context: ExecutionContext) {
+    const requiredPermissions = this.reflector.getAllAndOverride(
+      PERMISSIONS_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
-      if (countOfMatchRolesWithPermission.length === 0) {
-        throw new ForbiddenException('У вас немає прав на ці дії!');
-      }
+    const request = context.switchToHttp().getRequest<RequestWithUserDTO>();
+    const user = request.user;
 
-      return countOfMatchRolesWithPermission.length !== 0;
+    const isHasPermissionAccess = user?.roles.some((role) =>
+      role.permissions.some((item) => requiredPermissions.includes(item.name)),
+    );
+
+    if (!isHasPermissionAccess) {
+      throw new ForbiddenException('У вас немає прав на ці дії!');
     }
-  }
 
-  return mixin(PermissionGuardMixin);
-};
+    return isHasPermissionAccess;
+  }
+}
 
 export default PermissionGuard;

@@ -10,8 +10,7 @@ import { WishlistsService } from './wishlists.service';
 export class WishlistsController {
   constructor(private readonly wishlistsService: WishlistsService) {}
 
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @ApiOperation({ summary: 'Get wishlist by id' })
   @ApiResponse({ status: 200, type: [WishlistEntity] })
   @Get(':id')
@@ -21,8 +20,7 @@ export class WishlistsController {
 
   @ApiOperation({ summary: 'Add product to wishlist' })
   @ApiResponse({ status: 200, type: WishlistEntity })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Patch(':wishlistId/add-product/:productId')
   async addProductToWishlist(
     @Param('wishlistId') wishlistId: string,
@@ -32,8 +30,7 @@ export class WishlistsController {
   }
 
   @ApiOperation({ summary: 'Delete product from wishlist' })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Patch(':wishlistId/delete-product/:productId')
   async deleteProductFromWishlist(
     @Param('wishlistId') wishlistId: string,

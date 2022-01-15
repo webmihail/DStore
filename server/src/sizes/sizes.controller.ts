@@ -9,29 +9,27 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { SizesService } from './sizes.service';
-import { Permissions } from '../permissions/constants';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { SizeEntity } from './entity/size.entity';
 import { SizeCreateDTO } from './dtos/size.create.dto';
 import { SizeEditDTO } from './dtos/size.edit.dto';
 import { DeleteResult } from 'typeorm';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
+import PermissionGuard from 'src/permissions/guards/permission.guard';
 
 @ApiTags('Sizes')
 @Controller('sizes')
 export class SizesController {
   constructor(private readonly sizesServices: SizesService) {}
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @ApiOperation({ summary: 'Get all sizes' })
   @ApiResponse({ status: 200, type: [SizeEntity] })
   @Get()
@@ -39,14 +37,11 @@ export class SizesController {
     return await this.sizesServices.getAll();
   }
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @ApiOperation({ summary: 'Get size by id' })
   @ApiResponse({ status: 200, type: SizeEntity })
   @Get(':id')
@@ -56,14 +51,11 @@ export class SizesController {
 
   @ApiOperation({ summary: 'Create size' })
   @ApiResponse({ status: 200, type: SizeEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post()
   async createSize(@Body() data: SizeCreateDTO): Promise<SizeEntity> {
     return await this.sizesServices.create(data);
@@ -71,14 +63,11 @@ export class SizesController {
 
   @ApiOperation({ summary: 'Update size' })
   @ApiResponse({ status: 200, type: SizeEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateSize(
     @Param('id') id: string,
@@ -88,14 +77,11 @@ export class SizesController {
   }
 
   @ApiOperation({ summary: 'Delete size' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteSize(@Param('id') id: string): Promise<DeleteResult> {
     return await this.sizesServices.delete(id);

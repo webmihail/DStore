@@ -14,9 +14,10 @@ import { UserEditDTO } from './dtos/user.edit.dto';
 import { UserEntity } from './entity/user.entity';
 import { UsersService } from './users.service';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
-import PermissionGuard from 'src/permissions/guards/permission.guard';
-import { Permissions } from 'src/permissions/constants';
 import { BanGuard } from 'src/bans/guards/ban.guard';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
+import PermissionGuard from 'src/permissions/guards/permission.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -25,8 +26,8 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, type: [UserEntity] })
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
-  @UseGuards(JwtAuthGuard)
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Get()
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAll();
@@ -52,8 +53,8 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Delete user' })
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
-  @UseGuards(JwtAuthGuard)
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<DeleteResult> {
     return this.userService.delete(id);
@@ -61,14 +62,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Add role to user' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionRoleManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionRoleManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':userId/add-role/:roleId')
   async addRoleFromUser(
     @Param('userId') userId: string,
@@ -79,14 +77,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Delete role from user' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionRoleManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionRoleManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':userId/delete-role/:roleId')
   async deleteRoleFromUser(
     @Param('userId') userId: string,
@@ -97,14 +92,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Add ban to user' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionRoleManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':userId/add-ban/:banId')
   async addBanToUser(
     @Param('userId') userId: string,
@@ -115,14 +107,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Delete ban from user' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionRoleManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':userId/delete-ban')
   async deleteBanFromUser(
     @Param('userId') userId: string,

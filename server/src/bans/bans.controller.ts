@@ -10,14 +10,15 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
-import PermissionGuard from 'src/permissions/guards/permission.guard';
-import { Permissions } from 'src/permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
 import { DeleteResult } from 'typeorm';
 import { BansService } from './bans.service';
 import { BanCreateDTO } from './dtos/ban.create.dto';
 import { BanEditDTO } from './dtos/ban.edit.dto';
 import { BanEntity } from './entity/ban.entity';
 import { BanGuard } from './guards/ban.guard';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
+import PermissionGuard from 'src/permissions/guards/permission.guard';
 
 @ApiTags('Bans')
 @Controller('bans')
@@ -26,14 +27,11 @@ export class BansController {
 
   @ApiOperation({ summary: 'Get all bans' })
   @ApiResponse({ status: 200, type: [BanEntity] })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementRead,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementRead,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get()
   async getAllBans(): Promise<BanEntity[]> {
     return await this.bansServices.getAll();
@@ -41,14 +39,11 @@ export class BansController {
 
   @ApiOperation({ summary: 'Get ban by id' })
   @ApiResponse({ status: 200, type: BanEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementRead,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementRead,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get(':id')
   async getBan(@Param('id') id: string): Promise<BanEntity> {
     return await this.bansServices.getById(id);
@@ -56,14 +51,11 @@ export class BansController {
 
   @ApiOperation({ summary: 'Create new ban' })
   @ApiResponse({ status: 200, type: BanEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post()
   async createBan(@Body() data: BanCreateDTO): Promise<BanEntity> {
     return await this.bansServices.create(data);
@@ -71,14 +63,11 @@ export class BansController {
 
   @ApiOperation({ summary: 'Update ban' })
   @ApiResponse({ status: 200, type: BanEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateBan(
     @Param('id') id: string,
@@ -88,28 +77,22 @@ export class BansController {
   }
 
   @ApiOperation({ summary: 'Delete ban' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteBan(@Param('id') id: string): Promise<DeleteResult> {
     return await this.bansServices.delete(id);
   }
 
   @ApiOperation({ summary: 'Change ban status' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionBanManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionBanManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id/change-ban-status')
   async changeBanStatus(@Param('id') id: string): Promise<BanEntity> {
     return await this.bansServices.changeBanStatus(id);

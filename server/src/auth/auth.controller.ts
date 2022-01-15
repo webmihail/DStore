@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/common/decorators/user.decorator';
+import { User } from 'src/users/decorators/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginRequestDTO } from './dtos/login.request.dto';
 import { LoginResponseDTO } from './dtos/login.response.dto';
@@ -94,8 +94,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Resend confirmation link' })
   @ApiResponse({ status: 200 })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Post('resend-confirmation-link')
   async resendConfirmationLink(@User() user: UserEntity) {
     await this.authService.resendConfirmationLink(user.id);
