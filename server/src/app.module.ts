@@ -21,6 +21,7 @@ import { BasketsModule } from './baskets/baskets.module';
 import { PiecesModule } from './pieces/pieces.module';
 import { CommentsModule } from './comments/comments.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { WishlistsModule } from './wishlists/wishlists.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { RatingsModule } from './ratings/ratings.module';
     BasketsModule,
     CommentsModule,
     RatingsModule,
+    WishlistsModule,
   ],
 })
 export class AppModule {

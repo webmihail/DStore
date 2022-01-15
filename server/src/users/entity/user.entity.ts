@@ -22,6 +22,7 @@ import { OrderEntity } from 'src/orders/entity/order.entity';
 import { DeliveryEntity } from 'src/deliveries/entity/delivery.entity';
 import { CommentEntity } from 'src/comments/entity/comment.entity';
 import { RatingEntity } from 'src/ratings/entity/rating.entity';
+import { WishlistEntity } from 'src/wishlists/entity/wishlist.entity';
 
 @Entity({ name: 'users' })
 @Unique(['id', 'email'])
@@ -109,4 +110,8 @@ export class UserEntity extends GenericEntity {
     cascade: true,
   })
   ratings: RatingEntity[];
+
+  @OneToOne(() => WishlistEntity, (wishlist: WishlistEntity) => wishlist.user)
+  @JoinColumn()
+  wishlist: WishlistEntity;
 }

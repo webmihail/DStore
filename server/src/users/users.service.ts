@@ -13,6 +13,7 @@ import { UserEntity } from './entity/user.entity';
 import * as bcrypt from 'bcrypt';
 import { BansService } from 'src/bans/bans.service';
 import { BasketsService } from 'src/baskets/baskets.service';
+import { WishlistsService } from 'src/wishlists/wishlists.service';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +23,7 @@ export class UsersService {
     private readonly rolesService: RolesService,
     private readonly bansService: BansService,
     private readonly basketsService: BasketsService,
+    private readonly wishlistsService: WishlistsService,
   ) {}
 
   async getAll(): Promise<UserEntity[]> {
@@ -37,6 +39,8 @@ export class UsersService {
         'orders.pieces',
         'orders.delivery',
         'deliveries',
+        'wishlist',
+        'wishlist.products',
       ],
     });
   }
@@ -54,6 +58,8 @@ export class UsersService {
         'orders.pieces',
         'orders.delivery',
         'deliveries',
+        'wishlist',
+        'wishlist.products',
       ],
     });
     if (!user) throw new NotFoundException('Користувача не знайдено');
@@ -88,6 +94,7 @@ export class UsersService {
     newUser.roles = [role];
     const user = await this.usersRepository.save(newUser);
     await this.basketsService.create(user);
+    await this.wishlistsService.create(user);
 
     delete user.password;
     return user;
