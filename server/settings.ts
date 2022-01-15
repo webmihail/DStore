@@ -13,6 +13,7 @@ const requiredEnvVariables = [
   'PORT',
   'API_PREFIX',
   'SWAGGER_PREFIX',
+  'SWAGGER_ON',
 
   'SUPERADMIN_FIRST_NAME',
   'SUPERADMIN_LAST_NAME',
@@ -69,6 +70,7 @@ const settings = {
     port: process.env.PORT,
     apiPrefix: process.env.API_PREFIX,
     swaggerPrefix: process.env.SWAGGER_PREFIX,
+    isSwaggerOn: process.env.SWAGGER_ON === 'true',
   },
   superadmin: {
     firstName: process.env.SUPERADMIN_FIRST_NAME,
