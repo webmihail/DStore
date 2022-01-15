@@ -5,6 +5,7 @@ import { BanEntity } from 'src/bans/entity/ban.entity';
 import { BasketsModule } from 'src/baskets/baskets.module';
 import { RoleEntity } from 'src/roles/entity/role.entity';
 import { RolesModule } from 'src/roles/roles.module';
+import { WishlistsModule } from 'src/wishlists/wishlists.module';
 import { UserEntity } from './entity/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -15,6 +16,7 @@ import { UsersService } from './users.service';
     RolesModule,
     BansModule,
     BasketsModule,
+    WishlistsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

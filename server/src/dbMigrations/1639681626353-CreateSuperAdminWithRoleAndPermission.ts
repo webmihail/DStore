@@ -6,6 +6,7 @@ import { Permissions } from 'src/permissions/constants';
 import { PermissionEntity } from 'src/permissions/entity/permission.entity';
 import { RoleEntity } from 'src/roles/entity/role.entity';
 import { UserEntity } from 'src/users/entity/user.entity';
+import { WishlistEntity } from 'src/wishlists/entity/wishlist.entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateSuperAdminWithRoleAndPermission1639681626353
@@ -14,6 +15,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
   public async up(queryRunner: QueryRunner): Promise<void> {
     const userRepo = queryRunner.connection.getRepository(UserEntity);
     const basketRepo = queryRunner.connection.getRepository(BasketEntity);
+    const wishlistRepo = queryRunner.connection.getRepository(WishlistEntity);
     const roleRepo = queryRunner.connection.getRepository(RoleEntity);
     const permissionRepo =
       queryRunner.connection.getRepository(PermissionEntity);
@@ -45,6 +47,8 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
     const user = await userRepo.save(newUser);
     const newBasket = await basketRepo.create({ user });
     await basketRepo.save(newBasket);
+    const newWishlist = await wishlistRepo.create({ user });
+    await wishlistRepo.save(newWishlist);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}

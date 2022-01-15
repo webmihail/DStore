@@ -9,6 +9,7 @@ import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import { RatingEntity } from 'src/ratings/entity/rating.entity';
 import { SaleEntity } from 'src/sales/entity/sale.entity';
+import { WishlistEntity } from 'src/wishlists/entity/wishlist.entity';
 import {
   Column,
   Entity,
@@ -91,4 +92,10 @@ export class ProductEntity extends GenericEntity {
     cascade: true,
   })
   ratings: RatingEntity[];
+
+  @ManyToOne(
+    () => WishlistEntity,
+    (wishlist: WishlistEntity) => wishlist.products,
+  )
+  wishlist: WishlistEntity;
 }
