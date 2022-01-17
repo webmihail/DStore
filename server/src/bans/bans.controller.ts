@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -93,7 +94,7 @@ export class BansController {
     PermissionTypes.SubscriptionBanManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Put(':id/change-ban-status')
+  @Patch(':id/change-ban-status')
   async changeBanStatus(@Param('id') id: string): Promise<BanEntity> {
     return await this.bansServices.changeBanStatus(id);
   }

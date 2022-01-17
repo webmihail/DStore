@@ -56,6 +56,7 @@ export class ProductInfoEntity extends GenericEntity {
   })
   @Column('numeric', {
     transformer: new ColumnNumericTransformer(),
+    nullable: true,
   })
   count: number;
 

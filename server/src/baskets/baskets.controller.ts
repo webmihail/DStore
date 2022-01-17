@@ -31,12 +31,27 @@ export class BasketsController {
     PermissionTypes.SubscriptionOrderManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Patch(':basketId/add-product/:productId')
+  @Patch(':basketId/add-piece-with-product/:productId')
   async createAndAddPieceToUserBasket(
     @Param('basketId') basketId: string,
     @Param('productId') productId: string,
   ): Promise<BasketEntity> {
     return await this.basketsService.addPiece(basketId, productId);
+  }
+
+  @ApiOperation({ summary: 'Subtract piece from basket' })
+  @ApiResponse({ status: 200, type: BasketEntity })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionOrderManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @Patch(':basketId/subtract-piece-with-product/:productId')
+  async subtractPieceFromUserBasket(
+    @Param('basketId') basketId: string,
+    @Param('productId') productId: string,
+  ): Promise<BasketEntity> {
+    return await this.basketsService.subtractPiece(basketId, productId);
   }
 
   @ApiOperation({ summary: 'Clear basket' })

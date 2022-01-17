@@ -47,6 +47,12 @@ export class ProductsInfoService {
     return await this.productInfoRepository.delete(id);
   }
 
+  async changeInStockStatus(id: string): Promise<ProductInfoEntity> {
+    const productInfo = await this.getById(id);
+    productInfo.inStock = !productInfo.inStock;
+    return await this.productInfoRepository.save(productInfo);
+  }
+
   async addSize(
     productInfoId: string,
     sizeId: string,

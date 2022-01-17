@@ -26,19 +26,19 @@ export class BasketsService {
 
   async addPiece(basketId: string, productId: string): Promise<BasketEntity> {
     const basket = await this.getById(basketId);
-    const productIsExist =
+    const foundPiece =
       basket.pieces &&
-      basket.pieces.filter((piece) => piece.product.id === productId);
+      basket.pieces.find((piece) => piece.product.id === productId);
 
-    if (productIsExist && productIsExist.length !== 0) {
-      const piece = await this.piecesService.update(productIsExist[0].id, {
+    if (foundPiece) {
+      const editPiece = await this.piecesService.update(foundPiece.id, {
         productId,
-        count: productIsExist[0].count + 1,
+        count: foundPiece.count + 1,
       });
 
       basket.pieces = basket.pieces.map((currentPiece) => {
-        if (currentPiece.id === piece.id) {
-          return piece;
+        if (currentPiece.id === editPiece.id) {
+          return editPiece;
         }
         return currentPiece;
       });
@@ -50,6 +50,30 @@ export class BasketsService {
 
       basket.pieces.push(newPiece);
     }
+
+    return this.basketRepository.save(basket);
+  }
+
+  async subtractPiece(
+    basketId: string,
+    productId: string,
+  ): Promise<BasketEntity> {
+    const basket = await this.getById(basketId);
+    const foundPiece = basket.pieces.find(
+      (piece) => piece.product.id === productId,
+    );
+
+    const editPiece = await this.piecesService.update(foundPiece.id, {
+      productId,
+      count: foundPiece.count - 1,
+    });
+
+    basket.pieces = basket.pieces.map((currentPiece) => {
+      if (currentPiece.id === editPiece.id) {
+        return editPiece;
+      }
+      return currentPiece;
+    });
 
     return this.basketRepository.save(basket);
   }

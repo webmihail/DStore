@@ -79,6 +79,19 @@ export class ProductsInfoController {
     return await this.productsInfoService.delete(id);
   }
 
+  @ApiOperation({ summary: 'Change in stock status' })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @Patch(':id/change-in-stock-status')
+  async changeInStockStatus(
+    @Param('id') id: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.changeInStockStatus(id);
+  }
+
   @ApiOperation({ summary: 'Add size to product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
   @Permissions(
