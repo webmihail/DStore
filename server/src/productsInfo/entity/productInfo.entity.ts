@@ -37,6 +37,13 @@ export class ProductInfoEntity extends GenericEntity {
   description: string;
 
   @ApiProperty({
+    example: 'AE-34534',
+    description: 'Product info code',
+  })
+  @Column({ name: 'code', type: 'varchar', length: 255 })
+  code: string;
+
+  @ApiProperty({
     example: true,
     description: 'Is product exist in stock',
   })

@@ -23,6 +23,13 @@ export class ProductInfoCreateDTO {
   description: string;
 
   @ApiProperty({
+    example: 'AE-34534',
+    description: 'Product info code',
+  })
+  @IsString()
+  code: string;
+
+  @ApiProperty({
     example: true,
     description: 'Is product exist in stock',
   })
