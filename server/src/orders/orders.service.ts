@@ -36,8 +36,9 @@ export class OrdersService {
     });
   }
 
-  async create(userId: string): Promise<OrderEntity> {
+  async create(userId: string, deliveryId: string): Promise<OrderEntity> {
     const user = await this.usersServices.getById(userId);
+    const delivery = await this.deliveriesServices.getById(deliveryId);
     const count = user.basket.pieces.reduce(
       (accumulator: number, piece: PieceEntity) => {
         return accumulator + piece.count;
@@ -57,6 +58,7 @@ export class OrdersService {
       pieces: user.basket.pieces,
       price,
       count,
+      delivery,
     });
 
     const order = await this.ordersRepository.save(newOrder);
@@ -70,18 +72,5 @@ export class OrdersService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.ordersRepository.delete(id);
-  }
-
-  async addDelivery(orderId: string, deliveryId: string): Promise<OrderEntity> {
-    const order = await this.getById(orderId);
-    const delivery = await this.deliveriesServices.getById(deliveryId);
-    order.delivery = delivery;
-    return await this.ordersRepository.save(order);
-  }
-
-  async deleteDelivery(orderId: string): Promise<OrderEntity> {
-    const order = await this.getById(orderId);
-    order.delivery = null;
-    return await this.ordersRepository.save(order);
   }
 }

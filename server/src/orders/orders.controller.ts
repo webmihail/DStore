@@ -3,7 +3,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -55,9 +54,12 @@ export class OrdersController {
     PermissionTypes.SubscriptionOrderManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Post('create/:userId')
-  async createOrder(@Param('userId') userId: string): Promise<OrderEntity> {
-    return await this.ordersService.create(userId);
+  @Post('create/:userId/with-delivery/:deliveryId')
+  async createOrder(
+    @Param('userId') userId: string,
+    @Param('deliveryId') deliveryId: string,
+  ): Promise<OrderEntity> {
+    return await this.ordersService.create(userId, deliveryId);
   }
 
   @ApiOperation({ summary: 'Delete order' })
@@ -70,34 +72,5 @@ export class OrdersController {
   @Delete(':id')
   async deleteOrder(@Param('id') id: string): Promise<DeleteResult> {
     return await this.ordersService.delete(id);
-  }
-
-  @ApiOperation({ summary: 'Add delivery to order' })
-  @ApiResponse({ status: 200, type: OrderEntity })
-  @Permissions(
-    PermissionTypes.SubscriptionFullManagement,
-    PermissionTypes.SubscriptionOrderManagementWrite,
-  )
-  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Patch(':orderId/add-delivery/:deliveryId')
-  async addDeliveryToOrder(
-    @Param('orderId') orderId: string,
-    @Param('deliveryId') deliveryId: string,
-  ): Promise<OrderEntity> {
-    return await this.ordersService.addDelivery(orderId, deliveryId);
-  }
-
-  @ApiOperation({ summary: 'Delete delivery from order' })
-  @ApiResponse({ status: 200, type: OrderEntity })
-  @Permissions(
-    PermissionTypes.SubscriptionFullManagement,
-    PermissionTypes.SubscriptionOrderManagementWrite,
-  )
-  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Patch(':orderId/delete-delivery')
-  async deleteDeliveryFromOrder(
-    @Param('orderId') orderId: string,
-  ): Promise<OrderEntity> {
-    return await this.ordersService.deleteDelivery(orderId);
   }
 }

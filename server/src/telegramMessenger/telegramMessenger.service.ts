@@ -19,7 +19,7 @@ export class TelegramMessengerService {
     } \n - Телефон: ${data.user.phone} \n - Дата замовлення: ${moment(
       data.createdAt,
     ).format('DD.MM.YYYY')} \n - Час замовлення ${moment(data.createdAt)
-      .add(5, 'hours')
+      .add(2, 'hours')
       .format('LT')} \n - Замовлення: \n ${data.pieces.reduce(
       (prev, next, index) => {
         return `${
@@ -29,10 +29,15 @@ export class TelegramMessengerService {
           } (Код: ${next.product.productsInfo[0].code}) - ${next.count} шт (${
             next.price
           } грн)`
-        } \n`;
+        } \n `;
       },
       '',
-    )} \n Всього одиниць: ${data.count} \n Сума замовлення: ${data.price} грн`;
+    )} \n Всього одиниць: ${data.count} \n Сума замовлення: ${data.price} грн 
+    \n Доставка: \n ${data.delivery.city} (${data.delivery.area} обл.), ${
+      data.user.firstName
+    } ${data.user.lastName}, ${data.delivery.phone}, ${data.delivery.post} ${
+      data.delivery.description
+    }`;
 
     this.sendMessage(message);
   }
