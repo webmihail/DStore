@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BasketsService } from 'src/baskets/baskets.service';
 import { DeliveriesService } from 'src/deliveries/deliveries.service';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
+import { TelegramMessengerService } from 'src/telegramMessenger/telegramMessenger.service';
 import { UsersService } from 'src/users/users.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { OrderEntity } from './entity/order.entity';
@@ -15,6 +16,7 @@ export class OrdersService {
     private readonly usersServices: UsersService,
     private readonly deliveriesServices: DeliveriesService,
     private readonly basketsService: BasketsService,
+    private readonly telegramMessengerService: TelegramMessengerService,
   ) {}
 
   async getAllByUserId(userId: string): Promise<OrderEntity[]> {
@@ -60,6 +62,8 @@ export class OrdersService {
     const order = await this.ordersRepository.save(newOrder);
 
     await this.basketsService.clearBasket(user.basket.id);
+
+    this.telegramMessengerService.sendOrderMessage(order);
 
     return order;
   }

@@ -15,7 +15,7 @@ export class BasketsService {
 
   async getById(id: string): Promise<BasketEntity> {
     return await this.basketRepository.findOne(id, {
-      relations: ['pieces', 'pieces.product'],
+      relations: ['pieces', 'pieces.product', 'pieces.product.productsInfo'],
     });
   }
 
@@ -24,15 +24,20 @@ export class BasketsService {
     return await this.basketRepository.save(newBasket);
   }
 
-  async addPiece(basketId: string, productId: string): Promise<BasketEntity> {
+  async addPiece(
+    basketId: string,
+    productInfoId: string,
+  ): Promise<BasketEntity> {
     const basket = await this.getById(basketId);
     const foundPiece =
       basket.pieces &&
-      basket.pieces.find((piece) => piece.product.id === productId);
+      basket.pieces.find(
+        (piece) => piece.product.productsInfo[0].id === productInfoId,
+      );
 
     if (foundPiece) {
       const editPiece = await this.piecesService.update(foundPiece.id, {
-        productId,
+        productInfoId,
         count: foundPiece.count + 1,
       });
 
@@ -45,7 +50,7 @@ export class BasketsService {
     } else {
       const newPiece = await this.piecesService.create({
         count: 1,
-        productId,
+        productInfoId,
       });
 
       basket.pieces.push(newPiece);
@@ -56,15 +61,15 @@ export class BasketsService {
 
   async subtractPiece(
     basketId: string,
-    productId: string,
+    productInfoId: string,
   ): Promise<BasketEntity> {
     const basket = await this.getById(basketId);
     const foundPiece = basket.pieces.find(
-      (piece) => piece.product.id === productId,
+      (piece) => piece.product.productsInfo[0].id === productInfoId,
     );
 
     const editPiece = await this.piecesService.update(foundPiece.id, {
-      productId,
+      productInfoId,
       count: foundPiece.count - 1,
     });
 

@@ -20,7 +20,7 @@ export class ProductsInfoService {
 
   async getById(id: string): Promise<ProductInfoEntity> {
     return await this.productInfoRepository.findOne(id, {
-      relations: ['size', 'color'],
+      relations: ['size', 'color', 'product'],
     });
   }
 

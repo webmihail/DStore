@@ -40,6 +40,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
       lastName: settings.superadmin.lastName,
       email: settings.superadmin.email,
       password: settings.superadmin.password,
+      phone: settings.superadmin.phone,
       isEmailConfirmed: true,
       roles: [role],
     });

@@ -31,12 +31,12 @@ export class BasketsController {
     PermissionTypes.SubscriptionOrderManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Patch(':basketId/add-piece-with-product/:productId')
+  @Patch(':basketId/add-piece-with-product-info/:productInfoId')
   async createAndAddPieceToUserBasket(
     @Param('basketId') basketId: string,
-    @Param('productId') productId: string,
+    @Param('productInfoId') productInfoId: string,
   ): Promise<BasketEntity> {
-    return await this.basketsService.addPiece(basketId, productId);
+    return await this.basketsService.addPiece(basketId, productInfoId);
   }
 
   @ApiOperation({ summary: 'Subtract piece from basket' })
@@ -46,12 +46,12 @@ export class BasketsController {
     PermissionTypes.SubscriptionOrderManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Patch(':basketId/subtract-piece-with-product/:productId')
+  @Patch(':basketId/subtract-piece-with-product-info/:productInfoId')
   async subtractPieceFromUserBasket(
     @Param('basketId') basketId: string,
-    @Param('productId') productId: string,
+    @Param('productInfoId') productInfoId: string,
   ): Promise<BasketEntity> {
-    return await this.basketsService.subtractPiece(basketId, productId);
+    return await this.basketsService.subtractPiece(basketId, productInfoId);
   }
 
   @ApiOperation({ summary: 'Clear basket' })
