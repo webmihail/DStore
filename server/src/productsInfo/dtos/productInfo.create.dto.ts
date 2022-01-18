@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class ProductInfoCreateDTO {
   @ApiProperty({
@@ -15,6 +21,13 @@ export class ProductInfoCreateDTO {
   })
   @IsString()
   description: string;
+
+  @ApiProperty({
+    example: 'AE-34534',
+    description: 'Product info code',
+  })
+  @IsString()
+  code: string;
 
   @ApiProperty({
     example: true,
@@ -35,5 +48,6 @@ export class ProductInfoCreateDTO {
     description: 'Count of product in stock',
   })
   @IsNumber()
-  count: number;
+  @IsOptional()
+  count?: number;
 }

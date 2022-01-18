@@ -22,8 +22,7 @@ import { DeleteResult } from 'typeorm';
 export class DeliveriesController {
   constructor(private readonly deliveriesService: DeliveriesService) {}
 
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @ApiOperation({ summary: 'Get all deliveries by user id' })
   @ApiResponse({ status: 200, type: [DeliveryEntity] })
   @Get('all-deliveries-by/:userId')
@@ -33,8 +32,7 @@ export class DeliveriesController {
     return await this.deliveriesService.getAllByUserId(userId);
   }
 
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @ApiOperation({ summary: 'Get delivery by id' })
   @ApiResponse({ status: 200, type: DeliveryEntity })
   @Get(':id')
@@ -44,8 +42,7 @@ export class DeliveriesController {
 
   @ApiOperation({ summary: 'Create and add delivery to user' })
   @ApiResponse({ status: 200, type: DeliveryEntity })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Post('create-delivery-to-user/:userId')
   async createProductAndAddToCategory(
     @Param('userId') userId: string,
@@ -56,8 +53,7 @@ export class DeliveriesController {
 
   @ApiOperation({ summary: 'Update delivery' })
   @ApiResponse({ status: 200, type: DeliveryEntity })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Put(':id')
   async updateProduct(
     @Param('id') id: string,
@@ -67,8 +63,7 @@ export class DeliveriesController {
   }
 
   @ApiOperation({ summary: 'Delete delivery' })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return await this.deliveriesService.delete(id);

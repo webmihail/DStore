@@ -15,7 +15,7 @@ export class BasketsService {
 
   async getById(id: string): Promise<BasketEntity> {
     return await this.basketRepository.findOne(id, {
-      relations: ['pieces', 'pieces.product'],
+      relations: ['pieces', 'pieces.product', 'pieces.product.productsInfo'],
     });
   }
 
@@ -24,32 +24,61 @@ export class BasketsService {
     return await this.basketRepository.save(newBasket);
   }
 
-  async addPiece(basketId: string, productId: string): Promise<BasketEntity> {
+  async addPiece(
+    basketId: string,
+    productInfoId: string,
+  ): Promise<BasketEntity> {
     const basket = await this.getById(basketId);
-    const productIsExist =
+    const foundPiece =
       basket.pieces &&
-      basket.pieces.filter((piece) => piece.product.id === productId);
+      basket.pieces.find(
+        (piece) => piece.product.productsInfo[0].id === productInfoId,
+      );
 
-    if (productIsExist && productIsExist.length !== 0) {
-      const piece = await this.piecesService.update(productIsExist[0].id, {
-        productId,
-        count: productIsExist[0].count + 1,
+    if (foundPiece) {
+      const editPiece = await this.piecesService.update(foundPiece.id, {
+        productInfoId,
+        count: foundPiece.count + 1,
       });
 
       basket.pieces = basket.pieces.map((currentPiece) => {
-        if (currentPiece.id === piece.id) {
-          return piece;
+        if (currentPiece.id === editPiece.id) {
+          return editPiece;
         }
         return currentPiece;
       });
     } else {
       const newPiece = await this.piecesService.create({
         count: 1,
-        productId,
+        productInfoId,
       });
 
       basket.pieces.push(newPiece);
     }
+
+    return this.basketRepository.save(basket);
+  }
+
+  async subtractPiece(
+    basketId: string,
+    productInfoId: string,
+  ): Promise<BasketEntity> {
+    const basket = await this.getById(basketId);
+    const foundPiece = basket.pieces.find(
+      (piece) => piece.product.productsInfo[0].id === productInfoId,
+    );
+
+    const editPiece = await this.piecesService.update(foundPiece.id, {
+      productInfoId,
+      count: foundPiece.count - 1,
+    });
+
+    basket.pieces = basket.pieces.map((currentPiece) => {
+      if (currentPiece.id === editPiece.id) {
+        return editPiece;
+      }
+      return currentPiece;
+    });
 
     return this.basketRepository.save(basket);
   }

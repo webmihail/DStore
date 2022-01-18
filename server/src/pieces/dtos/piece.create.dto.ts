@@ -7,7 +7,7 @@ export class PieceCreateDTO {
     description: 'uuid idetificator',
   })
   @IsString()
-  productId: string;
+  productInfoId: string;
 
   @ApiProperty({
     example: 1,

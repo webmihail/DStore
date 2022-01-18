@@ -10,9 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
-import { Permissions } from './constants';
 import { PermissionCreateDTO } from './dtos/permission.create.dto';
 import { PermissionEditDTO } from './dtos/permission.edit.dto';
 import { PermissionEntity } from './entity/permission.entity';
@@ -25,8 +26,8 @@ export class PermissionsController {
 
   @ApiOperation({ summary: 'Get all permissions' })
   @ApiResponse({ status: 200, type: [PermissionEntity] })
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Get()
   async getAllPermissions(): Promise<PermissionEntity[]> {
     return await this.permissionsServices.getAll();
@@ -34,8 +35,8 @@ export class PermissionsController {
 
   @ApiOperation({ summary: 'Get permission by id' })
   @ApiResponse({ status: 200, type: PermissionEntity })
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Get(':id')
   async getRole(@Param('id') id: string): Promise<PermissionEntity> {
     return await this.permissionsServices.getById(id);
@@ -43,8 +44,8 @@ export class PermissionsController {
 
   @ApiOperation({ summary: 'Create new permission' })
   @ApiResponse({ status: 200, type: PermissionEntity })
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Post()
   async createRole(
     @Body() data: PermissionCreateDTO,
@@ -54,8 +55,8 @@ export class PermissionsController {
 
   @ApiOperation({ summary: 'Update permission' })
   @ApiResponse({ status: 200, type: PermissionEntity })
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Put(':id')
   async updateRole(
     @Param('id') id: string,
@@ -65,8 +66,8 @@ export class PermissionsController {
   }
 
   @ApiOperation({ summary: 'Delete permission' })
-  @UseGuards(JwtAuthGuard)
-  @UseGuards(PermissionGuard([Permissions.SubscriptionFullManagement]))
+  @Permissions(PermissionTypes.SubscriptionFullManagement)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
   @Delete(':id')
   async deleteRole(@Param('id') id: string): Promise<DeleteResult> {
     return await this.permissionsServices.delete(id);

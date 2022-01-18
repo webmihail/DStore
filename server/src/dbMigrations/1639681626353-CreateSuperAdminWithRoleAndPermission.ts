@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import settings from 'settings';
 import { BasketEntity } from 'src/baskets/entity/basket.entity';
-import { Permissions } from 'src/permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
 import { PermissionEntity } from 'src/permissions/entity/permission.entity';
 import { RoleEntity } from 'src/roles/entity/role.entity';
 import { UserEntity } from 'src/users/entity/user.entity';
@@ -21,7 +21,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
       queryRunner.connection.getRepository(PermissionEntity);
 
     const newPremission = await permissionRepo.create({
-      name: settings.superadmin.permissionName as Permissions,
+      name: settings.superadmin.permissionName as PermissionTypes,
       description: settings.superadmin.permissionDescription,
     });
 
@@ -40,6 +40,7 @@ export class CreateSuperAdminWithRoleAndPermission1639681626353
       lastName: settings.superadmin.lastName,
       email: settings.superadmin.email,
       password: settings.superadmin.password,
+      phone: settings.superadmin.phone,
       isEmailConfirmed: true,
       roles: [role],
     });

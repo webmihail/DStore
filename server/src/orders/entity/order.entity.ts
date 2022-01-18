@@ -7,6 +7,7 @@ import { UserEntity } from 'src/users/entity/user.entity';
 import {
   Column,
   Entity,
+  Generated,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -22,6 +23,10 @@ export class OrderEntity extends GenericEntity {
   })
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
+  @Generated('increment')
+  code: number;
 
   @ApiProperty({
     example: 1,

@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ColorsService } from './colors.service';
-import { Permissions } from '../permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
@@ -24,31 +25,25 @@ import { ColorEditDTO } from './dtos/color.edit.dto';
 export class ColorsController {
   constructor(private readonly colorsServices: ColorsService) {}
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all colors' })
   @ApiResponse({ status: 200, type: [ColorEntity] })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get()
   async getAllColors(): Promise<ColorEntity[]> {
     return await this.colorsServices.getAll();
   }
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get color by id' })
   @ApiResponse({ status: 200, type: ColorEntity })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get(':id')
   async getColor(@Param('id') id: string): Promise<ColorEntity> {
     return await this.colorsServices.getById(id);
@@ -56,14 +51,11 @@ export class ColorsController {
 
   @ApiOperation({ summary: 'Create color' })
   @ApiResponse({ status: 200, type: ColorEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post()
   async createColor(@Body() data: ColorCreateDTO): Promise<ColorEntity> {
     return await this.colorsServices.create(data);
@@ -71,14 +63,11 @@ export class ColorsController {
 
   @ApiOperation({ summary: 'Update color' })
   @ApiResponse({ status: 200, type: ColorEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateSize(
     @Param('id') id: string,
@@ -88,14 +77,11 @@ export class ColorsController {
   }
 
   @ApiOperation({ summary: 'Delete color' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteSize(@Param('id') id: string): Promise<DeleteResult> {
     return await this.colorsServices.delete(id);

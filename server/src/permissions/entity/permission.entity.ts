@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { Permissions } from '../constants';
+import { PermissionTypes } from '../constants';
 
 @Entity({ name: 'permissions' })
 @Unique(['id', 'name'])
@@ -13,9 +13,9 @@ export class PermissionEntity extends GenericEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiProperty({ enum: Permissions })
-  @Column({ name: 'name', type: 'enum', enum: Permissions })
-  name: Permissions;
+  @ApiProperty({ enum: PermissionTypes })
+  @Column({ name: 'name', type: 'enum', enum: PermissionTypes })
+  name: PermissionTypes;
 
   @ApiProperty({
     example: 'Administrator',

@@ -18,15 +18,17 @@ async function bootstrap() {
     //Helmet can help protect your app from some well-known (https://github.com/helmetjs/helmet#how-it-works)
     app.use(helmet());
 
-    const swaggerConfig = new DocumentBuilder()
-      .setTitle('DeStore API')
-      .setDescription('API docs')
-      .setVersion('1.0.0')
-      .addTag('DeStore')
-      .build();
+    if (settings.server.isSwaggerOn) {
+      const swaggerConfig = new DocumentBuilder()
+        .setTitle('DeStore API')
+        .setDescription('API docs')
+        .setVersion('1.0.0')
+        .addTag('DeStore')
+        .build();
 
-    const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup(settings.server.swaggerPrefix, app, swaggerDocument);
+      const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+      SwaggerModule.setup(settings.server.swaggerPrefix, app, swaggerDocument);
+    }
 
     //To protect your applications from brute-force attacks
     app.use(

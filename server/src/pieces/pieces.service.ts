@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductsService } from 'src/products/products.service';
+import { ProductsInfoService } from 'src/productsInfo/productsInfo.service';
 import { DeleteResult, Repository } from 'typeorm';
 import { PieceCreateDTO } from './dtos/piece.create.dto';
 import { PieceEditDTO } from './dtos/piece.edit.dto';
@@ -11,22 +11,28 @@ export class PiecesService {
   constructor(
     @InjectRepository(PieceEntity)
     private readonly piecesRepository: Repository<PieceEntity>,
-    private readonly productsServices: ProductsService,
+    private readonly productsInfoService: ProductsInfoService,
   ) {}
 
   async getById(id: string): Promise<PieceEntity> {
     return await this.piecesRepository.findOne(id, {
-      relations: ['product', 'product.productsInfo'],
+      relations: [
+        'product',
+        'product.productsInfo',
+        'product.productsInfo.color',
+      ],
     });
   }
 
   async create(data: PieceCreateDTO): Promise<PieceEntity> {
-    const product = await this.productsServices.getById(data.productId);
+    const productInfo = await this.productsInfoService.getById(
+      data.productInfoId,
+    );
 
     const newPiece = await this.piecesRepository.create({
       count: data.count,
-      product,
-      price: product.price,
+      product: { ...productInfo.product, productsInfo: [productInfo] },
+      price: productInfo.product.price,
     });
 
     return await this.piecesRepository.save(newPiece);

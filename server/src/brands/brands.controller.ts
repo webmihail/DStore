@@ -11,7 +11,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
-import { Permissions } from 'src/permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
 import { BrandsService } from './brands.service';
@@ -24,31 +25,25 @@ import { BrandEntity } from './entity/brand.entity';
 export class BrandsController {
   constructor(private readonly brandsServices: BrandsService) {}
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all brands' })
   @ApiResponse({ status: 200, type: [BrandEntity] })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get()
   async getAllBrands(): Promise<BrandEntity[]> {
     return await this.brandsServices.getAll();
   }
 
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
-  )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get brand by id' })
   @ApiResponse({ status: 200, type: BrandEntity })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get(':id')
   async getBrand(@Param('id') id: string): Promise<BrandEntity> {
     return await this.brandsServices.getById(id);
@@ -56,14 +51,11 @@ export class BrandsController {
 
   @ApiOperation({ summary: 'Create brand' })
   @ApiResponse({ status: 200, type: BrandEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post()
   async createBrand(@Body() data: BrandCreateDTO): Promise<BrandEntity> {
     return await this.brandsServices.create(data);
@@ -71,14 +63,11 @@ export class BrandsController {
 
   @ApiOperation({ summary: 'Update brand' })
   @ApiResponse({ status: 200, type: BrandEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateBrand(
     @Param('id') id: string,
@@ -88,14 +77,11 @@ export class BrandsController {
   }
 
   @ApiOperation({ summary: 'Delete brand' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteBrand(@Param('id') id: string): Promise<DeleteResult> {
     return await this.brandsServices.delete(id);

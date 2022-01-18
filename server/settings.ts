@@ -13,11 +13,13 @@ const requiredEnvVariables = [
   'PORT',
   'API_PREFIX',
   'SWAGGER_PREFIX',
+  'SWAGGER_ON',
 
   'SUPERADMIN_FIRST_NAME',
   'SUPERADMIN_LAST_NAME',
   'SUPERADMIN_EMAIL',
   'SUPERADMIN_PASSWORD',
+  'SUPERADMIN_PHONE',
   'SUPERADMIN_ROLE_NAME',
   'SUPERADMIN_ROLE_DESCRIPTION',
   'SUPERADMIN_ROLE_PERMISSION_NAME',
@@ -34,6 +36,9 @@ const requiredEnvVariables = [
   'EMAIL_SERVICE',
   'EMAIL_USER',
   'EMAIL_PASSWORD',
+
+  'TELEGRAM_BOT_ID',
+  'TELEGRAM_CHAT_ID',
 ];
 
 dotenv.config({
@@ -69,12 +74,14 @@ const settings = {
     port: process.env.PORT,
     apiPrefix: process.env.API_PREFIX,
     swaggerPrefix: process.env.SWAGGER_PREFIX,
+    isSwaggerOn: process.env.SWAGGER_ON === 'true',
   },
   superadmin: {
     firstName: process.env.SUPERADMIN_FIRST_NAME,
     lastName: process.env.SUPERADMIN_LAST_NAME,
     email: process.env.SUPERADMIN_EMAIL,
     password: process.env.SUPERADMIN_PASSWORD,
+    phone: process.env.SUPERADMIN_PHONE,
     roleName: process.env.SUPERADMIN_ROLE_NAME,
     roleDescription: process.env.SUPERADMIN_ROLE_DESCRIPTION,
     permissionName: process.env.SUPERADMIN_ROLE_PERMISSION_NAME,
@@ -94,6 +101,10 @@ const settings = {
     service: process.env.EMAIL_SERVICE,
     user: process.env.EMAIL_USER,
     password: process.env.EMAIL_PASSWORD,
+  },
+  telegram: {
+    botId: process.env.TELEGRAM_BOT_ID,
+    chatId: process.env.TELEGRAM_CHAT_ID,
   },
 };
 

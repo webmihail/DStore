@@ -3,7 +3,7 @@ import { IsString, MaxLength } from 'class-validator';
 
 export class LoginRequestDTO {
   @ApiProperty({
-    example: 'blabla@gmail.com',
+    example: 'ivanov@gmail.com',
     description: 'User email',
   })
   @IsString()
@@ -11,7 +11,7 @@ export class LoginRequestDTO {
   email: string;
 
   @ApiProperty({
-    example: 'dasdsa123123',
+    example: 'S1234ghgh',
     description: 'User password',
   })
   @IsString()

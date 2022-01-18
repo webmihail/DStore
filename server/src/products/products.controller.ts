@@ -12,7 +12,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
-import { Permissions } from 'src/permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
 import { ProductCreateDTO } from './dtos/product.create.dto';
@@ -41,14 +42,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Create and add product to category' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post('create-product-to-category/:categoryId')
   async createProductAndAddToCategory(
     @Param('categoryId') categoryId: string,
@@ -59,14 +57,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Update product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateProduct(
     @Param('id') id: string,
@@ -76,14 +71,11 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Delete product' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsServices.delete(id);
@@ -91,14 +83,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Add product to category' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/add-to-category/:categoryId')
   async addProductToCategory(
     @Param('productId') productId: string,
@@ -109,14 +98,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Delete product from category' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/delete-from-category')
   async deleteProductFromCategory(
     @Param('productId') productId: string,
@@ -126,14 +112,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Add product type to product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/add-product-type/:productTypeId')
   async addProductTypeToProduct(
     @Param('productId') productId: string,
@@ -144,14 +127,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Delete product type from product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/delete-product-type')
   async deleteProductTypeFromProduct(
     @Param('productId') productId: string,
@@ -161,14 +141,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Add brand to product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/add-brand/:brandId')
   async addBrandToProduct(
     @Param('productId') productId: string,
@@ -179,14 +156,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Delete brand from product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/delete-brand')
   async deleteBrandFromProduct(
     @Param('productId') productId: string,
@@ -196,14 +170,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Add sale to product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/add-sale/:saleId')
   async addSaleToProduct(
     @Param('productId') productId: string,
@@ -214,14 +185,11 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Delete sale from product' })
   @ApiResponse({ status: 200, type: ProductEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productId/delete-sale')
   async deleteSaleFromProduct(
     @Param('productId') productId: string,

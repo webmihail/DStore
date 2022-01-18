@@ -20,7 +20,7 @@ export class ProductsInfoService {
 
   async getById(id: string): Promise<ProductInfoEntity> {
     return await this.productInfoRepository.findOne(id, {
-      relations: ['size', 'color'],
+      relations: ['size', 'color', 'product'],
     });
   }
 
@@ -45,6 +45,12 @@ export class ProductsInfoService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.productInfoRepository.delete(id);
+  }
+
+  async changeInStockStatus(id: string): Promise<ProductInfoEntity> {
+    const productInfo = await this.getById(id);
+    productInfo.inStock = !productInfo.inStock;
+    return await this.productInfoRepository.save(productInfo);
   }
 
   async addSize(

@@ -12,7 +12,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
-import { Permissions } from 'src/permissions/constants';
+import { PermissionTypes } from 'src/permissions/constants';
+import { Permissions } from 'src/permissions/decorators/permission.decorator';
 import PermissionGuard from 'src/permissions/guards/permission.guard';
 import { DeleteResult } from 'typeorm';
 import { ProductInfoCreateDTO } from './dtos/productInfo.create.dto';
@@ -27,14 +28,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Get product type by id' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementRead,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementRead,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get(':id')
   async getProductType(@Param('id') id: string): Promise<ProductInfoEntity> {
     return await this.productsInfoService.getById(id);
@@ -42,14 +40,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Create and add product info to product' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Post('create-to-product/:productId')
   async createProductInfoAndAddToProduct(
     @Param('productId') productId: string,
@@ -60,14 +55,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Update product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Put(':id')
   async updateProductInfo(
     @Param('id') id: string,
@@ -77,29 +69,36 @@ export class ProductsInfoController {
   }
 
   @ApiOperation({ summary: 'Delete product info' })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteProductInfo(@Param('id') id: string): Promise<DeleteResult> {
     return await this.productsInfoService.delete(id);
   }
 
+  @ApiOperation({ summary: 'Change in stock status' })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @Patch(':id/change-in-stock-status')
+  async changeInStockStatus(
+    @Param('id') id: string,
+  ): Promise<ProductInfoEntity> {
+    return await this.productsInfoService.changeInStockStatus(id);
+  }
+
   @ApiOperation({ summary: 'Add size to product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productInfoId/add-size/:sizeId')
   async addSizeToProductInfo(
     @Param('productInfoId') productInfoId: string,
@@ -110,14 +109,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Delete size from product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productInfoId/delete-size')
   async deleteSizeFromProductInfo(
     @Param('productInfoId') productInfoId: string,
@@ -127,14 +123,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Add size to product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productInfoId/add-color/:colorId')
   async addColorToProductInfo(
     @Param('productInfoId') productInfoId: string,
@@ -145,14 +138,11 @@ export class ProductsInfoController {
 
   @ApiOperation({ summary: 'Delete size from product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
-  @UseGuards(
-    PermissionGuard([
-      Permissions.SubscriptionFullManagement,
-      Permissions.SubscriptionCategoryProductManagementWrite,
-    ]),
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Patch(':productInfoId/delete-color')
   async deleteColorFromProductInfo(
     @Param('productInfoId') productInfoId: string,

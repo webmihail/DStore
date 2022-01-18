@@ -22,8 +22,7 @@ import { CommentEntity } from './entity/comment.entity';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @ApiOperation({ summary: 'Get all comments by product id' })
   @ApiResponse({ status: 200, type: [CommentEntity] })
   @Get('all-comments-by/:productId')
@@ -33,8 +32,7 @@ export class CommentsController {
     return await this.commentsService.getAllByProductId(productId);
   }
 
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @ApiOperation({ summary: 'Get comment by id' })
   @ApiResponse({ status: 200, type: CommentEntity })
   @Get(':id')
@@ -44,8 +42,7 @@ export class CommentsController {
 
   @ApiOperation({ summary: 'Create and add comment to product' })
   @ApiResponse({ status: 200, type: CommentEntity })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Post('by-user/:userId/create-comment-to-product/:productId')
   async createCommentForProduct(
     @Param('userId') userId: string,
@@ -57,8 +54,7 @@ export class CommentsController {
 
   @ApiOperation({ summary: 'Update comment' })
   @ApiResponse({ status: 200, type: CommentEntity })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Put(':id')
   async updateComment(
     @Param('id') id: string,
@@ -68,8 +64,7 @@ export class CommentsController {
   }
 
   @ApiOperation({ summary: 'Delete comment' })
-  @UseGuards(BanGuard)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Delete(':id')
   async deleteComment(@Param('id') id: string): Promise<DeleteResult> {
     return await this.commentsService.delete(id);

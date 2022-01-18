@@ -46,6 +46,10 @@ export class UserEntity extends GenericEntity {
   @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })
   email: string;
 
+  @ApiProperty({ example: '+380990000000', description: 'user phone' })
+  @Column({ name: 'phone', type: 'varchar', length: 255, nullable: false })
+  phone: string;
+
   @ApiProperty({ example: 'S1234ghgh', description: 'User password' })
   @Column({
     name: 'password',
