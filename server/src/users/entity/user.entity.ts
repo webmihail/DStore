@@ -65,11 +65,12 @@ export class UserEntity extends GenericEntity {
     type: 'varchar',
     length: 255,
     nullable: true,
+    select: false,
   })
-  public currentHashedRefreshToken?: string;
+  currentHashedRefreshToken?: string;
 
   @Column({ name: 'isEmailConfirmed', type: 'boolean', default: false })
-  public isEmailConfirmed?: boolean;
+  isEmailConfirmed?: boolean;
 
   @OneToOne(() => BasketEntity, (basket: BasketEntity) => basket.user)
   @JoinColumn()
