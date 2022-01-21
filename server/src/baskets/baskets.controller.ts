@@ -12,6 +12,26 @@ import PermissionGuard from 'src/permissions/guards/permission.guard';
 @Controller('baskets')
 export class BasketsController {
   constructor(private readonly basketsService: BasketsService) {}
+
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionOrderManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @ApiOperation({ summary: 'Get basket by user id' })
+  @ApiResponse({ status: 200, type: BasketEntity })
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionOrderManagementRead,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @Get('by/:userId')
+  async getBasketByUserId(
+    @Param('userId') userId: string,
+  ): Promise<BasketEntity> {
+    return await this.basketsService.getByUserId(userId);
+  }
+
   @Permissions(
     PermissionTypes.SubscriptionFullManagement,
     PermissionTypes.SubscriptionOrderManagementRead,

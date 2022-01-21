@@ -2,12 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ColorEntity } from 'src/colors/entity/color.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
+import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import { SizeEntity } from 'src/sizes/entity/size.entity';
 import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -75,6 +77,11 @@ export class ProductInfoEntity extends GenericEntity {
     },
   )
   product: ProductEntity;
+
+  @OneToMany(() => PieceEntity, (piece: PieceEntity) => piece.productInfo, {
+    cascade: true,
+  })
+  pieces: PieceEntity[];
 
   @ManyToOne(() => SizeEntity, (size: SizeEntity) => size.productsInfo, {
     onDelete: 'CASCADE',

@@ -54,12 +54,12 @@ export class OrdersController {
     PermissionTypes.SubscriptionOrderManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  @Post('create/:userId/with-delivery/:deliveryId')
+  @Post('create/:basketId/with-delivery/:deliveryId')
   async createOrder(
-    @Param('userId') userId: string,
+    @Param('basketId') basketId: string,
     @Param('deliveryId') deliveryId: string,
   ): Promise<OrderEntity> {
-    return await this.ordersService.create(userId, deliveryId);
+    return await this.ordersService.create(basketId, deliveryId);
   }
 
   @ApiOperation({ summary: 'Delete order' })

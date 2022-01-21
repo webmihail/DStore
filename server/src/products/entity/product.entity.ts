@@ -4,7 +4,6 @@ import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { CommentEntity } from 'src/comments/entity/comment.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
-import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import { RatingEntity } from 'src/ratings/entity/rating.entity';
@@ -77,11 +76,6 @@ export class ProductEntity extends GenericEntity {
     },
   )
   productsInfo: ProductInfoEntity[];
-
-  @OneToMany(() => PieceEntity, (piece: PieceEntity) => piece.product, {
-    cascade: true,
-  })
-  pieces: PieceEntity[];
 
   @OneToMany(() => CommentEntity, (comment: CommentEntity) => comment.product, {
     cascade: true,

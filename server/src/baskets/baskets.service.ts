@@ -13,9 +13,32 @@ export class BasketsService {
     private readonly piecesService: PiecesService,
   ) {}
 
+  async getByUserId(userId: string): Promise<BasketEntity> {
+    return await this.basketRepository.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: [
+        'user',
+        'pieces',
+        'pieces.productInfo',
+        'pieces.productInfo.color',
+        'pieces.productInfo.product',
+      ],
+    });
+  }
+
   async getById(id: string): Promise<BasketEntity> {
     return await this.basketRepository.findOne(id, {
-      relations: ['pieces', 'pieces.product', 'pieces.product.productsInfo'],
+      relations: [
+        'user',
+        'pieces',
+        'pieces.productInfo',
+        'pieces.productInfo.color',
+        'pieces.productInfo.product',
+      ],
     });
   }
 
@@ -31,9 +54,7 @@ export class BasketsService {
     const basket = await this.getById(basketId);
     const foundPiece =
       basket.pieces &&
-      basket.pieces.find(
-        (piece) => piece.product.productsInfo[0].id === productInfoId,
-      );
+      basket.pieces.find((piece) => piece.productInfo.id === productInfoId);
 
     if (foundPiece) {
       const editPiece = await this.piecesService.update(foundPiece.id, {
@@ -65,7 +86,7 @@ export class BasketsService {
   ): Promise<BasketEntity> {
     const basket = await this.getById(basketId);
     const foundPiece = basket.pieces.find(
-      (piece) => piece.product.productsInfo[0].id === productInfoId,
+      (piece) => piece.productInfo.id === productInfoId,
     );
 
     const editPiece = await this.piecesService.update(foundPiece.id, {

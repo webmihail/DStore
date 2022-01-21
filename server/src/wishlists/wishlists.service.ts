@@ -13,6 +13,17 @@ export class WishlistsService {
     private readonly productsService: ProductsService,
   ) {}
 
+  async getByUserId(userId: string): Promise<WishlistEntity> {
+    return await this.wishlistRepository.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      relations: ['products'],
+    });
+  }
+
   async getById(id: string): Promise<WishlistEntity> {
     return await this.wishlistRepository.findOne(id, {
       relations: ['products'],

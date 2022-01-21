@@ -27,45 +27,14 @@ export class UsersService {
   ) {}
 
   async getAll(): Promise<UserEntity[]> {
-    return await this.usersRepository.find({
-      relations: [
-        'roles',
-        'roles.permissions',
-        'ban',
-        'basket',
-        'basket.pieces',
-        'basket.pieces.product',
-        'basket.pieces.product.productsInfo',
-        'basket.pieces.product.productsInfo.color',
-        'orders',
-        'orders.pieces',
-        'orders.delivery',
-        'deliveries',
-        'wishlist',
-        'wishlist.products',
-      ],
-    });
+    return await this.usersRepository.find();
   }
 
   async getById(id: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne(id, {
-      relations: [
-        'roles',
-        'roles.permissions',
-        'ban',
-        'basket',
-        'basket.pieces',
-        'basket.pieces.product',
-        'basket.pieces.product.productsInfo',
-        'basket.pieces.product.productsInfo.color',
-        'orders',
-        'orders.pieces',
-        'orders.delivery',
-        'deliveries',
-        'wishlist',
-        'wishlist.products',
-      ],
+      relations: ['roles', 'roles.permissions', 'ban'],
     });
+
     if (!user) throw new NotFoundException('Користувача не знайдено');
 
     return user;
