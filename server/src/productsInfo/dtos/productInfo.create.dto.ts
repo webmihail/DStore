@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ProductInfoCreateDTO {
   @ApiProperty({
@@ -35,13 +29,6 @@ export class ProductInfoCreateDTO {
   })
   @IsBoolean()
   inStock: boolean;
-
-  @ApiProperty({
-    example: ['http://fjsdjflsdf.com/image', 'http://dwewrwer.com/image'],
-    description: 'Array of images url',
-  })
-  @IsArray()
-  images: string[];
 
   @ApiProperty({
     example: 10,

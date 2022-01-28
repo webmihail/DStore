@@ -7,9 +7,18 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import { PermissionTypes } from 'src/permissions/constants';
@@ -148,5 +157,52 @@ export class ProductsInfoController {
     @Param('productInfoId') productInfoId: string,
   ): Promise<ProductInfoEntity> {
     return await this.productsInfoService.deleteColor(productInfoId);
+  }
+
+  @ApiOperation({ summary: 'Add image to product info' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @Patch(':productInfoId/add-image')
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addImageToProductInfo(
+    @Param('productInfoId') productInfoId: string,
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
+    return this.productsInfoService.addImage(
+      productInfoId,
+      file.buffer,
+      file.originalname,
+    );
+  }
+
+  @ApiOperation({ summary: 'Delete image to product info' })
+  @ApiResponse({ status: 200, type: ProductInfoEntity })
+  @Patch(':productInfoId/delete-image/:imageId')
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  async deleteImageToProductInfo(
+    @Param('productInfoId') productInfoId: string,
+    @Param('imageId') imageId: string,
+  ) {
+    return this.productsInfoService.deleteImage(productInfoId, imageId);
   }
 }

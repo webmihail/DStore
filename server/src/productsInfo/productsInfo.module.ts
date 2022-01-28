@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ColorsModule } from 'src/colors/colors.module';
+import { FileManagerModule } from 'src/fileManager/fileManager.module';
 import { ProductsModule } from 'src/products/products.module';
 import { SizesModule } from 'src/sizes/sizes.module';
 import { ProductInfoEntity } from './entity/productInfo.entity';
@@ -13,6 +14,7 @@ import { ProductsInfoService } from './productsInfo.service';
     ProductsModule,
     SizesModule,
     ColorsModule,
+    FileManagerModule,
   ],
   controllers: [ProductsInfoController],
   providers: [ProductsInfoService],

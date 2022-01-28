@@ -39,6 +39,13 @@ const requiredEnvVariables = [
 
   'TELEGRAM_BOT_ID',
   'TELEGRAM_CHAT_ID',
+
+  'AWS_REGION',
+  'AWS_ACCESS_KEY_ID',
+  'AWS_SECRET_ACCESS_KEY',
+  'AWS_PUBLIC_BUCKET_NAME',
+  'AWS_BUKET_ACL',
+  'AWS_BUKET_FOLDER',
 ];
 
 dotenv.config({
@@ -105,6 +112,14 @@ const settings = {
   telegram: {
     botId: process.env.TELEGRAM_BOT_ID,
     chatId: process.env.TELEGRAM_CHAT_ID,
+  },
+  awsStoreS3: {
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    publicBucketName: process.env.AWS_PUBLIC_BUCKET_NAME,
+    acl: process.env.AWS_BUKET_ACL,
+    folder: process.env.AWS_BUKET_FOLDER,
   },
 };
 

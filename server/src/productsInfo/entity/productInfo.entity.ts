@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ColorEntity } from 'src/colors/entity/color.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
+import PublicFileEntity from 'src/fileManager/entity/publicFile.entity';
 import { PieceEntity } from 'src/pieces/entity/piece.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import { SizeEntity } from 'src/sizes/entity/size.entity';
@@ -53,13 +54,6 @@ export class ProductInfoEntity extends GenericEntity {
   inStock: boolean;
 
   @ApiProperty({
-    example: ['http://fjsdjflsdf.com/image', 'http://dwewrwer.com/image'],
-    description: 'Array of images url',
-  })
-  @Column('text', { array: true, default: null })
-  images: string[];
-
-  @ApiProperty({
     example: 10,
     description: 'Count of product in stock',
   })
@@ -68,6 +62,15 @@ export class ProductInfoEntity extends GenericEntity {
     nullable: true,
   })
   count: number;
+
+  @OneToMany(
+    () => PublicFileEntity,
+    (image: PublicFileEntity) => image.productInfo,
+    {
+      cascade: true,
+    },
+  )
+  images: PublicFileEntity[];
 
   @ManyToOne(
     () => ProductEntity,

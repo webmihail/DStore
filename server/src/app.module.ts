@@ -23,6 +23,7 @@ import { CommentsModule } from './comments/comments.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { WishlistsModule } from './wishlists/wishlists.module';
 import { TelegramMessengerModule } from './telegramMessenger/telegramMessenger.module';
+import { FileManagerModule } from './fileManager/fileManager.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TelegramMessengerModule } from './telegramMessenger/telegramMessenger.m
     RatingsModule,
     WishlistsModule,
     TelegramMessengerModule,
+    FileManagerModule,
   ],
 })
 export class AppModule {
