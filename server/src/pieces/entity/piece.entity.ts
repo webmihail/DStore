@@ -3,7 +3,7 @@ import { BasketEntity } from 'src/baskets/entity/basket.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ColumnNumericTransformer } from 'src/common/transformers/ColumnNumericTransformer';
 import { OrderEntity } from 'src/orders/entity/order.entity';
-import { ProductEntity } from 'src/products/entity/product.entity';
+import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import {
   Column,
   Entity,
@@ -42,10 +42,14 @@ export class PieceEntity extends GenericEntity {
   })
   price: number;
 
-  @ManyToOne(() => ProductEntity, (product: ProductEntity) => product.pieces, {
-    onDelete: 'CASCADE',
-  })
-  product: ProductEntity;
+  @ManyToOne(
+    () => ProductInfoEntity,
+    (productInfo: ProductInfoEntity) => productInfo.pieces,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  productInfo: ProductInfoEntity;
 
   @ManyToOne(() => OrderEntity, (order: OrderEntity) => order.pieces, {
     onDelete: 'CASCADE',

@@ -16,11 +16,7 @@ export class PiecesService {
 
   async getById(id: string): Promise<PieceEntity> {
     return await this.piecesRepository.findOne(id, {
-      relations: [
-        'product',
-        'product.productsInfo',
-        'product.productsInfo.color',
-      ],
+      relations: ['productInfo', 'productInfo.product'],
     });
   }
 
@@ -31,7 +27,7 @@ export class PiecesService {
 
     const newPiece = await this.piecesRepository.create({
       count: data.count,
-      product: { ...productInfo.product, productsInfo: [productInfo] },
+      productInfo,
       price: productInfo.product.price,
     });
 
@@ -41,7 +37,7 @@ export class PiecesService {
   async update(id: string, data: PieceEditDTO): Promise<PieceEntity | null> {
     const piece = await this.getById(id);
     piece.count = data.count;
-    piece.price = piece.product.price * data.count;
+    piece.price = piece.productInfo.product.price * data.count;
 
     if (piece.count <= 0) {
       await this.delete(piece.id);

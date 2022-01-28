@@ -26,26 +26,28 @@ export class OrdersService {
           id: userId,
         },
       },
-      relations: ['pieces'],
+      relations: ['pieces', 'pieces.productInfo', 'pieces.productInfo.product'],
     });
   }
 
   async getById(id: string): Promise<OrderEntity> {
     return await this.ordersRepository.findOne(id, {
-      relations: ['pieces'],
+      relations: ['pieces', 'pieces.productInfo', 'pieces.productInfo.product'],
     });
   }
 
-  async create(userId: string): Promise<OrderEntity> {
-    const user = await this.usersServices.getById(userId);
-    const count = user.basket.pieces.reduce(
+  async create(basketId: string, deliveryId: string): Promise<OrderEntity> {
+    const basket = await this.basketsService.getById(basketId);
+    const user = await this.usersServices.getById(basket.user.id);
+    const delivery = await this.deliveriesServices.getById(deliveryId);
+    const count = basket.pieces.reduce(
       (accumulator: number, piece: PieceEntity) => {
         return accumulator + piece.count;
       },
       0,
     );
 
-    const price = user.basket.pieces.reduce(
+    const price = basket.pieces.reduce(
       (accumulator: number, piece: PieceEntity) => {
         return accumulator + piece.price;
       },
@@ -54,14 +56,15 @@ export class OrdersService {
 
     const newOrder = await this.ordersRepository.create({
       user,
-      pieces: user.basket.pieces,
+      pieces: basket.pieces,
       price,
       count,
+      delivery,
     });
 
     const order = await this.ordersRepository.save(newOrder);
 
-    await this.basketsService.clearBasket(user.basket.id);
+    await this.basketsService.clearBasket(basketId);
 
     this.telegramMessengerService.sendOrderMessage(order);
 
@@ -70,18 +73,5 @@ export class OrdersService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.ordersRepository.delete(id);
-  }
-
-  async addDelivery(orderId: string, deliveryId: string): Promise<OrderEntity> {
-    const order = await this.getById(orderId);
-    const delivery = await this.deliveriesServices.getById(deliveryId);
-    order.delivery = delivery;
-    return await this.ordersRepository.save(order);
-  }
-
-  async deleteDelivery(orderId: string): Promise<OrderEntity> {
-    const order = await this.getById(orderId);
-    order.delivery = null;
-    return await this.ordersRepository.save(order);
   }
 }

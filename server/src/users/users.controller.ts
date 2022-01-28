@@ -27,7 +27,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, type: [UserEntity] })
   @Permissions(PermissionTypes.SubscriptionFullManagement)
-  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Get()
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAll();
@@ -35,7 +35,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get user by id' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Get(':id')
   async getUser(@Param('id') id: string): Promise<UserEntity> {
     return await this.userService.getById(id);
@@ -43,7 +43,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: 200, type: UserEntity })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BanGuard)
   @Put(':id')
   async updateUser(
     @Param('id') id: string,
@@ -54,7 +54,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Delete user' })
   @Permissions(PermissionTypes.SubscriptionFullManagement)
-  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
   @Delete(':id')
   async deleteUser(@Param('id') id: string): Promise<DeleteResult> {
     return this.userService.delete(id);

@@ -27,45 +27,14 @@ export class UsersService {
   ) {}
 
   async getAll(): Promise<UserEntity[]> {
-    return await this.usersRepository.find({
-      relations: [
-        'roles',
-        'roles.permissions',
-        'ban',
-        'basket',
-        'basket.pieces',
-        'basket.pieces.product',
-        'basket.pieces.product.productsInfo',
-        'basket.pieces.product.productsInfo.color',
-        'orders',
-        'orders.pieces',
-        'orders.delivery',
-        'deliveries',
-        'wishlist',
-        'wishlist.products',
-      ],
-    });
+    return await this.usersRepository.find();
   }
 
   async getById(id: string): Promise<UserEntity> {
     const user = await this.usersRepository.findOne(id, {
-      relations: [
-        'roles',
-        'roles.permissions',
-        'ban',
-        'basket',
-        'basket.pieces',
-        'basket.pieces.product',
-        'basket.pieces.product.productsInfo',
-        'basket.pieces.product.productsInfo.color',
-        'orders',
-        'orders.pieces',
-        'orders.delivery',
-        'deliveries',
-        'wishlist',
-        'wishlist.products',
-      ],
+      relations: ['roles', 'roles.permissions', 'ban'],
     });
+
     if (!user) throw new NotFoundException('Користувача не знайдено');
 
     return user;
@@ -74,10 +43,8 @@ export class UsersService {
   async getUserByEmail(email: string): Promise<UserEntity> {
     return await this.usersRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.roles', 'roles')
-      .leftJoinAndSelect('roles.permissions', 'permissions')
       .where({ email })
-      .addSelect('user.password')
+      .addSelect(['user.password'])
       .getOne();
   }
 
@@ -100,7 +67,9 @@ export class UsersService {
     await this.basketsService.create(user);
     await this.wishlistsService.create(user);
 
+    delete user.currentHashedRefreshToken;
     delete user.password;
+
     return user;
   }
 
@@ -109,7 +78,9 @@ export class UsersService {
     const editUser = Object.assign(user, data);
     const updatedUser = await this.usersRepository.save(editUser);
 
+    delete updatedUser.currentHashedRefreshToken;
     delete updatedUser.password;
+
     return updatedUser;
   }
 
@@ -128,7 +99,9 @@ export class UsersService {
 
     const editUser = await this.usersRepository.save(user);
 
+    delete editUser.currentHashedRefreshToken;
     delete editUser.password;
+
     return editUser;
   }
 
@@ -138,7 +111,9 @@ export class UsersService {
     user.roles = editRoles;
     const editUser = await this.usersRepository.save(user);
 
+    delete editUser.currentHashedRefreshToken;
     delete editUser.password;
+
     return editUser;
   }
 
@@ -148,12 +123,16 @@ export class UsersService {
       currentHashedRefreshToken,
     });
 
-    delete updateUser.currentHashedRefreshToken;
     return updateUser;
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
-    const user = await this.getById(userId);
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where({ id: userId })
+      .addSelect(['user.password', 'user.currentHashedRefreshToken'])
+      .getOne();
+
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken,
@@ -164,6 +143,8 @@ export class UsersService {
     }
 
     delete user.currentHashedRefreshToken;
+    delete user.password;
+
     return user;
   }
 
@@ -190,7 +171,9 @@ export class UsersService {
 
     const editUser = await this.usersRepository.save(user);
 
+    delete editUser.currentHashedRefreshToken;
     delete editUser.password;
+
     return editUser;
   }
 
@@ -199,7 +182,9 @@ export class UsersService {
     user.ban = null;
     const editUser = await this.usersRepository.save(user);
 
+    delete editUser.currentHashedRefreshToken;
     delete editUser.password;
+
     return editUser;
   }
 }

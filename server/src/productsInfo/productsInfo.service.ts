@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ColorsService } from 'src/colors/colors.service';
+import { FileManagerService } from 'src/fileManager/fileManager.service';
 import { ProductsService } from 'src/products/products.service';
 import { SizesService } from 'src/sizes/sizes.service';
 import { DeleteResult, Repository } from 'typeorm';
@@ -16,11 +17,12 @@ export class ProductsInfoService {
     private readonly sizesService: SizesService,
     private readonly colorsService: ColorsService,
     private readonly productsService: ProductsService,
+    private readonly fileManagerService: FileManagerService,
   ) {}
 
   async getById(id: string): Promise<ProductInfoEntity> {
     return await this.productInfoRepository.findOne(id, {
-      relations: ['size', 'color', 'product'],
+      relations: ['size', 'color', 'product', 'images'],
     });
   }
 
@@ -91,5 +93,28 @@ export class ProductsInfoService {
     const editProductInfo = await this.productInfoRepository.save(productInfo);
 
     return editProductInfo;
+  }
+
+  async addImage(productInfoId: string, imageBuffer: Buffer, filename: string) {
+    const image = await this.fileManagerService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
+    const productInfo = await this.getById(productInfoId);
+    productInfo.images.push(image);
+
+    return await this.productInfoRepository.save(productInfo);
+  }
+
+  async deleteImage(productInfoId: string, imageId: string) {
+    const productInfo = await this.getById(productInfoId);
+    const editRoles = productInfo.images.filter(
+      (image) => image.id !== imageId,
+    );
+
+    productInfo.images = editRoles;
+
+    await this.fileManagerService.deletePublicFile(imageId);
+    return await this.productInfoRepository.save(productInfo);
   }
 }

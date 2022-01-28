@@ -25,25 +25,18 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<UserEntity> {
-    try {
-      const user = await this.usersService.getUserByEmail(email);
-      await this.verifyPassword(password, user.password);
-      delete user.password;
+    const user = await this.usersService.getUserByEmail(email);
 
-      return user;
-    } catch (error) {
-      throw new HttpException(
-        'Невірний логін або пароль',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    if (user) await this.verifyPassword(password, user.password);
+
+    return user;
   }
 
   async verifyPassword(plainTextPassword: string, hashedPassword: string) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
       throw new HttpException(
-        'Невірний логін або пароль',
+        'Невірно набраний пароль',
         HttpStatus.BAD_REQUEST,
       );
     }
