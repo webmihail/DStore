@@ -1,8 +1,13 @@
 import createSagaMiddleware from "@redux-saga/core";
+import {
+  applyMiddleware,
+  compose,
+  configureStore,
+  Store,
+} from "@reduxjs/toolkit";
 import { Context, createWrapper, MakeStore } from "next-redux-wrapper";
-import { applyMiddleware, compose, createStore, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { RootState, reducer } from "./reducers";
+import { reducer, rootReducer } from "./reducers";
 import { rootSaga } from "./sagas";
 
 declare global {
@@ -18,14 +23,13 @@ const enhancer =
     ? compose(applyMiddleware(sagaMiddleware))
     : composeWithDevTools(applyMiddleware(sagaMiddleware));
 
-const store = createStore(reducer, enhancer);
+const store = configureStore({ reducer, enhancers: [enhancer] });
+const makeStore: MakeStore<Store<RootState>> = (context: Context) => store;
 
 sagaMiddleware.run(rootSaga);
 
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
-
-const makeStore: MakeStore<Store<RootState>> = (context: Context) => store;
-
 export const wrapper = createWrapper<Store<RootState>>(makeStore, {
   debug: true,
 });
