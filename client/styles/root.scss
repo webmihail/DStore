@@ -1,0 +1,47 @@
+@import "colors.scss";
+
+:root {
+  //Font
+  --heading-font-family: Montserrat, sans-serif;
+  --heading-font-weight: 500;
+  --heading-font-style: normal;
+  --text-font-family: "Nunito Sans", sans-serif;
+  --text-font-weight: 400;
+  --text-font-style: normal;
+  --text-color: $white;
+  --text-color-light: $white;
+  --base-text-font-size: 14px;
+  --default-text-font-size: 14px;
+  //Background
+  --background: $darkslategray;
+  --background-light: $darkslategray;
+  //Link
+  --link-color: $white;
+  //Border
+  --border-color: $darkslategraylight;
+  //Button
+  --button-background: $goldenrod;
+  --button-text-color: $darkslategray;
+  //Header
+  --header-background: $darkslategray;
+  --header-heading-color: $white;
+  --header-text-color-light: $dimgray;
+  --header-border-color: $darkslategraylight;
+  //Footer
+  --footer-background: $white;
+  --footer-text-color: $dimgray;
+  --footer-heading-color: $darkslategray;
+  --footer-border-color: $darkgray
+  //Navigation
+  --navigation-background: $darkslategray;
+  --navigation-text-color: $white;
+  --navigation-text-color-light: $darkgray
+  --navigation-border-color: $dimgray
+  //Secondary-elements
+  --secondary-elements-background: $darkslategray;
+  --secondary-elements-text-color: $white;
+  --secondary-elements-text-color-light: $darkgray
+  --secondary-elements-border-color: $dimgray
+  //Sale
+  --product-sale-price-color: $redflame;
+}
