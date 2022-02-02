@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GenericEntity } from 'src/common/generic/generic.entity';
+import PublicFileEntity from 'src/fileManager/entity/publicFile.entity';
 import { ProductEntity } from 'src/products/entity/product.entity';
 import { ProductTypeEntity } from 'src/productTypes/entity/productType.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
@@ -35,23 +38,21 @@ export class CategoryEntity extends GenericEntity {
   })
   name: string;
 
-  @ApiProperty({
-    example: 'https://www.fsdfdsf.fdfs',
-    description: 'category icon url',
-  })
-  @Column({
-    name: 'iconUrl',
-    type: 'varchar',
-    length: 255,
-    nullable: true,
-  })
-  iconUrl?: string;
-
   @TreeChildren({ cascade: ['soft-remove', 'remove', 'recover'] })
   children: CategoryEntity[];
 
   @TreeParent({ onDelete: 'CASCADE' })
   parent: CategoryEntity;
+
+  @OneToOne(
+    () => PublicFileEntity,
+    (image: PublicFileEntity) => image.category,
+    {
+      onDelete: 'SET NULL',
+    },
+  )
+  @JoinColumn()
+  image: PublicFileEntity;
 
   @OneToMany(
     () => ProductEntity,

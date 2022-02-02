@@ -191,7 +191,7 @@ export class ProductsInfoController {
     );
   }
 
-  @ApiOperation({ summary: 'Delete image to product info' })
+  @ApiOperation({ summary: 'Delete image from product info' })
   @ApiResponse({ status: 200, type: ProductInfoEntity })
   @Patch(':productInfoId/delete-image/:imageId')
   @Permissions(
@@ -199,7 +199,7 @@ export class ProductsInfoController {
     PermissionTypes.SubscriptionCategoryProductManagementWrite,
   )
   @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
-  async deleteImageToProductInfo(
+  async deleteImageFromProductInfo(
     @Param('productInfoId') productInfoId: string,
     @Param('imageId') imageId: string,
   ) {

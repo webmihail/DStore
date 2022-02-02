@@ -64,7 +64,9 @@ export class ProductsService {
     );
 
     if (equalProduct.length !== 0)
-      throw new BadRequestException('Продукт з такою назвою існує у категорії');
+      throw new BadRequestException(
+        'A product with this name exists in the category',
+      );
 
     newProduct.category = category;
 
@@ -92,7 +94,9 @@ export class ProductsService {
     );
 
     if (equalProduct.length !== 0)
-      throw new BadRequestException('Продукт з такою назвою існує у категорії');
+      throw new BadRequestException(
+        'A product with this name exists in the category',
+      );
 
     product.category = category;
 

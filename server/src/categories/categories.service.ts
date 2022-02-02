@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FileManagerService } from 'src/fileManager/fileManager.service';
 import { DeleteResult, getManager, TreeRepository } from 'typeorm';
 import { CategoryCreateDTO } from './dtos/category.create.dto';
 import { CategoryEditDTO } from './dtos/category.edit.dto';
@@ -12,12 +13,13 @@ export class CategoriesService {
     private readonly categoryTreeRepository: TreeRepository<CategoryEntity> = getManager().getTreeRepository(
       CategoryEntity,
     ),
+    private readonly fileManagerService: FileManagerService,
   ) {}
 
   async getAll(): Promise<CategoryEntity[]> {
     const categoriesList = await this.categoryTreeRepository.findTrees({
       depth: 2,
-      relations: ['products'],
+      relations: ['products', 'image'],
     });
 
     const responseWithDeletions = categoriesList.map((category) => {
@@ -34,7 +36,7 @@ export class CategoriesService {
 
   async getById(id: string): Promise<CategoryEntity> {
     const category = await this.categoryTreeRepository.findOne(id, {
-      relations: ['children', 'products', 'productTypes'],
+      relations: ['children', 'products', 'productTypes', 'image'],
     });
 
     if (category.children.length !== 0 && category.products.length === 0) {
@@ -49,7 +51,6 @@ export class CategoriesService {
   async create(data: CategoryCreateDTO): Promise<CategoryEntity> {
     const category = new CategoryEntity();
     category.name = data.name;
-    category.iconUrl = data.iconUrl;
     return await this.categoryTreeRepository.save(category);
   }
 
@@ -60,7 +61,6 @@ export class CategoriesService {
     const newSubcategory = new CategoryEntity();
     const category = await this.getById(categoryId);
     newSubcategory.name = data.name;
-    newSubcategory.iconUrl = data.iconUrl;
     newSubcategory.parent = category;
 
     return await this.categoryTreeRepository.save(newSubcategory);
@@ -74,5 +74,24 @@ export class CategoriesService {
 
   async delete(id: string): Promise<DeleteResult> {
     return await this.categoryTreeRepository.delete(id);
+  }
+
+  async addImage(categoryId: string, imageBuffer: Buffer, filename: string) {
+    const image = await this.fileManagerService.uploadPublicFile(
+      imageBuffer,
+      filename,
+    );
+    const category = await this.getById(categoryId);
+    category.image = image;
+
+    return await this.categoryTreeRepository.save(category);
+  }
+
+  async deleteImage(categoryId: string, imageId: string) {
+    const category = await this.getById(categoryId);
+    category.image = null;
+
+    await this.fileManagerService.deletePublicFile(imageId);
+    return await this.categoryTreeRepository.save(category);
   }
 }

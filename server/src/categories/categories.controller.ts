@@ -7,9 +7,18 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/guards/jwt.auth.guard';
 import { BanGuard } from 'src/bans/guards/ban.guard';
 import { PermissionTypes } from 'src/permissions/constants';
@@ -93,5 +102,52 @@ export class CategoriesController {
   @Delete(':id')
   async deleteCategory(@Param('id') id: string): Promise<DeleteResult> {
     return await this.categoryServices.delete(id);
+  }
+
+  @ApiOperation({ summary: 'Add image to category' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, type: CategoryEntity })
+  @Patch(':categoryId/add-image')
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addImageToCategory(
+    @Param('categoryId') categoryId: string,
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
+    return this.categoryServices.addImage(
+      categoryId,
+      file.buffer,
+      file.originalname,
+    );
+  }
+
+  @ApiOperation({ summary: 'Delete image from category' })
+  @ApiResponse({ status: 200, type: CategoryEntity })
+  @Patch(':categoryId/delete-image/:imageId')
+  @Permissions(
+    PermissionTypes.SubscriptionFullManagement,
+    PermissionTypes.SubscriptionCategoryProductManagementWrite,
+  )
+  @UseGuards(JwtAuthGuard, BanGuard, PermissionGuard)
+  async deleteImageFromCategory(
+    @Param('categoryId') categoryId: string,
+    @Param('imageId') imageId: string,
+  ) {
+    return this.categoryServices.deleteImage(categoryId, imageId);
   }
 }
