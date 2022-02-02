@@ -46,7 +46,7 @@ export class WishlistsService {
       wishlist.products.filter((product) => product.id === productId);
 
     if (productIsExist && productIsExist.length !== 0)
-      throw new BadRequestException('Ви вже добавили цей продукт');
+      throw new BadRequestException('You have already added this product');
 
     wishlist.products.push(product);
 

@@ -16,7 +16,7 @@ export class LocalAuthenticationStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<UserEntity | null> {
     const user = await this.authService.getAuthenticatedUser(email, password);
     if (!user) {
-      throw new UnauthorizedException('Юзера с таким Email не існує');
+      throw new UnauthorizedException('There is no user with this Email!');
     }
 
     return user;

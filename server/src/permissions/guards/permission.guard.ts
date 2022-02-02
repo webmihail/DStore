@@ -26,7 +26,7 @@ class PermissionGuard implements CanActivate {
     );
 
     if (!isHasPermissionAccess) {
-      throw new ForbiddenException('У вас немає прав на ці дії!');
+      throw new ForbiddenException('You have no permissions to these actions!');
     }
 
     return isHasPermissionAccess;

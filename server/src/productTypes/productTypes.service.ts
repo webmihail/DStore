@@ -45,7 +45,7 @@ export class ProductTypesService {
 
     if (equalProductType.length !== 0)
       throw new BadRequestException(
-        'Тип продукту з такою назвою існує у категорії',
+        'The type of product with this name exists in the category',
       );
 
     newProductType.category = category;

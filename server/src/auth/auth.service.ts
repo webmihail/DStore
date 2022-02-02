@@ -36,7 +36,7 @@ export class AuthService {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
       throw new HttpException(
-        'Невірно набраний пароль',
+        'The password was typed incorrectly',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -82,11 +82,11 @@ export class AuthService {
 
     const url = `${settings.email.confirmationUrl}?token=${token}`;
 
-    const text = `Ласкаво просимо до нашого магазину. Для підтвердження вашого email перейдіть за цим посиланням: ${url}`;
+    const text = `Добро пожаловать в магазин! Для подтверждения Вашего email перейдите по ссылке: ${url}`;
 
     return this.emailService.sendMail({
       to: email,
-      subject: 'Підтвердження email',
+      subject: 'Подтверждение email',
       text,
     });
   }
@@ -104,17 +104,19 @@ export class AuthService {
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
         throw new BadRequestException(
-          'Срок дії токену підтвердження email закінчився',
+          'The email confirmation token has expired',
         );
       }
-      throw new BadRequestException('Невірний токен підтвердження');
+      throw new BadRequestException('Invalid confirmation token');
     }
   }
 
   public async confirmEmail(email: string) {
     const user = await this.usersService.getUserByEmail(email);
     if (user.isEmailConfirmed) {
-      throw new BadRequestException('Ваш email успішно підтвердженно');
+      throw new BadRequestException(
+        'Your email has been successfully confirmed',
+      );
     }
     await this.usersService.markEmailAsConfirmed(email);
   }
@@ -122,7 +124,9 @@ export class AuthService {
   public async resendConfirmationLink(userId: string) {
     const user = await this.usersService.getById(userId);
     if (user.isEmailConfirmed) {
-      throw new BadRequestException('Ваш email успішно підтвердженно');
+      throw new BadRequestException(
+        'Your email has been successfully confirmed',
+      );
     }
     await this.sendEmailVerificationLink(user.email);
   }

@@ -70,6 +70,8 @@
 }
 
 #__next {
+  color: var(--text-color-dark);
+
   h1,
   h2,
   h3,
@@ -78,7 +80,6 @@
   h6 {
     color: var(--text-color-dark);
   }
-  color: var(--text-color-dark);
 }
 
 body {

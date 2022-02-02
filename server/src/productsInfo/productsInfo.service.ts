@@ -108,11 +108,11 @@ export class ProductsInfoService {
 
   async deleteImage(productInfoId: string, imageId: string) {
     const productInfo = await this.getById(productInfoId);
-    const editRoles = productInfo.images.filter(
+    const editProductInfo = productInfo.images.filter(
       (image) => image.id !== imageId,
     );
 
-    productInfo.images = editRoles;
+    productInfo.images = editProductInfo;
 
     await this.fileManagerService.deletePublicFile(imageId);
     return await this.productInfoRepository.save(productInfo);

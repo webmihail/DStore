@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CategoryCreateDTO {
   @ApiProperty({
@@ -8,12 +8,4 @@ export class CategoryCreateDTO {
   })
   @IsString()
   name: string;
-
-  @ApiProperty({
-    example: 'https://www.fsdfdsf.fdfs',
-    description: 'category icon url',
-  })
-  @IsString()
-  @IsOptional()
-  iconUrl?: string;
 }

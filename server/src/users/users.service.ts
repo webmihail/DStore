@@ -35,7 +35,7 @@ export class UsersService {
       relations: ['roles', 'roles.permissions', 'ban'],
     });
 
-    if (!user) throw new NotFoundException('Користувача не знайдено');
+    if (!user) throw new NotFoundException('User not found');
 
     return user;
   }
@@ -50,7 +50,8 @@ export class UsersService {
 
   async create(data: UserCreateDTO): Promise<UserEntity> {
     const userExist = await this.usersRepository.findOne({ email: data.email });
-    if (userExist) throw new BadRequestException('Такий email вже існує');
+    if (userExist)
+      throw new BadRequestException('Such an email already exists');
 
     let role = await this.rolesService.getByValue('Persone');
 
@@ -139,7 +140,7 @@ export class UsersService {
     );
 
     if (!isRefreshTokenMatching) {
-      throw new UnauthorizedException('Токен оновлення не співпадає');
+      throw new UnauthorizedException('Refresh token not match!');
     }
 
     delete user.currentHashedRefreshToken;

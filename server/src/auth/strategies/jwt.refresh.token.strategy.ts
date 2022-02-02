@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayloadDTO } from '../dtos/token.payload.dto';
@@ -25,9 +25,17 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
 
   async validate(request: Request, payload: TokenPayloadDTO) {
     const refreshToken = request.cookies?.Refresh;
-    return this.userService.getUserIfRefreshTokenMatches(
+    const user = this.userService.getUserIfRefreshTokenMatches(
       refreshToken,
       payload.userId,
     );
+
+    if (!user) {
+      throw new UnauthorizedException(
+        'User with valid refresh token not found',
+      );
+    }
+
+    return user;
   }
 }

@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CategoryEntity } from 'src/categories/entity/category.entity';
 import { GenericEntity } from 'src/common/generic/generic.entity';
 import { ProductInfoEntity } from 'src/productsInfo/entity/productInfo.entity';
 import {
   Column,
   Entity,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -41,6 +43,15 @@ class PublicFileEntity extends GenericEntity {
     },
   )
   productInfo: ProductInfoEntity;
+
+  @OneToOne(
+    () => CategoryEntity,
+    (category: CategoryEntity) => category.image,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  category: CategoryEntity;
 }
 
 export default PublicFileEntity;

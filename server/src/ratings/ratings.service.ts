@@ -43,7 +43,7 @@ export class RatingsService {
     );
 
     if (equalRating.length !== 0)
-      throw new BadRequestException('Ви вже оцінили цей продукт');
+      throw new BadRequestException('You have already rated this product');
 
     newRating.user = user;
     newRating.product = product;
