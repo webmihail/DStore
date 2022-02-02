@@ -1,0 +1,16 @@
+.ant-btn {
+  height: 40px;
+  font-size: var(--text-font-size) !important;
+
+  &,
+  &:hover,
+  &:focus {
+    background-color: var(--antd-default-button-background-color);
+    border: 2px solid var(--antd-default-button-border);
+    color: var(--antd-default-button-color);
+  }
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
