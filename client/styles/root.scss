@@ -3,65 +3,65 @@
 @import "./antd/main.scss";
 
 :root {
-  --uniq-you-font-family: "Nunito", sans-serif;
-  --font-family: var(#{--uniq-you-font-family});
-  --uniq-you-font-weight: 400;
-  --font-weight: var(#{--uniq-you-font-weight});
-  --uniq-you-font-style: normal;
-  --font-style: var(#{--uniq-you-font-style});
-  --uniq-you-text-color: #{$white};
-  --text-color: var(#{--uniq-you-text-color});
-  --uniq-you-text-color-dark: #{$darkslategray};
-  --text-color-dark: var(#{--uniq-you-text-color-dark});
+  --uniqq-font-family: "Nunito", sans-serif;
+  --font-family: var(#{--uniqq-font-family});
+  --uniqq-font-weight: 400;
+  --font-weight: var(#{--uniqq-font-weight});
+  --uniqq-font-style: normal;
+  --font-style: var(#{--uniqq-font-style});
+  --uniqq-text-color: #{$white};
+  --text-color: var(#{--uniqq-text-color});
+  --uniqq-text-color-dark: #{$darkslategray};
+  --text-color-dark: var(#{--uniqq-text-color-dark});
 
-  --uniq-you-text-font-size: 14px;
-  --text-font-size: var(#{--uniq-you-text-font-siz});
-  --uniq-you-background: #{$darkslategray};
-  --background: var(#{--uniq-you-background});
-  --uniq-you-heading-color: #{$white};
-  --heading-color: var(#{--uniq-you-heading-color});
-  --uniq-you-drawer-background: #{$darkslategray};
-  --drawer-background: var(#{--uniq-you-drawer-background});
-  --uniq-you-drawer-close-button-color: #{$goldenrod};
-  --drawer-close-button-color: var(#{--uniq-you-drawer-close-button-color});
-  --uniq-you-border-color: #{$darkslategraylight};
-  --border-color: var(#{--uniq-you-border-color});
-  --uniq-you-button-background: #{$goldenrod};
-  --button-background: var(#{--uniq-you-button-background});
-  --uniq-you-button-text-color: #{$darkslategray};
-  --button-text-color: var(#{--uniq-you-button-text-color});
-  --uniq-you-header-background: #{$darkslategray};
-  --header-background: var(#{--uniq-you-header-background});
-  --uniq-you-antd-default-button-background-color: #{$darkslategray};
+  --uniqq-text-font-size: 14px;
+  --text-font-size: var(#{--uniqq-text-font-size});
+  --uniqq-background: #{$darkslategray};
+  --background: var(#{--uniqq-background});
+  --uniqq-heading-color: #{$white};
+  --heading-color: var(#{--uniqq-heading-color});
+  --uniqq-drawer-background: #{$darkslategray};
+  --drawer-background: var(#{--uniqq-drawer-background});
+  --uniqq-drawer-close-button-color: #{$goldenrod};
+  --drawer-close-button-color: var(#{--uniqq-drawer-close-button-color});
+  --uniqq-border-color: #{$darkslategraylight};
+  --border-color: var(#{--uniqq-border-color});
+  --uniqq-button-background: #{$goldenrod};
+  --button-background: var(#{--uniqq-button-background});
+  --uniqq-button-text-color: #{$darkslategray};
+  --button-text-color: var(#{--uniqq-button-text-color});
+  --uniqq-header-background: #{$darkslategray};
+  --header-background: var(#{--uniqq-header-background});
+  --uniqq-antd-default-button-background-color: #{$darkslategray};
   --antd-default-button-background-color: var(
-    #{--uniq-you-antd-default-button-background-color}
+    #{--uniqq-antd-default-button-background-color}
   );
-  --uniq-you-antd-default-button-border: #{$goldenrod};
-  --antd-default-button-border: var(#{--uniq-you-antd-default-button-border});
-  --uniq-you-antd-default-button-color: #{$goldenrod};
-  --antd-default-button-color: var(#{--uniq-you-antd-default-button-color});
-  --uniq-you-header-border-color: #{$darkslategraylight};
-  --header-border-color: var(#{--uniq-you-header-border-color});
-  --uniq-you-footer-background: #{$white};
-  --footer-background: var(#{--uniq-you-footer-background});
-  --uniq-you-footer-text-color: #{$dimgray};
-  --footer-text-color: var(#{--uniq-you-footer-text-color});
-  --uniq-you-footer-border-color: #{$darkgray};
-  --footer-border-color: var(#{--uniq-you-footer-border-color});
-  --uniq-you-navigation-background: #{$darkslategray};
-  --navigation-background: var(#{--uniq-you-navigation-background});
-  --uniq-you-navigation-border-color: #{$dimgray};
-  --navigation-border-color: var(#{--uniq-you-navigation-border-color});
-  --uniq-you-secondary-elements-background: #{$darkslategray};
+  --uniqq-antd-default-button-border: #{$goldenrod};
+  --antd-default-button-border: var(#{--uniqq-antd-default-button-border});
+  --uniqq-antd-default-button-color: #{$goldenrod};
+  --antd-default-button-color: var(#{--uniqq-antd-default-button-color});
+  --uniqq-header-border-color: #{$darkslategraylight};
+  --header-border-color: var(#{--uniqq-header-border-color});
+  --uniqq-footer-background: #{$white};
+  --footer-background: var(#{--uniqq-footer-background});
+  --uniqq-footer-text-color: #{$dimgray};
+  --footer-text-color: var(#{--uniqq-footer-text-color});
+  --uniqq-footer-border-color: #{$darkgray};
+  --footer-border-color: var(#{--uniqq-footer-border-color});
+  --uniqq-navigation-background: #{$darkslategray};
+  --navigation-background: var(#{--uniqq-navigation-background});
+  --uniqq-navigation-border-color: #{$dimgray};
+  --navigation-border-color: var(#{--uniqq-navigation-border-color});
+  --uniqq-secondary-elements-background: #{$darkslategray};
   --secondary-elements-background: var(
-    #{--uniq-you-secondary-elements-background}
+    #{--uniqq-secondary-elements-background}
   );
-  --uniq-you-secondary-elements-border-color: #{$dimgray};
+  --uniqq-secondary-elements-border-color: #{$dimgray};
   --secondary-elements-border-color: var(
-    #{--uniq-you-secondary-elements-border-color}
+    #{--uniqq-secondary-elements-border-color}
   );
-  --uniq-you-product-sale-price-color: #{$redflame};
-  --product-sale-price-color: var(#{--uniq-you-product-sale-price-color});
+  --uniqq-product-sale-price-color: #{$redflame};
+  --product-sale-price-color: var(#{--uniqq-product-sale-price-color});
 }
 
 * {
