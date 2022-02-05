@@ -2,6 +2,7 @@ export enum RouteHrefs {
   HOME = "/",
   BASKET = "/basket",
   ORDERS = "/orders",
+  CATEGORY = "/categories",
 }
 
 export enum ImagePaths {

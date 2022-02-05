@@ -1,6 +1,7 @@
 @import "./colors.scss";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap");
 @import "./antd/main.scss";
+@import "./normalize/normalize.scss";
 
 :root {
   --uniqq-font-family: "Nunito", sans-serif;
@@ -13,7 +14,6 @@
   --text-color: var(#{--uniqq-text-color});
   --uniqq-text-color-dark: #{$darkslategray};
   --text-color-dark: var(#{--uniqq-text-color-dark});
-
   --uniqq-text-font-size: 14px;
   --text-font-size: var(#{--uniqq-text-font-size});
   --uniqq-background: #{$darkslategray};
@@ -40,6 +40,12 @@
   --antd-default-button-border: var(#{--uniqq-antd-default-button-border});
   --uniqq-antd-default-button-color: #{$goldenrod};
   --antd-default-button-color: var(#{--uniqq-antd-default-button-color});
+  --uniqq-antd-text-button-color: #{$white};
+  --antd-text-button-color: var(#{--uniqq-antd-text-button-color});
+  --uniqq-antd-text-button-border-color: #{$darkslategray};
+  --antd-text-button-border-color: var(
+    #{--uniqq-antd-text-button-border-color}
+  );
   --uniqq-header-border-color: #{$darkslategraylight};
   --header-border-color: var(#{--uniqq-header-border-color});
   --uniqq-footer-background: #{$white};
@@ -62,11 +68,8 @@
   );
   --uniqq-product-sale-price-color: #{$redflame};
   --product-sale-price-color: var(#{--uniqq-product-sale-price-color});
-}
-
-* {
-  margin: 0;
-  padding: 0;
+  --uniqq-card-gradient: #{$blackOpacityGradient};
+  --card-gradient: var(#{--uniqq-card-gradient});
 }
 
 body {
@@ -84,5 +87,6 @@ body {
   h5,
   h6 {
     color: var(--heading-color);
+    margin: 0;
   }
 }
