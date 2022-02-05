@@ -11,7 +11,7 @@ const Header: FC = (): JSX.Element => {
   return (
     <header className={styles.header}>
       <NavLink className={styles.headerLogo} href={RouteHrefs.HOME}>
-        <img src={ImagePaths.UNIQ_YOU_MAIN_LOGO} alt="logo" />
+        <img src={ImagePaths.UNIQQ_MAIN_LOGO} alt="logo" />
       </NavLink>
       <AppDrawer placement={Placement.LEFT} closable={true}>
         <div></div>

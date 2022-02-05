@@ -6,3 +6,10 @@ $dimgray: #6a6a6a;
 $darkgray: #afafaf;
 $white: #ffffff;
 $redflame: #f94c43;
+$blackOpacityGradient: linear-gradient(
+  0deg,
+  rgb(0, 0, 0, 0.9) 0%,
+  rgb(0, 0, 0, 0.7) 20%,
+  rgb(0, 0, 0, 0.5) 50%,
+  rgb(0, 0, 0, 0.2) 100%
+);

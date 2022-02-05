@@ -12,10 +12,10 @@ const AppLayout: FC<AppLayoutOwnProps> = ({
   return (
     <>
       <Head>
-        <title>{title || "UniqYou"}</title>
+        <title>{title || "UNIQQ"}</title>
         <meta
           name="description"
-          content={`UniqTM. CСоздан делать людей уникальными! ${description}`}
+          content={`UNIQQ. Создан делать людей уникальными! ${description}`}
         />
         <meta name="robots" content="index, follow" />
         <meta

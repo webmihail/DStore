@@ -13,7 +13,7 @@ const NotFoundPage: NextPage = () => {
       </Head>
       <img
         className={styles.logo}
-        src={ImagePaths.UNIQ_YOU_NOT_FOUND_LOGO}
+        src={ImagePaths.UNIQQ_NOT_FOUND_LOGO}
         alt="Not found page logo"
       />
       <h2>404 | Такой страницы не существует!</h2>

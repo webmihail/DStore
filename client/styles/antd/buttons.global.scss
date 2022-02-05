@@ -14,3 +14,53 @@
     opacity: 0.5;
   }
 }
+
+.ant-btn.ant-btn-text {
+  background: none;
+  border: 1px solid var(--antd-text-button-color);
+  border-radius: 0px;
+  color: var(--text-color-dark);
+  position: relative;
+  z-index: 2;
+
+  &:hover {
+    opacity: 1;
+    color: var(--text-color);
+  }
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    opacity: 1;
+  }
+
+  &::before {
+    background-color: var(--antd-text-button-color);
+    z-index: -1;
+    transition: all 0.2s ease-in-out;
+  }
+
+  &::after {
+    background: none;
+    border-top: 1px solid var(--antd-text-button-border-color);
+    border-bottom: 1px solid var(--antd-text-button-border-color);
+    z-index: -2;
+    transition: all 0.5s ease-in-out;
+  }
+
+  &:hover::before {
+    width: 0;
+  }
+
+  &:hover::after {
+    width: 70%;
+    transform: scale(1.052);
+  }
+}
