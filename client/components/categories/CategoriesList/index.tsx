@@ -1,9 +1,9 @@
 import { Button, Col, Row } from "antd";
-import NavLink from "components/NavLink";
-import { RouteHrefs } from "../../constants";
+import NavLink from "components/common/NavLink";
+import { RouteHrefs } from "../../../constants";
 import { FC } from "react";
 import styles from "./styles/categoriesList.module.scss";
-import AppButton from "components/AppButton";
+import AppButton from "components/common/AppButton";
 
 const categories = [
   {

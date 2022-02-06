@@ -3,8 +3,8 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "./styles/notFound.module.scss";
 import { Button } from "antd";
-import NavLink from "components/NavLink";
-import AppButton from "components/AppButton";
+import NavLink from "components/common/NavLink";
+import AppButton from "components/common/AppButton";
 
 const NotFoundPage: NextPage = () => {
   return (

@@ -1,12 +1,12 @@
-import { ImagePaths, RouteHrefs } from "../../constants";
+import { ImagePaths, RouteHrefs } from "../../../constants";
 import { FC } from "react";
 import AppDrawer from "../AppDrawer";
 import { Placement } from "../AppDrawer/constants";
 import styles from "./styles/header.module.scss";
-import NavLink from "components/NavLink";
+import NavLink from "components/common/NavLink";
 import { Button } from "antd";
 import { ShoppingOutlined, UserOutlined } from "@ant-design/icons";
-import AppButton from "components/AppButton";
+import AppButton from "components/common/AppButton";
 
 const Header: FC = (): JSX.Element => {
   return (
