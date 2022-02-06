@@ -1,13 +1,19 @@
-.ant-btn {
+.button,.buttonWhite,.buttonGold {
+  cursor: pointer;
+  background: none;
+  font-size: var(--text-font-size);
   height: 40px;
-  font-size: var(--text-font-size) !important;
+  padding: 0 10px;
+}
 
+.button {
   &,
   &:hover,
   &:focus {
-    background-color: var(--antd-default-button-background-color);
-    border: 2px solid var(--antd-default-button-border);
-    color: var(--antd-default-button-color);
+    background-color: var(--default-button-background-color);
+    border: 2px solid var(--default-button-border);
+    color: var(--default-button-color);
+    transition: 0.5s ease;
   }
 
   &:hover {
@@ -15,10 +21,8 @@
   }
 }
 
-.ant-btn.ant-btn-text {
-  background: none;
-  border: 1px solid var(--antd-text-button-color);
-  border-radius: 0px;
+.buttonWhite {
+  border: 1px solid var(--text-button-color);
   color: var(--text-color-dark);
   position: relative;
   z-index: 2;
@@ -28,7 +32,8 @@
     color: var(--text-color);
   }
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     display: block;
@@ -42,15 +47,15 @@
   }
 
   &::before {
-    background-color: var(--antd-text-button-color);
+    background-color: var(--text-button-color);
     z-index: -1;
     transition: all 0.2s ease-in-out;
   }
 
   &::after {
     background: none;
-    border-top: 1px solid var(--antd-text-button-border-color);
-    border-bottom: 1px solid var(--antd-text-button-border-color);
+    border-top: 1px solid var(--text-button-border-color);
+    border-bottom: 1px solid var(--text-button-border-color);
     z-index: -2;
     transition: all 0.5s ease-in-out;
   }
@@ -61,6 +66,6 @@
 
   &:hover::after {
     width: 70%;
-    transform: scale(1.052);
+    transform: scale(1.0548);
   }
 }

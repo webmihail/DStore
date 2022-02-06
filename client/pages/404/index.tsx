@@ -4,6 +4,7 @@ import Head from "next/head";
 import styles from "./styles/notFound.module.scss";
 import { Button } from "antd";
 import NavLink from "components/NavLink";
+import AppButton from "components/AppButton";
 
 const NotFoundPage: NextPage = () => {
   return (
@@ -17,8 +18,8 @@ const NotFoundPage: NextPage = () => {
         alt="Not found page logo"
       />
       <h2>404 | Такой страницы не существует!</h2>
-      <NavLink className={styles.button} href={RouteHrefs.HOME}>
-        <Button>Вернуться на главную страницу</Button>
+      <NavLink style={styles.button} href={RouteHrefs.HOME}>
+        <AppButton>Вернуться на главную страницу</AppButton>
       </NavLink>
     </div>
   );

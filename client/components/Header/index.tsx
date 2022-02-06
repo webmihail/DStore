@@ -6,11 +6,12 @@ import styles from "./styles/header.module.scss";
 import NavLink from "components/NavLink";
 import { Button } from "antd";
 import { ShoppingOutlined, UserOutlined } from "@ant-design/icons";
+import AppButton from "components/AppButton";
 
 const Header: FC = (): JSX.Element => {
   return (
     <header className={styles.header}>
-      <NavLink className={styles.headerLogo} href={RouteHrefs.HOME}>
+      <NavLink style={styles.headerLogo} href={RouteHrefs.HOME}>
         <img src={ImagePaths.UNIQQ_MAIN_LOGO} alt="logo" />
       </NavLink>
       <AppDrawer placement={Placement.LEFT} closable={true}>
@@ -18,9 +19,9 @@ const Header: FC = (): JSX.Element => {
       </AppDrawer>
       <div className={styles.headerRightNavBar}>
         <NavLink href={RouteHrefs.ORDERS}>
-          <Button className={styles.headerButtonHistory}>
+          <AppButton style={styles.headerButtonHistory}>
             История заказов
-          </Button>
+          </AppButton>
         </NavLink>
         <NavLink href={RouteHrefs.BASKET}>
           <ShoppingOutlined />

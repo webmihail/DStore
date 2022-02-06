@@ -32,20 +32,18 @@
   --button-text-color: var(#{--uniqq-button-text-color});
   --uniqq-header-background: #{$darkslategray};
   --header-background: var(#{--uniqq-header-background});
-  --uniqq-antd-default-button-background-color: #{$darkslategray};
-  --antd-default-button-background-color: var(
-    #{--uniqq-antd-default-button-background-color}
+  --uniqq-default-button-background-color: #{$darkslategray};
+  --default-button-background-color: var(
+    #{--uniqq-default-button-background-color}
   );
-  --uniqq-antd-default-button-border: #{$goldenrod};
-  --antd-default-button-border: var(#{--uniqq-antd-default-button-border});
-  --uniqq-antd-default-button-color: #{$goldenrod};
-  --antd-default-button-color: var(#{--uniqq-antd-default-button-color});
-  --uniqq-antd-text-button-color: #{$white};
-  --antd-text-button-color: var(#{--uniqq-antd-text-button-color});
-  --uniqq-antd-text-button-border-color: #{$darkslategray};
-  --antd-text-button-border-color: var(
-    #{--uniqq-antd-text-button-border-color}
-  );
+  --uniqq-default-button-border: #{$goldenrod};
+  --default-button-border: var(#{--uniqq-default-button-border});
+  --uniqq-default-button-color: #{$goldenrod};
+  --default-button-color: var(#{--uniqq-default-button-color});
+  --uniqq-text-button-color: #{$white};
+  --text-button-color: var(#{--uniqq-text-button-color});
+  --uniqq-text-button-border-color: #{$darkslategray};
+  --text-button-border-color: var(#{--uniqq-text-button-border-color});
   --uniqq-header-border-color: #{$darkslategraylight};
   --header-border-color: var(#{--uniqq-header-border-color});
   --uniqq-footer-background: #{$white};

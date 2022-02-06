@@ -3,24 +3,25 @@ import NavLink from "components/NavLink";
 import { RouteHrefs } from "../../constants";
 import { FC } from "react";
 import styles from "./styles/categoriesList.module.scss";
+import AppButton from "components/AppButton";
 
 const categories = [
   {
-    id:'423',
+    id: "423",
     image:
       "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
     parent: "Женская одежда",
     name: "Топы",
   },
   {
-    id:'42353',
+    id: "42353",
     image:
       "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
     parent: "Женская одежда",
     name: "Топы",
   },
   {
-    id:'42325242524',
+    id: "42325242524",
     image:
       "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
     parent: "Женская одежда",
@@ -41,9 +42,9 @@ const CategoriesList: FC = (): JSX.Element => {
                 <h3>{category.parent}</h3>
                 <h1>{category.name}</h1>
                 <NavLink href={`${RouteHrefs.CATEGORY}/${category.id}`}>
-                  <Button type="text" className={styles.titleButton}>
+                  <AppButton type="WHITE" style={styles.cardButton}>
                     Показать товары
-                  </Button>
+                  </AppButton>
                 </NavLink>
               </div>
             </div>

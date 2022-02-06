@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
-export interface NavLinkOwnProps {
+export interface AppButtonOwnProps {
+  type?: "WHITE" | "GOLD";
   children: ReactNode;
-  href: string;
   style?: string;
 }
