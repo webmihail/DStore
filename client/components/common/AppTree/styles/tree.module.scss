@@ -27,17 +27,17 @@
     display: block;
     padding: 4px;
     text-transform: none;
-    color: gray;
+    color: var(--color-gray);
 
     &:hover {
-      color: white;
+      color: var(--text-color);
       transform: scale(1.05);
       transition: transform 0.5s ease;
     }
   }
 
   .mainTitle {
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid var(--border-white);
     padding: 15px 5px;
     margin-bottom: 15px;
   }
@@ -45,6 +45,10 @@
   .treeNodeList {
     overflow: hidden;
     list-style-type: none;
+    padding: 0px 0px 0px 20px;
+    &:first-child {
+      border-left: 1px solid var(--border-gray);
+    }
 
     &.firstVisible {
       max-height: 100em;

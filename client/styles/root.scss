@@ -16,6 +16,12 @@
   --text-color-dark: var(#{--uniqq-text-color-dark});
   --uniqq-text-font-size: 14px;
   --text-font-size: var(#{--uniqq-text-font-size});
+  --uniqq-border-gray: #{$gray};
+  --border-gray: var(#{--uniqq-border-gray});
+  --uniqq-border-white: #{$white};
+  --border-white: var(#{--uniqq-border-white});
+  --uniqq-color-gray: #{$gray};
+  --color-gray: var(#{--uniqq-color-gray});
   --uniqq-background: #{$darkslategray};
   --background: var(#{--uniqq-background});
   --uniqq-heading-color: #{$white};
