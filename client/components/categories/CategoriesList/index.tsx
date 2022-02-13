@@ -4,44 +4,33 @@ import { RouteHrefs } from "../../../constants";
 import { FC } from "react";
 import styles from "./styles/categoriesList.module.scss";
 import AppButton from "components/common/AppButton";
-
-const categories = [
-  {
-    id: "423",
-    image:
-      "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
-    parent: "Женская одежда",
-    name: "Топы",
-  },
-  {
-    id: "42353",
-    image:
-      "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
-    parent: "Женская одежда",
-    name: "Топы",
-  },
-  {
-    id: "42325242524",
-    image:
-      "https://cdn.shopify.com/s/files/1/0557/1824/8604/products/theycallmelocksmith_5013_1000x.jpg?v=1620991032",
-    parent: "Женская одежда",
-    name: "Топы",
-  },
-];
+import { useAppSelector } from "hooks/useAppSelector";
+import { Subcategory } from "types/categories";
+import { getSubcategories } from "../../../utils/getSubcategories";
 
 const CategoriesList: FC = (): JSX.Element => {
+  const { categories } = useAppSelector((state) => state.categories);
+  const subcategories: Subcategory[] = getSubcategories(categories);
+
   return (
     <>
       <h1 className={styles.title}>Наша продукция</h1>
       <Row className={styles.list}>
-        {categories.map((category) => (
-          <Col className={styles.listCard} xs={24} md={12} lg={12} xl={8}>
+        {subcategories.map((subcategory, index) => (
+          <Col
+            key={index + subcategory.id}
+            className={styles.listCard}
+            xs={24}
+            md={12}
+            lg={12}
+            xl={8}
+          >
             <div className={styles.cardWrapper}>
-              <img className={styles.cardImage} src={category.image} />
+              <img className={styles.cardImage} src={subcategory.image?.url} />
               <div className={styles.cardTitle}>
-                <h3>{category.parent}</h3>
-                <h1>{category.name}</h1>
-                <NavLink href={`${RouteHrefs.CATEGORY}/${category.id}`}>
+                <h3>{subcategory.parent}</h3>
+                <h1>{subcategory.name}</h1>
+                <NavLink href={`${RouteHrefs.CATEGORY}/${subcategory.id}`}>
                   <AppButton type="WHITE" style={styles.cardButton}>
                     Показать товары
                   </AppButton>
