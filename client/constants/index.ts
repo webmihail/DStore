@@ -3,6 +3,7 @@ export enum RouteHrefs {
   BASKET = "/basket",
   ORDERS = "/orders",
   CATEGORY = "/categories",
+  CATEGORIES_MANAGER = "/categories/manager",
 }
 
 export enum ImagePaths {

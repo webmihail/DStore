@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CategoriesAction, CategoriesState } from "types/categories";
+import { CategoriesLoadAction, CategoriesState } from "types/categories";
 
 const initialState: CategoriesState = {
   categories: [],
@@ -17,7 +17,7 @@ export const categories = createSlice({
     },
     getAllCategoriesSuccess: (
       state: CategoriesState,
-      action: CategoriesAction
+      action: CategoriesLoadAction
     ): void => {
       state.categories = action.payload.categories;
       state.loading = false;

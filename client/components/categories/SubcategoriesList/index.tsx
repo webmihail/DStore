@@ -2,13 +2,13 @@ import { Button, Col, Row } from "antd";
 import NavLink from "components/common/NavLink";
 import { RouteHrefs } from "../../../constants";
 import { FC } from "react";
-import styles from "./styles/categoriesList.module.scss";
+import styles from "./styles/subcategoriesList.module.scss";
 import AppButton from "components/common/AppButton";
 import { useAppSelector } from "hooks/useAppSelector";
 import { Subcategory } from "types/categories";
 import { getSubcategories } from "../../../utils/getSubcategories";
 
-const CategoriesList: FC = (): JSX.Element => {
+const SubcategoriesList: FC = (): JSX.Element => {
   const { categories } = useAppSelector((state) => state.categories);
   const subcategories: Subcategory[] = getSubcategories(categories);
 
@@ -44,4 +44,4 @@ const CategoriesList: FC = (): JSX.Element => {
   );
 };
 
-export default CategoriesList;
+export default SubcategoriesList;

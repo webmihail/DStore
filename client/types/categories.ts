@@ -24,7 +24,23 @@ export interface CategoriesState {
   error: boolean;
 }
 
-export interface CategoriesAction {
+export interface CategoryState {
+  category: Subcategory | Category | null;
+  loading: boolean;
+  error: boolean;
+}
+
+export interface CategoriesLoadAction {
   type: string;
   payload: CategoriesState;
+}
+
+export interface CategoryAction {
+  type: string;
+  payload: CategoryState;
+}
+
+export interface CategoryLoadAction {
+  type: string;
+  payload: string;
 }

@@ -2,6 +2,7 @@ import { Drawer } from "antd";
 import { FC, useState } from "react";
 import { AppDrawerOwnProps } from "./types";
 import { MenuOutlined } from "@ant-design/icons";
+import AppButton from "../AppButton";
 
 const AppDrawer: FC<AppDrawerOwnProps> = ({
   title,

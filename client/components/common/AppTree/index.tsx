@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import { TreeNodeOwnProps, TreeOwnProps } from "./types";
 import styles from "./styles/tree.module.scss";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import NavLink from "../NavLink";
+import { RouteHrefs } from "./../../../constants";
 
 const AppTree: FC<TreeOwnProps> = ({ data, title, style }): JSX.Element => {
   const [visible, setVisible] = useState(false);
@@ -59,7 +61,9 @@ const TreeNode: FC<TreeNodeOwnProps> = ({
   );
 
   const titleWithoutChild = (
-    <span className={styles.lastNodeTitle}>{node.title}</span>
+    <NavLink href={`${RouteHrefs.CATEGORY}/${node.key}`}>
+      <span className={styles.lastNodeTitle}>{node.title}</span>
+    </NavLink>
   );
 
   return (
