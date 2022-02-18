@@ -13,10 +13,10 @@ const ProductCard: FC<ProductCardOwnProps> = ({ data }): JSX.Element => {
           <img className={styles.cardSecondImage} src={data.images[1].url} />
         </div>
         <div className={styles.cardTitle}>
-          <h3>
+          <h3 className={styles.cardTitleName}>
             {data.product.name} {data.color?.name}
           </h3>
-          <span className={styles.cardPrice}>{data.product.price} &#8372;</span>
+          <span className={styles.cardTitlePrice}>{data.product.price} &#8372;</span>
         </div>
       </NavLink>
     </div>
