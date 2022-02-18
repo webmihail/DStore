@@ -1,0 +1,73 @@
+.wrapper {
+  user-select: none;
+
+  .nodeTitle,
+  .mainTitle {
+    background-color: var(--background);
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    text-transform: uppercase;
+    user-select: none;
+    cursor: pointer;
+
+    .titleIconForvard {
+      transform: rotate(180deg);
+      transition: transform 1s ease;
+    }
+
+    .titleIconReverse {
+      transform: rotate(-180deg);
+      transition: transform 1s ease;
+    }
+  }
+
+  .lastNodeTitle {
+    cursor: pointer;
+    display: block;
+    padding: 4px;
+    text-transform: none;
+    color: var(--color-gray);
+
+    &:hover {
+      color: var(--text-color);
+      transform: scale(1.05);
+      transition: transform 0.5s ease;
+    }
+  }
+
+  .mainTitle {
+    border-bottom: 1px solid var(--border-white);
+    padding: 15px 5px;
+    margin-bottom: 15px;
+  }
+
+  .treeNodeList {
+    overflow: hidden;
+    list-style-type: none;
+    padding: 0px 0px 0px 20px;
+    &:first-child {
+      border-left: 1px solid var(--border-gray);
+    }
+
+    &.firstVisible {
+      max-height: 100em;
+      transition: all 0.5s cubic-bezier(1, 0, 1, 0);
+    }
+
+    &.firstHide {
+      max-height: 0;
+      transition: all 0.5s cubic-bezier(0, 1, 0, 1);
+    }
+
+    &.secondVisible {
+      max-height: 100em;
+      transition: all 0.5s cubic-bezier(1, 0, 1, 0);
+    }
+
+    &.secondHide {
+      max-height: 0;
+      transition: all 0.5s cubic-bezier(0, 1, 0, 1);
+    }
+  }
+}

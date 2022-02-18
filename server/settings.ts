@@ -10,7 +10,7 @@ const requiredEnvVariables = [
   'POSTGRES_HOST',
   'POSTGRES_PORT',
 
-  'PORT',
+  'SERVER_PORT',
   'API_PREFIX',
   'SWAGGER_PREFIX',
   'SWAGGER_ON',
@@ -50,13 +50,13 @@ const requiredEnvVariables = [
 
 dotenv.config({
   path: !isProduction
-    ? path.join(__dirname, `../.env-dev`)
+    ? path.join(__dirname, `../.env.local`)
     : path.join(__dirname, `../.env`),
 });
 
 dotenv.config({
   path: !isProduction
-    ? path.join(__dirname, `../../.env-dev`)
+    ? path.join(__dirname, `../../.env.local`)
     : path.join(__dirname, `../../.env`),
 });
 
@@ -78,7 +78,7 @@ const settings = {
     host: process.env.POSTGRES_HOST,
   },
   server: {
-    port: process.env.PORT,
+    port: process.env.SERVER_PORT,
     apiPrefix: process.env.API_PREFIX,
     swaggerPrefix: process.env.SWAGGER_PREFIX,
     isSwaggerOn: process.env.SWAGGER_ON === 'true',
