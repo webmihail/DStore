@@ -5,13 +5,7 @@ import { ProductType } from "./productTypes";
 export interface Category {
   id: string;
   name: string;
-  children: Subcategory[];
-  image: ImageEntity;
-}
-
-export interface Subcategory {
-  id: string;
-  name: string;
+  children: Category[];
   image: ImageEntity;
   products: Product[];
   productTypes: ProductType[];
@@ -25,22 +19,39 @@ export interface CategoriesState {
 }
 
 export interface CategoryState {
-  category: Subcategory | Category | null;
+  category: Category | null;
   loading: boolean;
   error: boolean;
 }
 
-export interface CategoriesLoadAction {
+export interface CategoriesSuccessAction {
   type: string;
   payload: CategoriesState;
 }
 
-export interface CategoryAction {
+export interface CategorySuccessAction {
   type: string;
   payload: CategoryState;
 }
 
+export interface CategoriesLoadAction {
+  type: string;
+  payload: {
+    loading: boolean;
+  };
+}
+
 export interface CategoryLoadAction {
   type: string;
-  payload: string;
+  payload: {
+    id: string;
+    loading: boolean;
+  };
+}
+
+export interface ErrorAction {
+  type: string;
+  payload: {
+    error: boolean;
+  };
 }

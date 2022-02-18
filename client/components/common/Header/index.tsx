@@ -21,7 +21,7 @@ const Header: FC = (): JSX.Element => {
   useInjectSaga("getAllCategoriesSaga", getAllCategoriesSaga);
 
   useEffect(() => {
-    getAllCategories();
+    getAllCategories({ loading: true });
   }, []);
 
   return (

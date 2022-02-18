@@ -1,7 +1,7 @@
-import { Category, Subcategory } from "types/categories";
+import { Category } from "types/categories";
 
-export const getSubcategories = (categories: Category[]): Subcategory[] => {
-  const subcategories: Subcategory[] = [];
+export const getSubcategories = (categories: Category[]): Category[] => {
+  const subcategories: Category[] = [];
 
   categories.forEach((category) => {
     category.children.forEach((child) => {

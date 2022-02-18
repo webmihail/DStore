@@ -6,16 +6,16 @@ import {
   actionCategoryError,
   actionCategorySuccess,
 } from "store/reducers/categories/category";
-import { Category, CategoryLoadAction, Subcategory } from "types/categories";
+import { Category, CategoryLoadAction } from "types/categories";
 
 export function* getCategorySaga() {
   yield takeEvery(getCategory.type, onGetCategory);
 
   function* onGetCategory(action: CategoryLoadAction) {
+    const { id } = action.payload;
+
     try {
-      const data: Category | Subcategory = yield call(() =>
-        getCategoryByIdApi(action.payload)
-      );
+      const data: Category = yield call(() => getCategoryByIdApi(id));
 
       yield put(
         actionCategorySuccess({ category: data, loading: false, error: false })
@@ -25,7 +25,7 @@ export function* getCategorySaga() {
         message: "Серверная ошибка!",
         description: "К сожалению не удалось загрузить категорию товара.",
       });
-      yield put(actionCategoryError());
+      yield put(actionCategoryError({ error: true }));
       throw error;
     }
   }

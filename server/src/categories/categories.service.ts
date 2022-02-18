@@ -19,7 +19,14 @@ export class CategoriesService {
   async getAll(): Promise<CategoryEntity[]> {
     const categoriesList = await this.categoryTreeRepository.findTrees({
       depth: 2,
-      relations: ['products', 'image'],
+      relations: [
+        'products',
+        'products.productsInfo',
+        'products.productsInfo.images',
+        'products.productsInfo.color',
+        'products.productsInfo.size',
+        'image',
+      ],
     });
 
     const responseWithDeletions = categoriesList.map((category) => {
@@ -36,7 +43,16 @@ export class CategoriesService {
 
   async getById(id: string): Promise<CategoryEntity> {
     const category = await this.categoryTreeRepository.findOne(id, {
-      relations: ['children', 'products', 'productTypes', 'image'],
+      relations: [
+        'children',
+        'products',
+        'products.productsInfo',
+        'products.productsInfo.images',
+        'products.productsInfo.color',
+        'products.productsInfo.size',
+        'productTypes',
+        'image',
+      ],
     });
 
     if (category.children.length !== 0 && category.products.length === 0) {

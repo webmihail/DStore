@@ -1,8 +1,9 @@
 import { Drawer } from "antd";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { AppDrawerOwnProps } from "./types";
 import { MenuOutlined } from "@ant-design/icons";
-import AppButton from "../AppButton";
+import { useAppSelector } from "hooks/useAppSelector";
+import { useActions } from "hooks/useActions";
 
 const AppDrawer: FC<AppDrawerOwnProps> = ({
   title,
@@ -10,24 +11,17 @@ const AppDrawer: FC<AppDrawerOwnProps> = ({
   closable,
   children,
 }): JSX.Element => {
-  const [visible, setVisible] = useState<boolean>(false);
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
+  const { visible } = useAppSelector((state) => state.drawer);
+  const { setVisible } = useActions();
 
   return (
     <>
-      <MenuOutlined onClick={showDrawer} />
+      <MenuOutlined onClick={() => setVisible(true)} />
       <Drawer
         title={title}
         placement={placement}
         closable={closable}
-        onClose={onClose}
+        onClose={() => setVisible(false)}
         visible={visible}
         key={placement}
       >

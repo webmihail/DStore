@@ -1,5 +1,7 @@
 import { Color } from "./colors";
 import ImageEntity from "./images";
+import { Product } from "./products";
+import { Sale } from "./sales";
 import { Size } from "./sizes";
 
 export interface ProductInfo {
@@ -12,4 +14,10 @@ export interface ProductInfo {
   images: ImageEntity[];
   size: Size;
   color: Color;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    sale: Sale;
+  }
 }

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CategoryAction, CategoryLoadAction, CategoryState } from "types/categories";
+import {
+  CategorySuccessAction,
+  CategoryLoadAction,
+  CategoryState,
+  ErrorAction,
+} from "types/categories";
 
 const initialState: CategoryState = {
   category: null,
@@ -12,26 +17,21 @@ export const category = createSlice({
   initialState,
   reducers: {
     getCategory: (state: CategoryState, action: CategoryLoadAction): void => {
-      state.loading = true;
-      state.error = false;
+      state.loading = action.payload.loading;
     },
     actionCategorySuccess: (
       state: CategoryState,
-      action: CategoryAction
+      action: CategorySuccessAction
     ): void => {
       state.category = action.payload.category;
-      state.loading = false;
-      state.error = false;
+      state.loading = action.payload.loading;
+      state.error = action.payload.error;
     },
-    actionCategoryError: (state: CategoryState): void => {
-      state.error = true;
-      state.loading = false;
+    actionCategoryError: (state: CategoryState, action: ErrorAction): void => {
+      state.error = action.payload.error;
     },
   },
 });
 
-export const {
-  getCategory,
-  actionCategorySuccess,
-  actionCategoryError,
-} = category.actions;
+export const { getCategory, actionCategorySuccess, actionCategoryError } =
+  category.actions;

@@ -4,6 +4,7 @@ import styles from "./styles/tree.module.scss";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import NavLink from "../NavLink";
 import { RouteHrefs } from "./../../../constants";
+import { useActions } from "hooks/useActions";
 
 const AppTree: FC<TreeOwnProps> = ({ data, title, style }): JSX.Element => {
   const [visible, setVisible] = useState(false);
@@ -44,6 +45,7 @@ const TreeNode: FC<TreeNodeOwnProps> = ({
   nodeId,
   setNodeId,
 }): JSX.Element => {
+  const { setVisible } = useActions();
   const isEquals = nodeId === node.key;
   const setNode = isEquals ? "" : node.key;
   const setNodeStyle = isEquals ? styles.secondVisible : styles.secondHide;
@@ -61,8 +63,10 @@ const TreeNode: FC<TreeNodeOwnProps> = ({
   );
 
   const titleWithoutChild = (
-    <NavLink href={`${RouteHrefs.CATEGORY}/${node.key}`}>
-      <span className={styles.lastNodeTitle}>{node.title}</span>
+    <NavLink href={`${RouteHrefs.CATEGORIES}/${node.key}`}>
+      <span className={styles.lastNodeTitle} onClick={() => setVisible(false)}>
+        {node.title}
+      </span>
     </NavLink>
   );
 

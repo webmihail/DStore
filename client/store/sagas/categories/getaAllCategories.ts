@@ -16,7 +16,11 @@ export function* getAllCategoriesSaga() {
       const data: Category[] = yield call(getCategoriesListApi);
 
       yield put(
-        getAllCategoriesSuccess({ categories: data, loading: false, error: false })
+        getAllCategoriesSuccess({
+          categories: data,
+          loading: false,
+          error: false,
+        })
       );
     } catch (error) {
       notification.error({
@@ -24,7 +28,7 @@ export function* getAllCategoriesSaga() {
         description:
           "К сожалению не удалось загрузить список категорий товаров.",
       });
-      yield put(getAllCategoriesError());
+      yield put(getAllCategoriesError({ error: true }));
       throw error;
     }
   }
