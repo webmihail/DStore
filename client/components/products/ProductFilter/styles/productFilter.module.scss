@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+
+  .button {
+    min-width: 180px;
+    margin-right: 20px;
+
+    .buttonIcon {
+      margin-right: 10px;
+    }
+  }
+
+  .search {
+    height: 40px;
+    border-radius: none;
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+    color: var(--text-color);
+    outline: none;
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--border-color);
+    }
+  }
+}

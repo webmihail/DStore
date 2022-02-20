@@ -13,7 +13,7 @@ const CategoryCard: FC<CategoryCardOwnProps> = ({ data }): JSX.Element => {
         <h3>{data.parent}</h3>
         <h1>{data.name}</h1>
         <NavLink href={`${RouteHrefs.CATEGORIES}/${data.id}`}>
-          <AppButton type="WHITE" style={styles.cardButton}>
+          <AppButton type="WHITE" className={styles.cardButton}>
             Показать товары
           </AppButton>
         </NavLink>

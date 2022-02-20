@@ -26,20 +26,20 @@ const Header: FC = (): JSX.Element => {
 
   return (
     <header className={styles.header}>
-      <NavLink style={styles.headerLogo} href={RouteHrefs.HOME}>
+      <NavLink className={styles.headerLogo} href={RouteHrefs.HOME}>
         <img src={ImagePaths.UNIQQ_MAIN_LOGO} alt="logo" />
       </NavLink>
       <AppDrawer placement={Placement.LEFT} closable={true}>
         <AppTree title="Магазин" data={treeData} />
         <NavLink href={RouteHrefs.CATEGORIES_MANAGER}>
-          <AppButton style={styles.drawerCategoryButton}>
+          <AppButton className={styles.drawerCategoryButton}>
             Открыть менеджер категорий
           </AppButton>
         </NavLink>
       </AppDrawer>
       <div className={styles.headerRightNavBar}>
         <NavLink href={RouteHrefs.ORDERS}>
-          <AppButton style={styles.headerButtonHistory}>
+          <AppButton className={styles.headerButtonHistory}>
             История заказов
           </AppButton>
         </NavLink>

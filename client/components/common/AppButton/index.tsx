@@ -5,7 +5,7 @@ import { AppButtonOwnProps } from "./types";
 const AppButton: FC<AppButtonOwnProps> = ({
   children,
   type,
-  style,
+  className,
 }): JSX.Element => {
   const getStyle = () => {
     switch (type) {
@@ -18,7 +18,7 @@ const AppButton: FC<AppButtonOwnProps> = ({
     }
   };
 
-  return <button className={`${getStyle()} ${style}`}>{children}</button>;
+  return <button className={`${getStyle()} ${className}`}>{children}</button>;
 };
 
 export default AppButton;
