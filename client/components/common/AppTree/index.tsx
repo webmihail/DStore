@@ -5,8 +5,9 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import NavLink from "../NavLink";
 import { RouteHrefs } from "./../../../constants";
 import { useActions } from "hooks/useActions";
+import classnames from "classnames";
 
-const AppTree: FC<TreeOwnProps> = ({ data, title, style }): JSX.Element => {
+const AppTree: FC<TreeOwnProps> = ({ data, title, className }): JSX.Element => {
   const [visible, setVisible] = useState(false);
   const [nodeId, setNodeId] = useState("");
   const firstNode = data[0];
@@ -26,7 +27,7 @@ const AppTree: FC<TreeOwnProps> = ({ data, title, style }): JSX.Element => {
           </span>
         </div>
       )}
-      <ul className={`${styles.treeNodeList} ${setNodeStyle} ${style}`}>
+      <ul className={classnames([styles.treeNodeList, setNodeStyle, className])}>
         {data.map((child) => (
           <TreeNode
             key={child.key}
@@ -73,7 +74,7 @@ const TreeNode: FC<TreeNodeOwnProps> = ({
   return (
     <li className={styles.treeNodeListItem}>
       {node.children ? titleWithChildren : titleWithoutChild}
-      {node.children && <AppTree data={node.children} style={setNodeStyle} />}
+      {node.children && <AppTree data={node.children} className={setNodeStyle} />}
     </li>
   );
 };

@@ -7,7 +7,7 @@ export interface TreeData {
 export interface TreeOwnProps {
   data: TreeData[];
   title?: string; 
-  style?: string;
+  className?: string;
 }
 
 export interface TreeNodeOwnProps {

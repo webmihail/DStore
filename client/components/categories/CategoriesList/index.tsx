@@ -20,7 +20,7 @@ const CategoriesList: FC = (): JSX.Element => {
 
   return (
     <>
-      <h1 className={styles.title}>Наша продукция</h1>
+      <h2 className={styles.title}>Наша продукция</h2>
       <Row>
         {subcategories.map((subcategory) => (
           <Col key={subcategory.id} xs={24} md={12} lg={12} xl={8}>
